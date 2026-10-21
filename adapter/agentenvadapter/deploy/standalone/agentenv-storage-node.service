@@ -1,0 +1,18 @@
+[Unit]
+Description=AgentENV native storage provider
+After=network-online.target ssf-node.service
+Wants=network-online.target ssf-node.service
+Before=agentenv.service
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/agentenv-storage/control.env
+ExecStart=/usr/local/bin/agentenvadapter node -config /etc/agentenv-storage/node.json
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=180
+KillSignal=SIGTERM
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

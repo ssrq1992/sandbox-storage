@@ -1,0 +1,276 @@
+   Compiling aws-lc-rs v1.18.1
+    Checking aws-lc-sys v0.45.0
+   Compiling libublk-rs-sys v0.1.0 (https://github.com/ublk-org/libublk-rs.git?rev=c6a3e06#c6a3e069)
+    Checking storage-util v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/storage/util)
+    Checking genawaiter-macro v0.99.1
+   Compiling crc32fast v1.5.0
+   Compiling redb v4.2.0
+    Checking toml v0.9.12+spec-1.1.0
+    Checking genawaiter v0.99.1
+   Compiling rustls v0.23.37
+error: the `io-uring` feature requires target_os = "linux"
+  --> storage/util/src/lib.rs:12:1
+   |
+12 | compile_error!("the `io-uring` feature requires target_os = \"linux\"");
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+ --> storage/util/src/io_ring/uring.rs:2:5
+  |
+2 | use io_uring::{squeue::EntryMarker as SQEMarker, IoUring};
+  |     ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+  |
+  = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0432]: unresolved import `io_uring`
+ --> storage/util/src/io_ring/mod.rs:1:5
+  |
+1 | use io_uring::opcode;
+  |     ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+  |
+  = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0432]: unresolved import `io_uring`
+ --> storage/util/src/io_ring/uring.rs:2:5
+  |
+2 | use io_uring::{squeue::EntryMarker as SQEMarker, IoUring};
+  |     ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+  |
+  = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/uring.rs:87:25
+   |
+87 | impl AsyncIoRingSQE for io_uring::squeue::Entry {
+   |                         ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/uring.rs:93:25
+   |
+93 | impl AsyncIoRingSQE for io_uring::squeue::Entry128 {
+   |                         ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/uring.rs:235:44
+    |
+235 | pub struct AsyncIoRing<S: AsyncIoRingSQE = io_uring::squeue::Entry> {
+    |                                            ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/uring.rs:457:42
+    |
+457 | impl IoUringSubmitterBox for AsyncIoRing<io_uring::squeue::Entry> {
+    |                                          ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/uring.rs:460:16
+    |
+460 |         entry: io_uring::squeue::Entry,
+    |                ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/uring.rs:470:39
+    |
+470 | impl IoUringSubmitter for AsyncIoRing<io_uring::squeue::Entry> {
+    |                                       ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/uring.rs:471:35
+    |
+471 |     async fn submit(&self, entry: io_uring::squeue::Entry) -> std::io::Result<i32> {
+    |                                   ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/uring.rs:477:18
+    |
+477 | impl AsyncIoRing<io_uring::squeue::Entry> {
+    |                  ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/uring.rs:486:21
+    |
+486 |         let entry = io_uring::opcode::FilesUpdate::new(fds.as_ptr(), 1)
+    |                     ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/worker.rs:24:47
+   |
+24 |     pub static URING128: OnceCell<AsyncIoRing<io_uring::squeue::Entry128>> = const {OnceCell::new()};
+   |                                               ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/worker.rs:36:30
+   |
+36 | impl TlsRing for AsyncIoRing<io_uring::squeue::Entry> {
+   |                              ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/worker.rs:47:30
+   |
+47 | impl TlsRing for AsyncIoRing<io_uring::squeue::Entry128> {
+   |                              ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/worker.rs:49:62
+   |
+49 |     ) -> &'static std::thread::LocalKey<OnceCell<AsyncIoRing<io_uring::squeue::Entry128>>> {
+   |                                                              ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/worker.rs:61:40
+   |
+61 | enum IoRingRequest<S: AsyncIoRingSQE = io_uring::squeue::Entry128> {
+   |                                        ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/worker.rs:101:45
+    |
+101 | pub struct IoRingHandle<S: AsyncIoRingSQE = io_uring::squeue::Entry> {
+    |                                             ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/worker.rs:336:16
+    |
+336 |         entry: io_uring::squeue::Entry,
+    |                ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/worker.rs:345:16
+    |
+345 |         entry: io_uring::squeue::Entry,
+    |                ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/mod.rs:19:16
+   |
+19 |         entry: io_uring::squeue::Entry,
+   |                ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/mod.rs:29:16
+   |
+29 |         entry: io_uring::squeue::Entry,
+   |                ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/mod.rs:36:16
+   |
+36 |         entry: io_uring::squeue::Entry,
+   |                ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/mod.rs:47:16
+   |
+47 |         entry: io_uring::squeue::Entry,
+   |                ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/mod.rs:54:16
+   |
+54 |         entry: io_uring::squeue::Entry,
+   |                ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/mod.rs:64:16
+   |
+64 |         entry: io_uring::squeue::Entry,
+   |                ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+  --> storage/util/src/io_ring/mod.rs:83:13
+   |
+83 |             io_uring::types::Fixed(file_io_ring_idx),
+   |             ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+   |
+   = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/mod.rs:119:13
+    |
+119 |             io_uring::types::Fixed(file_io_ring_idx),
+    |             ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/mod.rs:155:39
+    |
+155 |         let entry = opcode::Read::new(io_uring::types::Fd(fd), buf.as_mut_ptr(), buf.len() as _)
+    |                                       ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `io_uring` in this scope
+   --> storage/util/src/io_ring/mod.rs:188:40
+    |
+188 |         let entry = opcode::Write::new(io_uring::types::Fd(fd), buf.as_ptr(), buf.len() as _)
+    |                                        ^^^^^^^^ use of unresolved module or unlinked crate `io_uring`
+    |
+    = help: if you wanted to use a crate named `io_uring`, use `cargo add io_uring` to add it to your `Cargo.toml`
+
+error[E0425]: cannot find function `prctl` in crate `libc`
+   --> storage/util/src/io_ring/worker.rs:118:30
+    |
+118 |             let _res = libc::prctl(PR_SET_IO_FLUSHER, 0, 0, 0, 0);
+    |                              ^^^^^ not found in `libc`
+
+Some errors have detailed explanations: E0425, E0432, E0433.
+For more information about an error, try `rustc --explain E0425`.
+error: could not compile `storage-util` (lib) due to 32 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: failed to run custom build command for `libublk-rs-sys v0.1.0 (https://github.com/ublk-org/libublk-rs.git?rev=c6a3e06#c6a3e069)`
+
+Caused by:
+  process didn't exit successfully: `/private/tmp/ssf-agentenv-target/debug/build/libublk-rs-sys-21d3eea7593c19ce/build-script-build` (exit status: 101)
+  --- stderr
+  /private/tmp/ssf-cargo/git/checkouts/libublk-rs-886f23a7f8892207/c6a3e06/libublk-rs-sys/include-file.h:2:10: fatal error: 'asm/ioctl.h' file not found
+
+  thread 'main' (15520042) panicked at /private/tmp/ssf-cargo/git/checkouts/libublk-rs-886f23a7f8892207/c6a3e06/libublk-rs-sys/build.rs:82:10:
+  called `Result::unwrap()` on an `Err` value: ClangDiagnostic("/private/tmp/ssf-cargo/git/checkouts/libublk-rs-886f23a7f8892207/c6a3e06/libublk-rs-sys/include-file.h:2:10: fatal error: 'asm/ioctl.h' file not found\n")
+  note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

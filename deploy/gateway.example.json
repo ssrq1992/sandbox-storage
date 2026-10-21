@@ -1,0 +1,1 @@
+{"Listen": ":9443", "HealthListen": ":9090", "Cert": "/etc/ssf-tls/tls.crt", "Key": "/etc/ssf-tls/tls.key", "CA": "/etc/ssf-tls/ca.crt", "AllowedPeers": ["spiffe://ssf/project/consumption"], "DriverName": "example.csi.driver", "DriverEndpoint": "unix:///csi/csi.sock"}

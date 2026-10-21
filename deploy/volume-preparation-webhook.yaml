@@ -1,0 +1,32 @@
+# Render CA_BUNDLE and namespace before applying. Install alongside /validate,
+# after the Guard profile config has been updated and its readiness is healthy.
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: ssf-volume-profile
+webhooks:
+  - name: volume-profile.ssf.dev
+    admissionReviewVersions: [v1]
+    sideEffects: None
+    failurePolicy: Fail
+    matchPolicy: Equivalent
+    reinvocationPolicy: Never
+    timeoutSeconds: 5
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: In
+          values: [agentenv-system]
+    clientConfig:
+      service:
+        namespace: ssf-system
+        name: ssf-guard
+        path: /mutate
+        port: 443
+      caBundle: CA_BUNDLE
+    rules:
+      - operations: [CREATE]
+        apiGroups: ['']
+        apiVersions: [v1]
+        resources: [persistentvolumeclaims]
+        scope: Namespaced

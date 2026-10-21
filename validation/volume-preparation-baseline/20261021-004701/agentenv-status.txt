@@ -1,0 +1,61 @@
+ M services/api/proto/scheduler.pb.go
+ M services/api/proto/scheduler.proto
+ M services/api/proto/scheduler_grpc.pb.go
+ M services/gateway/cmd/main.go
+ M services/gateway/internal/server.go
+ M services/scheduler/cmd/main.go
+ M services/scheduler/internal/node_registry.go
+ M services/scheduler/internal/service.go
+ M services/scheduler/internal/types.go
+ M src/api/generated/src/apis/volumes.rs
+ M src/api/generated/src/models.rs
+ M src/api/generated/src/server/mod.rs
+ M src/api/impls/auth.rs
+ M src/api/impls/mod.rs
+ M src/api/impls/sandbox.rs
+ M src/api/impls/volumes.rs
+ M src/api/openapi.yml
+ M src/api/server.rs
+ M src/bin/server.rs
+ M src/cfg.rs
+ M src/orchestrator/launch_plan.rs
+ M src/orchestrator/persistence/file_backed.rs
+ M src/orchestrator/service.rs
+ M src/orchestrator/store/metadata.rs
+ M src/orchestrator/tests.rs
+ M src/sandbox/backend.rs
+ M src/sandbox/custom_extension/mod.rs
+ M src/sandbox/extra_drive.rs
+ M src/sandbox/firecracker/config.rs
+ M src/sandbox/firecracker/factory.rs
+ M src/sandbox/firecracker/sandbox.rs
+ M src/sandbox/firecracker/startup_pack.rs
+ M src/sandbox/manifest.rs
+ M src/sandbox/mock.rs
+ M src/sandbox/mod.rs
+ M src/snapshot/manager.rs
+ M src/snapshot/repository/backends/oss/client.rs
+ M src/snapshot/repository/backends/oss/repository.rs
+ M src/snapshot/repository/backends/posixfs/backend.rs
+ M src/snapshot/repository/backends/posixfs/catalog.rs
+ M src/snapshot/repository/interfaces.rs
+ M src/snapshot/types/snapshot.rs
+ M src/volume.rs
+ M tests/integration/posix_startup_pack.rs
+ M tests/integration/snapshot.rs
+?? deploy/docker/Dockerfile.scheduler.ssf
+?? deploy/k8s/overlays/ssf/
+?? services/gateway/internal/storage.go
+?? services/gateway/internal/storage_test.go
+?? services/go.ssf.mod
+?? services/go.ssf.sum
+?? services/scheduler/cmd/storage_default.go
+?? services/scheduler/cmd/storage_ssf.go
+?? services/scheduler/cmd/storage_wire_test.go
+?? services/scheduler/internal/storage_plugin.go
+?? services/scheduler/internal/storage_plugin_test.go
+?? services/shared/storage/
+?? src/api/impls/storage.rs
+?? src/api/impls/storage_fork.rs
+?? src/api/impls/volume_provider.rs
+?? src/sandbox/storage/

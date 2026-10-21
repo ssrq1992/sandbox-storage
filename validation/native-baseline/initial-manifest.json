@@ -1,0 +1,9 @@
+{
+  "src/cfg.rs": "e308428c15beb74b5b84703fefcc0517287efa77535c600f62275ac1447c3e43",
+  "src/orchestrator/service.rs": "a95c1c7e0f00365ac23b80a5b4a4796fb1fc0bb5ec3b609b68b3bafc4f7b5ce7",
+  "src/sandbox/custom_extension/mod.rs": "d77fd68b5f7f39cfd125371fb3cd47b8488984a7b83d99d3cfa97e12faf40b71",
+  "src/sandbox/firecracker/config.rs": "7ad86bfdedebd578ac5a65d44a5789b600e1581f8cb410891864a0716fb723eb",
+  "src/sandbox/firecracker/sandbox.rs": "1b7127b724314af61dbaed83abefa8691478131551adbaf07eb54334cc893a7e",
+  "src/sandbox/manifest.rs": "41590c45b1c1f08dd4ce121ba8ea72b047f17ebddca007808d35056da303d827",
+  "src/sandbox/custom_extension/storage.rs": "8a88792f15d8e95dd61ae3d1aac3f2f33914574a8934560b456bfd978ab32edb"
+}

@@ -1,0 +1,16 @@
+{
+  "scope": "offline-render-and-credentials-only",
+  "time": "2026-10-20T07:12:06.345347+00:00",
+  "cluster_deployed": false,
+  "checks": [
+    {
+      "name": "agentenv-system",
+      "status": "passed"
+    },
+    {
+      "name": "ssf-native-validation",
+      "status": "passed"
+    }
+  ],
+  "status": "passed"
+}

@@ -1,0 +1,105 @@
+{
+  "scope": "native-integration-foundation-only",
+  "time": "2026-10-19T18:50:10.970441+00:00",
+  "host": "Darwin",
+  "checks": [
+    {
+      "name": "ssf-unit",
+      "status": "passed_with_skips",
+      "exit_code": 0,
+      "log": "ssf-unit.log",
+      "skipped_tests": [
+        "ssf.dev/ssf/consume/TestPostgresAbortUnattachedPartialAcquire",
+        "ssf.dev/ssf/consume/TestPostgresConsumptionLifecycle",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestPostgresConcurrentIdempotency",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestPostgresStopCannotBeOverwritten",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestPostgresInitializationIsSingleOperation",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestPostgresConcurrentPlacementCapacity",
+        "ssf.dev/ssf/ledger/TestPauseHoldResumeEpochAndDeletion",
+        "ssf.dev/ssf/ledger/TestCheckpointPinsAndDeleteTombstone",
+        "ssf.dev/ssf/ledger/TestPostgresConcurrentWriterAndDrain",
+        "ssf.dev/ssf/kubernetes/TestClusterNativeProvisioning"
+      ]
+    },
+    {
+      "name": "ssf-race",
+      "status": "passed_with_skips",
+      "exit_code": 0,
+      "log": "ssf-race.log",
+      "skipped_tests": [
+        "ssf.dev/ssf/adapter/agentenvadapter/TestPostgresConcurrentIdempotency",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestPostgresStopCannotBeOverwritten",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestPostgresInitializationIsSingleOperation",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestPostgresConcurrentPlacementCapacity",
+        "ssf.dev/ssf/consume/TestPostgresAbortUnattachedPartialAcquire",
+        "ssf.dev/ssf/consume/TestPostgresConsumptionLifecycle",
+        "ssf.dev/ssf/ledger/TestPauseHoldResumeEpochAndDeletion",
+        "ssf.dev/ssf/ledger/TestCheckpointPinsAndDeleteTombstone",
+        "ssf.dev/ssf/ledger/TestPostgresConcurrentWriterAndDrain",
+        "ssf.dev/ssf/kubernetes/TestClusterNativeProvisioning"
+      ]
+    },
+    {
+      "name": "ssf-vet",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "ssf-vet.log"
+    },
+    {
+      "name": "ssf-linux-build",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "ssf-linux-build.log"
+    },
+    {
+      "name": "ssf-generated",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "ssf-generated.log"
+    },
+    {
+      "name": "agentenv-services-unit",
+      "status": "passed_with_skips",
+      "exit_code": 0,
+      "log": "agentenv-services-unit.log",
+      "skipped_tests": [
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreGetCases",
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreRecordCases",
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreReconcileCases"
+      ]
+    },
+    {
+      "name": "postgres-integration",
+      "status": "not_executed",
+      "reason": "requires --database and dedicated SSF_TEST_DATABASE_URL"
+    },
+    {
+      "name": "rust-typecheck",
+      "status": "not_executed",
+      "reason": "requires Linux Rust toolchain and native build dependencies; not run by this foundation script"
+    },
+    {
+      "name": "native-ssf-build",
+      "status": "not_executed",
+      "reason": "native plugin integration not yet implemented"
+    },
+    {
+      "name": "linux-kvm-k8s-csi-e2e",
+      "status": "not_executed",
+      "reason": "requires completed native integration and real environment"
+    },
+    {
+      "name": "guard-final-race",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "guard-final-race.log"
+    },
+    {
+      "name": "integration-example-final-build",
+      "status": "passed",
+      "command": "go test ./examples/integration ./guard",
+      "note": "integration example has no runtime tests"
+    }
+  ],
+  "complete_plan": false
+}

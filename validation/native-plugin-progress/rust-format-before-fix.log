@@ -1,0 +1,179 @@
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:114:
+ ) -> Vec<models::SandboxVolumeMount> {
+     let mut result = volume_mounts_model(mounts);
+     if let Some(storage) = storage {
+-        result.extend(storage.managed_mounts.iter().map(|m| models::SandboxVolumeMount::new(m.name.clone(), m.path.clone())));
++        result.extend(
++            storage
++                .managed_mounts
++                .iter()
++                .map(|m| models::SandboxVolumeMount::new(m.name.clone(), m.path.clone())),
++        );
+     }
+     result
+ }
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:162:
+         for managed in &context.managed_mounts {
+             if let Some(name) = legacy_mounts.get(&managed.path) {
+                 if name != &managed.name {
+-                    return Err(ApiImpl::error(409, "storage plan mount differs from native request".into()));
++                    return Err(ApiImpl::error(
++                        409,
++                        "storage plan mount differs from native request".into(),
++                    ));
+                 }
+             }
+             legacy_mounts.remove(&managed.path);
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:169:
+         }
+     }
+-    if legacy_mounts.is_empty() { return Ok(PreparedVolumeMounts::default()); }
++    if legacy_mounts.is_empty() {
++        return Ok(PreparedVolumeMounts::default());
++    }
+     let owner = format!("pending-{}", Uuid::now_v7().simple());
+-    let (drives, mounts) = resolve_volume_mounts(&api.volume_manager, &legacy_mounts, &owner).await?;
++    let (drives, mounts) =
++        resolve_volume_mounts(&api.volume_manager, &legacy_mounts, &owner).await?;
+     Ok(PreparedVolumeMounts {
+         owner: Some(owner),
+         drives,
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:374:
+             metadata: m.user_metadata,
+             state: m.state.into(),
+             envd_version: m.runtime_versions.envd_version.clone(),
+-            volume_mounts: Some(volume_mounts_with_storage(&m.volume_mounts, m.storage_context.as_ref())),
++            volume_mounts: Some(volume_mounts_with_storage(
++                &m.volume_mounts,
++                m.storage_context.as_ref(),
++            )),
+         }
+     }
+ }
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:466:
+                 auto_resume: m.auto_resume,
+                 on_timeout: m.timeout_action.into(),
+             }),
+-            volume_mounts: Some(volume_mounts_with_storage(&m.volume_mounts, m.storage_context.as_ref())),
++            volume_mounts: Some(volume_mounts_with_storage(
++                &m.volume_mounts,
++                m.storage_context.as_ref(),
++            )),
+         }
+     }
+ }
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:987:
+     ) -> Result<SandboxesPostResponse, ()> {
+         let timer = SandboxStageTimer::new("create_warm");
+         let pinned_template = crate::sandbox::storage::current_context()
+-            .map(|c| c.template_pin).filter(|id| !id.is_empty())
++            .map(|c| c.template_pin)
++            .filter(|id| !id.is_empty())
+             .unwrap_or_else(|| body.template_id.clone());
+         let snapshot = match timer
+             .time(
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:114:
+ ) -> Vec<models::SandboxVolumeMount> {
+     let mut result = volume_mounts_model(mounts);
+     if let Some(storage) = storage {
+-        result.extend(storage.managed_mounts.iter().map(|m| models::SandboxVolumeMount::new(m.name.clone(), m.path.clone())));
++        result.extend(
++            storage
++                .managed_mounts
++                .iter()
++                .map(|m| models::SandboxVolumeMount::new(m.name.clone(), m.path.clone())),
++        );
+     }
+     result
+ }
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:162:
+         for managed in &context.managed_mounts {
+             if let Some(name) = legacy_mounts.get(&managed.path) {
+                 if name != &managed.name {
+-                    return Err(ApiImpl::error(409, "storage plan mount differs from native request".into()));
++                    return Err(ApiImpl::error(
++                        409,
++                        "storage plan mount differs from native request".into(),
++                    ));
+                 }
+             }
+             legacy_mounts.remove(&managed.path);
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:169:
+         }
+     }
+-    if legacy_mounts.is_empty() { return Ok(PreparedVolumeMounts::default()); }
++    if legacy_mounts.is_empty() {
++        return Ok(PreparedVolumeMounts::default());
++    }
+     let owner = format!("pending-{}", Uuid::now_v7().simple());
+-    let (drives, mounts) = resolve_volume_mounts(&api.volume_manager, &legacy_mounts, &owner).await?;
++    let (drives, mounts) =
++        resolve_volume_mounts(&api.volume_manager, &legacy_mounts, &owner).await?;
+     Ok(PreparedVolumeMounts {
+         owner: Some(owner),
+         drives,
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:374:
+             metadata: m.user_metadata,
+             state: m.state.into(),
+             envd_version: m.runtime_versions.envd_version.clone(),
+-            volume_mounts: Some(volume_mounts_with_storage(&m.volume_mounts, m.storage_context.as_ref())),
++            volume_mounts: Some(volume_mounts_with_storage(
++                &m.volume_mounts,
++                m.storage_context.as_ref(),
++            )),
+         }
+     }
+ }
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:466:
+                 auto_resume: m.auto_resume,
+                 on_timeout: m.timeout_action.into(),
+             }),
+-            volume_mounts: Some(volume_mounts_with_storage(&m.volume_mounts, m.storage_context.as_ref())),
++            volume_mounts: Some(volume_mounts_with_storage(
++                &m.volume_mounts,
++                m.storage_context.as_ref(),
++            )),
+         }
+     }
+ }
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/api/impls/sandbox.rs:987:
+     ) -> Result<SandboxesPostResponse, ()> {
+         let timer = SandboxStageTimer::new("create_warm");
+         let pinned_template = crate::sandbox::storage::current_context()
+-            .map(|c| c.template_pin).filter(|id| !id.is_empty())
++            .map(|c| c.template_pin)
++            .filter(|id| !id.is_empty())
+             .unwrap_or_else(|| body.template_id.clone());
+         let snapshot = match timer
+             .time(
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/sandbox/custom_extension/storage.rs:1:
+ //! Transitional module path for the existing safety gates.
+-pub(crate) use crate::sandbox::storage::devices::{requested, reject_managed};
++pub(crate) use crate::sandbox::storage::devices::{reject_managed, requested};
+ 
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/sandbox/custom_extension/storage.rs:1:
+ //! Transitional module path for the existing safety gates.
+-pub(crate) use crate::sandbox::storage::devices::{requested, reject_managed};
++pub(crate) use crate::sandbox::storage::devices::{reject_managed, requested};
+ 
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/sandbox/custom_extension/storage.rs:1:
+ //! Transitional module path for the existing safety gates.
+-pub(crate) use crate::sandbox::storage::devices::{requested, reject_managed};
++pub(crate) use crate::sandbox::storage::devices::{reject_managed, requested};
+ 
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/sandbox/mod.rs:1:
+ mod access;
+ mod backend;
+ pub(crate) mod custom_extension;
+-pub(crate) mod storage;
+ mod envd;
+ mod extra_drive;
+ mod firecracker;
+Diff in /Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV/src/sandbox/mod.rs:11:
+ pub(crate) mod mock;
+ mod network;
+ mod process;
++pub(crate) mod storage;
+ mod ublk;
+ 
+ use std::{collections::HashMap, path::PathBuf};

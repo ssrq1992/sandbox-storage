@@ -1,0 +1,22 @@
+{
+  "Listen": ":9443",
+  "Cert": "/etc/ssf-tls/tls.crt",
+  "Key": "/etc/ssf-tls/tls.key",
+  "CA": "/etc/ssf-tls/ca.crt",
+  "VolumeProfiles": [
+    {
+      "name": "agentenv-block-ext4-v1",
+      "runtime": "agentenv",
+      "version": "volume-preparation-v1",
+      "volumeMode": "Block",
+      "filesystem": "ext4",
+      "initializeBlank": true
+    }
+  ],
+  "ManagedNamespaces": [
+    "agentenv-system"
+  ],
+  "CoordinatorUsers": [
+    "system:serviceaccount:agentenv-system:agentenv-scheduler"
+  ]
+}

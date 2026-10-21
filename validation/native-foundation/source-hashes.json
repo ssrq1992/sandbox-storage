@@ -1,0 +1,262 @@
+[
+  {
+    "path": "adapter/agentenvadapter/adapter_test.go",
+    "sha256": "95c37bbcd6fe8119ecadeba31e0965582b55b53b5a60d014a412c6ac16213ba7"
+  },
+  {
+    "path": "adapter/agentenvadapter/artifacts_test.go",
+    "sha256": "3300f648c594ff6c11c11178b25d4ff501952bb148d17b3cf69ce5996cb417b1"
+  },
+  {
+    "path": "adapter/agentenvadapter/blank.go",
+    "sha256": "bbdcb593904ebc2910ebda4f8ca78edc64a771306605ca21f8899cb783ec9e0d"
+  },
+  {
+    "path": "adapter/agentenvadapter/cmd/agentenvadapter/main.go",
+    "sha256": "577c5b4f13299e9cb8051b49cdae78222e38a98a3b739ce4e760e0c1d58be511"
+  },
+  {
+    "path": "adapter/agentenvadapter/config.go",
+    "sha256": "50b78506caf75a6c72819b11ba948a6dd485936570e5b0513aad99ba0a3d3db5"
+  },
+  {
+    "path": "adapter/agentenvadapter/control.go",
+    "sha256": "e62ecbc76f1f95fa800bcfbaf9651747f6e7aea391581df40a85be27d6a467d7"
+  },
+  {
+    "path": "adapter/agentenvadapter/http.go",
+    "sha256": "ea34a6ba49905e81f0cc620edd5487bb2cde5ecb87deece7ea8c36404a5ab5ea"
+  },
+  {
+    "path": "adapter/agentenvadapter/journal.go",
+    "sha256": "355010bf170580e80c380af409747405edf7441d5abc03b1cb16798c2d51b660"
+  },
+  {
+    "path": "adapter/agentenvadapter/node.go",
+    "sha256": "52c938c3705447e1e37e2c6e25cef7d1a2df8687f59ec83c7238b32a95380d91"
+  },
+  {
+    "path": "adapter/agentenvadapter/placement.go",
+    "sha256": "16810df653cb531c6ca43843d55e4f7d0e84aaa13a6ac642ae432b720bee4b86"
+  },
+  {
+    "path": "adapter/agentenvadapter/platform_linux.go",
+    "sha256": "ada459d4cc02b597e152baab333885fc8e8a48790afcf7ce2a34f7fd23736b8c"
+  },
+  {
+    "path": "adapter/agentenvadapter/platform_other.go",
+    "sha256": "c43ca7be1f62e1d5a8b38b39c0b5f6cfaf29aa5c6d0fd21fca74bc29dc3d2778"
+  },
+  {
+    "path": "adapter/agentenvadapter/postgres_test.go",
+    "sha256": "19f4189fee25f24f3681856c9e901a0bc8921849b9d2086b649e5aeff84aad32"
+  },
+  {
+    "path": "adapter/agentenvadapter/proxy.go",
+    "sha256": "b3bafe64ba2607d2bf1989a5d4fc5310df339079a801a871aa1715ad2084fe10"
+  },
+  {
+    "path": "adapter/agentenvadapter/runtime.go",
+    "sha256": "d9830469b0926decd28f4813be5c2f053738474448ca01ea74549e8280e1d9a7"
+  },
+  {
+    "path": "adapter/agentenvadapter/server.go",
+    "sha256": "edeebd9d5d5bd8bacdaaf0a88479c3b8094ca1830396e87fac181ddc069c2e08"
+  },
+  {
+    "path": "adapter/agentenvadapter/store.go",
+    "sha256": "7c04113d707cb270d839870d4987ee8b27c963ae1d1c3a902516684bebda01db"
+  },
+  {
+    "path": "adapter/agentenvadapter/timing.go",
+    "sha256": "74595ef157eb98fd87b168283c59f695b0a27bc57e1f2b48c075f8ae58657f99"
+  },
+  {
+    "path": "adapter/agentenvadapter/types.go",
+    "sha256": "8d3fc274c01d76e584a33ad34ac3cc485bd655525583b6946c8714e4232164cd"
+  },
+  {
+    "path": "adapter/agentenvadapter/volumes.go",
+    "sha256": "b0ba49b1cda08d37b123d382671bdc7a2b93788ccaf17ca9d2243125a14ae275"
+  },
+  {
+    "path": "consume/abort.go",
+    "sha256": "22160e96af4664b9975701539a37a8a2923242e4dfe4a8b0d8c4b88bec5b8ce1"
+  },
+  {
+    "path": "consume/abort_test.go",
+    "sha256": "8480a5a06ee552eb155d4b10e9eca6c75bf898722bea1fcbf6e1042e235db481"
+  },
+  {
+    "path": "consume/coordinator.go",
+    "sha256": "7bc6830d5e62b73e031257fb870bf04ee56fe59ca7654200fc7a57fc0e146da0"
+  },
+  {
+    "path": "consume/coordinator_test.go",
+    "sha256": "0b6136057f206ee2c11bd8b32cd5a3629f42ec41628e8a3174cde9eac09a41b9"
+  },
+  {
+    "path": "consume/delete.go",
+    "sha256": "da709985ac1cb9d59a0a156882231f40321682618c1fbbf48d66fa67fdc45f2a"
+  },
+  {
+    "path": "consume/lifecycle.go",
+    "sha256": "f910c13b2d4a97ccc2f7df4d21d6286c566eece03b8797872dbadde5d501d3e5"
+  },
+  {
+    "path": "consume/placement.go",
+    "sha256": "ad6d3620dee78ec7e1047e2eacb1c93586e8f71f9425394b09d4c98295a48456"
+  },
+  {
+    "path": "consume/recovery.go",
+    "sha256": "1a525a6c2730fe3916a2e54843bfe90464cb3933902575c6aa4277089634c219"
+  },
+  {
+    "path": "core/json.go",
+    "sha256": "b5215adc4fb50bf7b94f337bff06012205264a0a857087d8cf171fa73fda4e6d"
+  },
+  {
+    "path": "core/model.go",
+    "sha256": "530089c0f760b459b0014cd4d1e0ba3a487dfad19cde29c31d9c8addb3f51eab"
+  },
+  {
+    "path": "core/model_test.go",
+    "sha256": "f02f39e7f8210bfa17ad698502297de11b0367ca633d576a2dc1611783cf0467"
+  },
+  {
+    "path": "examples/integration/create.go",
+    "sha256": "30aeec2a7e0203b67dd7212eee13d6d89a674201593f4d7cac5bcc27213d4e48"
+  },
+  {
+    "path": "guard/binding.go",
+    "sha256": "2ee89e80096a51477105b7c55e27278f5385ee998d2276d4954f3861b07b966b"
+  },
+  {
+    "path": "guard/handler.go",
+    "sha256": "9d7dda55b77139c210590a24e40d04f4077cee4f0fcd2f93f4924a734f00797c"
+  },
+  {
+    "path": "guard/handler_test.go",
+    "sha256": "31879b64b688ff13b9496f31e26d4499f533faf9c16ba3a6aafaa564af7e2302"
+  },
+  {
+    "path": "guard/snapshot.go",
+    "sha256": "e7654dc4f7b26bd70e8b0b2cd88b43896d2151bbfcbf5ac94dce47e758fe9895"
+  },
+  {
+    "path": "guard/snapshot_test.go",
+    "sha256": "5d3e18e4d0144fd359c981c02d257bcc36c679615a824419307c447c1e0d362e"
+  },
+  {
+    "path": "kubernetes/capacity.go",
+    "sha256": "b78854ab3f5614ed103711918793eeeec78ef68e46d1ee2e4d7d7db350e92dd9"
+  },
+  {
+    "path": "kubernetes/client.go",
+    "sha256": "f6a804e7bde3d04e3fc0f21012c1089da7edc989488d4b8d5a40e1dde9a0902c"
+  },
+  {
+    "path": "kubernetes/client_test.go",
+    "sha256": "e09305a28ca6d5e5fe6182bc8b8e88a0ba2e6a1ee05e21e2051aaa94ada89cdf"
+  },
+  {
+    "path": "kubernetes/cluster_test.go",
+    "sha256": "3f570c348f0c6250abd1674953281339782d5d3c006347a7724766adeee81a8c"
+  },
+  {
+    "path": "kubernetes/expansion.go",
+    "sha256": "8b25f382ba9f5dcb27b90ce70552cbcf7b7c2d4e7fb89e48e1c19aa604121b69"
+  },
+  {
+    "path": "kubernetes/ownership.go",
+    "sha256": "354fefea2606d893699044495a7a78f25eaef2aca265136eef71a5eef90c4508"
+  },
+  {
+    "path": "kubernetes/pending_topology.go",
+    "sha256": "9b930734cd3d7995bd40cec0502ff3b2804e912ef35168636fc43594fd9d4e38"
+  },
+  {
+    "path": "kubernetes/pin.go",
+    "sha256": "9fc45424393cacc5bbb90e48c032dab658118e1a051cd7d16a616b2138277552"
+  },
+  {
+    "path": "kubernetes/protection.go",
+    "sha256": "cc08a6bc5e3940a39b0de81765d6844a92f2e8301035ab03573cf61a2e46ede8"
+  },
+  {
+    "path": "kubernetes/reclaim.go",
+    "sha256": "720715bccf98db7ac800015214b31795d0f4ea4b6406f2a82816402ac5e0e1ff"
+  },
+  {
+    "path": "kubernetes/snapshot.go",
+    "sha256": "d3ccf1f4421b38fabfeb2bc2bb91c7daf904de755def73a52efe3dfa39399601"
+  },
+  {
+    "path": "kubernetes/snapshot_test.go",
+    "sha256": "54b84d959b9b0afbcc20a625ed9a75c01a90b1885308fe8556cdb847a3926c2f"
+  },
+  {
+    "path": "kubernetes/static.go",
+    "sha256": "835f7849be38fb0d55785eee96e81d2a31c903483b604a34daf503a61ef81341"
+  },
+  {
+    "path": "ledger/attachment.go",
+    "sha256": "83425a137ca832484a1366182b964cb6d420aa1cd633c07dce0ed5d57f8741f0"
+  },
+  {
+    "path": "ledger/drain.go",
+    "sha256": "1e83f81f53c616a3741ce4e94f26eb8e78459f1b5af1d67364ec032f7e33a629"
+  },
+  {
+    "path": "ledger/lifecycle.go",
+    "sha256": "997ddfb4a5a43b3c0431121a2c92bd10cb59ce1fd05814cf91fd7bba61ca59d0"
+  },
+  {
+    "path": "ledger/lifecycle_test.go",
+    "sha256": "5ac5996d335c305562dee9e56465253cf9ceb8f66c76736a2e826bfea2674b4c"
+  },
+  {
+    "path": "ledger/postgres.go",
+    "sha256": "b2b686b371b2ad99d1cd4d21dec6d52adab8e69cf4064e48b69c049b54bad96b"
+  },
+  {
+    "path": "ledger/postgres_test.go",
+    "sha256": "6342209d05207ac341b78f5dbfdbad7d7b30e3a1c97aac58925b4cbbc2633f7a"
+  },
+  {
+    "path": "ledger/selection.go",
+    "sha256": "345e3008b82435f177244b631d81b7d6d202e45f59f79390f2443b6f36ebef03"
+  },
+  {
+    "path": "ledger/session.go",
+    "sha256": "b7232247ba82a9970bc948f694000b55d67aa54321a9dad2beaadbe0be05752e"
+  },
+  {
+    "path": "ledger/uses.go",
+    "sha256": "2fac07d3a4a2e2710f15cccc43baedf9ca029e36fa81dd4ce35cd180c851947c"
+  },
+  {
+    "path": "runtime/evidence.go",
+    "sha256": "239858759af5429e694b9e963ffaa98a93b027651d3e6dc40a0d8aa7377499f8"
+  },
+  {
+    "path": "runtime/plugin.go",
+    "sha256": "c33a04fb2d8e0b5f5c5b0cafdd2cdddb8ddb91076cab26833c35e18cc0e7a236"
+  },
+  {
+    "path": "runtime/plugin_test.go",
+    "sha256": "c1c2e3495c1043109d0f24ae2d31c7a52b1617db705d56e303fff0b898e1730f"
+  },
+  {
+    "path": "runtime/runtime.go",
+    "sha256": "b6b164306fb984fd73a7806239ad2a30379888f2cfe8053a281c4fcbf81e908f"
+  },
+  {
+    "path": "runtime/verification/adapter.go",
+    "sha256": "a7455d0dae006b46a8b837d4fdb363cf86866058802f3f9ab22c69d7448d5a6a"
+  },
+  {
+    "path": "runtime/verification/adapter_test.go",
+    "sha256": "291e5a2c5aa802813db1cf66eba09a7fb15dfa1cf9968a206bd09f57af915002"
+  }
+]

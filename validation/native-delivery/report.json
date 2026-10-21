@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "time": "2026-10-20T07:23:23.418010+00:00",
+  "scope": "local-software-delivery-and-test-tools",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "foundation",
+      "status": "passed",
+      "report": "validation/native-plugin-progress/report.json",
+      "report_sha256": "82baf26b18bdf2ec3f254dff4bd26561277f7d315e1b134bd84c06e8304cbb06"
+    },
+    {
+      "name": "database",
+      "status": "passed",
+      "report": "validation/native-database/report.json",
+      "report_sha256": "fd215563fbef3dc389b101fdcf696a5abb994305a7f368ee65f2287433884522"
+    },
+    {
+      "name": "rust_cross",
+      "status": "passed",
+      "report": "validation/native-rust-cross/current/report.json",
+      "report_sha256": "9d3adf167ea7a45524b45cabdb0d93b5b1dc1ae476a80d80e5028e9eda04c3e8"
+    },
+    {
+      "name": "portable_rust",
+      "status": "passed",
+      "report": "validation/native-rust-modules/report.json",
+      "report_sha256": "16ea37bbe55e65056d581866478dfe69be37a92719a5296d6b380707a9b5ee77"
+    },
+    {
+      "name": "deployment_render",
+      "status": "passed",
+      "report": "validation/native-deployment/report.json",
+      "report_sha256": "1cbb593389ff0b7f8ed992ec7a85b9f00bcd6599adeb46fd0573a8685f260a8f"
+    },
+    {
+      "name": "artifacts",
+      "status": "passed",
+      "report": "validation/artifacts/report.json",
+      "report_sha256": "9efee2b22121e76c64976394c9a8ef06094f4193f3c8e3cbdfc8bbe039199fb3"
+    },
+    {
+      "name": "patch_replay",
+      "status": "passed",
+      "report": "adapter/agentenvadapter/patches/agentenv-native-progress.patch.json",
+      "report_sha256": "121a14070e18e8134f2f19291bfd364f6418cd3abaeaefbfbe3f011bd484900e"
+    },
+    {
+      "name": "fault_tool_dry_run",
+      "status": "passed",
+      "report": "validation/native-delivery/fault-tool-dry-run.json",
+      "report_sha256": "fa189027a328f448ebf4fdd8ffb6f1491e6b649bf3f29b76023907722df45be7"
+    },
+    {
+      "name": "native_openapi_generation",
+      "status": "passed",
+      "report": "validation/native-delivery/openapi-generation.log"
+    },
+    {
+      "name": "foundation_source",
+      "status": "passed",
+      "changed": []
+    },
+    {
+      "name": "database_source",
+      "status": "passed",
+      "changed": []
+    },
+    {
+      "name": "rust_source",
+      "status": "passed",
+      "changed": []
+    }
+  ],
+  "software_scope_implemented": [
+    "native-gateway-scheduler-node-api",
+    "owner-run-epoch-ready-stop-evidence",
+    "pause-resume-auto-resume",
+    "joint-native-legacy-csi-capture",
+    "fork-independent-clones",
+    "template-inherit-empty-replace",
+    "offline-block-ext4-expand",
+    "standalone-fixed-placement",
+    "durable-cleanup-and-reference-gc",
+    "native-overlay-and-test-tools",
+    "prototype-removal"
+  ],
+  "acceptance": {
+    "real_environment_executed": false,
+    "vendor_csi_certified": false,
+    "full_native_rust_tests_executed": false
+  },
+  "not_executed": [
+    "Linux native Rust linking and full tests",
+    "Linux/KVM VMM and guest lifecycle",
+    "Kubernetes deployment, Guard admission, RBAC, drain",
+    "vendor CSI four binding combinations and data semantics",
+    "systemd standalone",
+    "full real fault and compatibility matrices",
+    "performance"
+  ],
+  "resolved_validation_issues": [
+    "psql URL environment parsing corrected; assertion fixture proves expected rejection",
+    "database runner now reports post-test command errors as failed",
+    "source-stability rerun after patch artifact generation"
+  ],
+  "constraints": {
+    "committed": false,
+    "pushed": false,
+    "externally_deployed": false,
+    "reference_sha256": "9733935a2c0e2d144b67c8404361c835e7f8ed45d2b508992cb230da31b3d5dc"
+  }
+}

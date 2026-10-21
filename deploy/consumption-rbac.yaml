@@ -1,0 +1,24 @@
+# Bind this role to the existing project's control-plane service account.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: {name: ssf-consumption}
+rules:
+  - apiGroups: [admissionregistration.k8s.io]
+    resources: [validatingwebhookconfigurations]
+    resourceNames: [ssf-guard]
+    verbs: [get]
+  - apiGroups: ['']
+    resources: [persistentvolumeclaims, persistentvolumes]
+    verbs: [get, list, watch, create, update, patch, delete]
+  - apiGroups: ['']
+    resources: [nodes, secrets, pods]
+    verbs: [get, list]
+  - apiGroups: [storage.k8s.io]
+    resources: [storageclasses, csinodes, csidrivers, volumeattachments]
+    verbs: [get, list, watch]
+  - apiGroups: [snapshot.storage.k8s.io]
+    resources: [volumesnapshots, volumesnapshotcontents]
+    verbs: [get, list, watch, create, delete]
+  - apiGroups: [snapshot.storage.k8s.io]
+    resources: [volumesnapshotclasses]
+    verbs: [get, list]

@@ -1,0 +1,28 @@
+{"Time":"2026-10-20T02:53:04.789658+08:00","Action":"start","Package":"ssf.dev/ssf/guard"}
+{"Time":"2026-10-20T02:53:09.375191+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestPVCDeleteRequiresPermit"}
+{"Time":"2026-10-20T02:53:09.375293+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestPVCDeleteRequiresPermit","Output":"=== RUN   TestPVCDeleteRequiresPermit\n"}
+{"Time":"2026-10-20T02:53:10.610364+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestPVCDeleteRequiresPermit","Output":"--- PASS: TestPVCDeleteRequiresPermit (1.23s)\n"}
+{"Time":"2026-10-20T02:53:10.610489+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestPVCDeleteRequiresPermit","Elapsed":1.23}
+{"Time":"2026-10-20T02:53:10.610541+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestNativePodCannotStealManagedVolume"}
+{"Time":"2026-10-20T02:53:10.610596+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestNativePodCannotStealManagedVolume","Output":"=== RUN   TestNativePodCannotStealManagedVolume\n"}
+{"Time":"2026-10-20T02:53:10.620197+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestNativePodCannotStealManagedVolume","Output":"--- PASS: TestNativePodCannotStealManagedVolume (0.01s)\n"}
+{"Time":"2026-10-20T02:53:10.625252+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestNativePodCannotStealManagedVolume","Elapsed":0.01}
+{"Time":"2026-10-20T02:53:10.687555+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestSelectedNodeNeedsPlacementPermit"}
+{"Time":"2026-10-20T02:53:10.687634+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestSelectedNodeNeedsPlacementPermit","Output":"=== RUN   TestSelectedNodeNeedsPlacementPermit\n"}
+{"Time":"2026-10-20T02:53:10.687658+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestSelectedNodeNeedsPlacementPermit","Output":"--- PASS: TestSelectedNodeNeedsPlacementPermit (0.00s)\n"}
+{"Time":"2026-10-20T02:53:10.687675+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestSelectedNodeNeedsPlacementPermit","Elapsed":0}
+{"Time":"2026-10-20T02:53:10.687692+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestSnapshotLedgerProtectionSurvivesMissingLabel"}
+{"Time":"2026-10-20T02:53:10.687706+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestSnapshotLedgerProtectionSurvivesMissingLabel","Output":"=== RUN   TestSnapshotLedgerProtectionSurvivesMissingLabel\n"}
+{"Time":"2026-10-20T02:53:10.687737+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestSnapshotLedgerProtectionSurvivesMissingLabel","Output":"--- PASS: TestSnapshotLedgerProtectionSurvivesMissingLabel (0.00s)\n"}
+{"Time":"2026-10-20T02:53:10.687764+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestSnapshotLedgerProtectionSurvivesMissingLabel","Elapsed":0}
+{"Time":"2026-10-20T02:53:10.68778+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestUnlabelledContentInheritsSnapshotProtection"}
+{"Time":"2026-10-20T02:53:10.687801+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestUnlabelledContentInheritsSnapshotProtection","Output":"=== RUN   TestUnlabelledContentInheritsSnapshotProtection\n"}
+{"Time":"2026-10-20T02:53:10.687817+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestUnlabelledContentInheritsSnapshotProtection","Output":"--- PASS: TestUnlabelledContentInheritsSnapshotProtection (0.00s)\n"}
+{"Time":"2026-10-20T02:53:10.687835+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestUnlabelledContentInheritsSnapshotProtection","Elapsed":0}
+{"Time":"2026-10-20T02:53:10.68785+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestUnmanagedOrphanContentKeepsNativeGC"}
+{"Time":"2026-10-20T02:53:10.687864+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestUnmanagedOrphanContentKeepsNativeGC","Output":"=== RUN   TestUnmanagedOrphanContentKeepsNativeGC\n"}
+{"Time":"2026-10-20T02:53:10.687906+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestUnmanagedOrphanContentKeepsNativeGC","Output":"--- PASS: TestUnmanagedOrphanContentKeepsNativeGC (0.00s)\n"}
+{"Time":"2026-10-20T02:53:10.687978+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestUnmanagedOrphanContentKeepsNativeGC","Elapsed":0}
+{"Time":"2026-10-20T02:53:10.687989+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Output":"PASS\n"}
+{"Time":"2026-10-20T02:53:11.639901+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Output":"ok  \tssf.dev/ssf/guard\t6.850s\n"}
+{"Time":"2026-10-20T02:53:11.640165+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Elapsed":6.851}

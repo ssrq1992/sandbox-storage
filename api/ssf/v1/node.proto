@@ -1,0 +1,36 @@
+syntax = "proto3";
+package ssf.v1;
+option go_package = "ssf.dev/ssf/api/ssf/v1;ssfv1";
+
+service RuntimeStorageNode {
+ rpc PrepareVolumes(PrepareRequest) returns (PrepareResponse);
+ rpc MarkRuntimeReady(RuntimeRequest) returns (Operation);
+ rpc ReleaseVolumes(RuntimeRequest) returns (Operation);
+ rpc InspectOperation(InspectRequest) returns (Operation);
+ rpc ExpandVolume(ExpandRequest) returns (Operation);
+ rpc PrepareVolumeContent(PrepareRequest) returns (VolumePreparation);
+ rpc InspectVolumePreparation(InspectRequest) returns (VolumePreparation);
+ rpc ReleaseVolumePreparation(PrepareRequest) returns (VolumePreparation);
+}
+message PrepareRequest { string request_id=1; string signed_node_plan=2; }
+message FileTree { string managed_path=1; string mount_identity=2; }
+message BlockDevice { string managed_target=1; uint32 major=2; uint32 minor=3; uint64 size_bytes=4; string device_identity=5; }
+message Endpoint {
+ string binding_uid=1; uint64 epoch=2; string guest_path=3; bool readonly=4;
+ string node_boot_id=5;
+ oneof source { FileTree file_tree=6; BlockDevice block_device=7; }
+  string volume_uid=8; uint64 volume_generation=9; string node_uid=10; string capability_revision=11;
+}
+message PrepareResponse { string operation_id=1; repeated Endpoint endpoints=2; }
+message RuntimeRequest { string request_id=1; string operation_id=2; string sandbox_instance_uid=3; string evidence=4; string signed_node_plan=5; }
+message InspectRequest { string operation_id=1; }
+message ExpandRequest { string operation_id=1; string binding_uid=2; int64 capacity_bytes=3; }
+message Operation { string operation_id=1; string state=2; string reason=3; uint64 retry_after_ms=4; }
+message ErrorDetail { string operation_id=1; string reason=2; uint64 retry_after_ms=3; }
+message VolumePreparation {
+ string operation_id=1;
+ string state=2;
+ string receipt_json=3;
+ string reason=4;
+ string protocol=5;
+}

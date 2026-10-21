@@ -1,0 +1,18 @@
+warning: use of deprecated method `std::sync::atomic::Atomic::<i64>::fetch_update`: renamed to `try_update` for consistency
+   --> storage/overlaybd/src/download_gate.rs:187:10
+    |
+187 |         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+    |          ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+187 -         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+187 +         .try_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+    |
+
+warning: `overlaybd` (lib) generated 1 warning (run `cargo fix --lib -p overlaybd` to apply 1 suggestion)
+    Checking agentenv v0.2.3 (/Users/admin/work/agent/agent-runtime/sandboxVolume/AgentENV)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.15s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`

@@ -1,0 +1,40 @@
+{
+  "scope": "source-followup-after-foundation",
+  "rust_format_exit_code": 0,
+  "agentenv_typechecked": false,
+  "changed_since_foundation": [
+    "SSF/adapter/agentenvadapter/patches/agentenv-native-progress.patch.json",
+    "AgentENV/src/api/impls/sandbox.rs",
+    "AgentENV/src/sandbox/mod.rs",
+    "AgentENV/src/sandbox/custom_extension/storage.rs",
+    "AgentENV/src/sandbox/firecracker/sandbox.rs"
+  ],
+  "go_source_unchanged": true,
+  "rust_source_sha256": {
+    "AgentENV/src/api/impls/auth.rs": "2b176f2dcf335f13c31e19db4fb4e7a528c59dbb33fa14a77fa0e3e20ca56abe",
+    "AgentENV/src/api/impls/mod.rs": "cd7d033ac92a71987b45b4b2655c4efca8720f0013f06146eefba6ba4a41952f",
+    "AgentENV/src/api/impls/sandbox.rs": "75d48ee34cb9b08aea7234876ab231f52bc14857867170469bd2cc6086efe050",
+    "AgentENV/src/api/impls/storage.rs": "1821bd58f56cef75deaeeb390f7d581ac81f34bb469f81d129257c204a196233",
+    "AgentENV/src/api/impls/volume_provider.rs": "477dbfd0b882ff6a00eee74bbe06ab90993225d651ddc8c42faabd0a57d97529",
+    "AgentENV/src/api/impls/volumes.rs": "7cc7b29c8c943c2c9f5423f3e963e0252b36dfaaba703e24c8d6c0a6118271e4",
+    "AgentENV/src/api/server.rs": "d4f444bc9de6245bcade251b97dbb37dedb3e7722c3adc336949b55960cb95c9",
+    "AgentENV/src/cfg.rs": "79bc918c332f9bff812063bfe415b4bdcce94ac60cd786e98023dbf0a91a40c6",
+    "AgentENV/src/orchestrator/launch_plan.rs": "6a7200d0625bcc0219f7de90777979ebfdc6a31722b6782352a329347383568b",
+    "AgentENV/src/orchestrator/persistence/file_backed.rs": "a21f1888273b5020ed88352820d0139b5ab780b43d9f59fdfc0c97a813d5bdb7",
+    "AgentENV/src/orchestrator/service.rs": "64ca99af40398dceb27752a685f9ce7d3ad556a204d9bf3f87d251aa967ea8f1",
+    "AgentENV/src/orchestrator/store/metadata.rs": "aa48934b0688328cff053c50b8fdddc27a6a3a4b6c38dc5ff58320c9789e2792",
+    "AgentENV/src/sandbox/backend.rs": "8a6371b1ba34fd166d882cdc9f2086a1f814cdc8bfc2e6608002d83fdcb64ca6",
+    "AgentENV/src/sandbox/custom_extension/mod.rs": "d77fd68b5f7f39cfd125371fb3cd47b8488984a7b83d99d3cfa97e12faf40b71",
+    "AgentENV/src/sandbox/custom_extension/storage.rs": "f66d6425bc98d27c6c0a19121eb6bb4e384efee9b7a992aa483d18c014f13b48",
+    "AgentENV/src/sandbox/firecracker/config.rs": "b374f5f6e16f02e0ca6688c2dae592907475840c2a6152851411bfe49f890f05",
+    "AgentENV/src/sandbox/firecracker/factory.rs": "ddbaef7e89bd52d6b10c79c8014503066458eaffe179fff4352df34ef9a733f0",
+    "AgentENV/src/sandbox/firecracker/sandbox.rs": "b63a9103a605b882be7ba2dc5cdf85104fb193037fe87126f9a98f1fa9919a11",
+    "AgentENV/src/sandbox/manifest.rs": "37c77f391f24947388006e9c7819f1315d7bca7987957e5680d3738cdc643ee5",
+    "AgentENV/src/sandbox/mod.rs": "b2a3957b89fd32faffb36018451756e4c6aa541e8d1905c91bac6284617e6500",
+    "AgentENV/src/sandbox/storage/artifacts.rs": "5b535cfc3eb20830a9e66abc4a5ca35c385ac7d3502433d6e93943adc008f1b5",
+    "AgentENV/src/sandbox/storage/devices.rs": "a33e33b10c14762130a7fd63c62127f7fe14ae2b27f745e403821058715bd072",
+    "AgentENV/src/sandbox/storage/freeze.rs": "30eb777ca71c220214fe403b91dcd3548105509602c2ae6948aba5b03d604cad",
+    "AgentENV/src/sandbox/storage/mod.rs": "7cc1d4e0280d43c92fa18b56a8201b1e49d0744a523c766947baeb00fcbf0e24",
+    "AgentENV/src/snapshot/manager.rs": "f0942e0750627e2842222bcbe72450ec9be78eacef6ab9808069f3522c261d71"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "Listen": "127.0.0.1:9443",
+  "HealthListen": "127.0.0.1:9093",
+  "Root": "/var/lib/ssf",
+  "PlanPublicKey": "/etc/agentenv-storage/plan.pub",
+  "Cert": "/etc/ssf-node-tls/tls.crt",
+  "Key": "/etc/ssf-node-tls/tls.key",
+  "CA": "/etc/ssf-node-tls/ca.crt",
+  "AllowedPeers": [
+    "spiffe://ssf/agentenv/node",
+    "spiffe://ssf/agentenv/scheduler"
+  ],
+  "EvidenceEndpoint": "https://127.0.0.1:9444/v1/evidence",
+  "Drivers": [
+    {
+      "Name": "example.csi.driver",
+      "NodeEndpoint": "unix:///var/lib/kubelet/plugins/example.csi.driver/csi.sock",
+      "Revision": "1"
+    }
+  ],
+  "NodeName": "worker-1",
+  "Kubeconfig": "/etc/agentenv-storage/kubeconfig",
+  "PreparationEndpoint": "http://127.0.0.1:9445/storage/volume-preparation",
+  "PreparationTokenFile": "/etc/agentenv-storage/hook-token"
+}

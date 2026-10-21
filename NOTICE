@@ -1,0 +1,11 @@
+SSF implementation, 2026.
+
+Architecture and CSI client/workflow separation reference:
+  https://github.com/agent-substrate/substrate
+  commit 6edd1fccfc9d8a0c0c21db31cb1125336edce442
+  internal/volume/csi, cmd/atelet/volumes.go, ateapi resume workflow.
+
+Substrate is licensed under Apache License 2.0, copyright 2026 Google LLC.
+SSF's handwritten implementation is independent; it does not import Substrate
+internal packages or copy its Actor/worker lifecycle. Standard CSI and generated
+protobuf code retain their dependency/module licensing.

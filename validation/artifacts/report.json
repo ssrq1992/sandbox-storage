@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "errors": [],
+  "checks": [
+    "relative Markdown links",
+    "core dependency boundary",
+    "protected CSI document SHA256",
+    "JSON parsing",
+    "bash syntax"
+  ]
+}

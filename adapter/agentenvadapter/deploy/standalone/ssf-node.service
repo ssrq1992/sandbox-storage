@@ -1,0 +1,16 @@
+[Unit]
+Description=SSF CSI node consumer
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/ssf-node -config /etc/agentenv-storage/ssf-node.json
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=180
+KillSignal=SIGTERM
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

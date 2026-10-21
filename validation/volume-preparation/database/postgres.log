@@ -1,0 +1,77 @@
+2026-10-21 01:20:13.001 CST [82449] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-21 01:20:13.001 CST [82449] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-rzmp26gs/socket/.s.PGSQL.5432"
+2026-10-21 01:20:13.007 CST [82452] LOG:  database system was shut down at 2026-10-21 01:20:12 CST
+2026-10-21 01:20:13.009 CST [82449] LOG:  database system is ready to accept connections
+2026-10-21 01:20:38.392 CST [82449] LOG:  received fast shutdown request
+2026-10-21 01:20:38.392 CST [82449] LOG:  aborting any active transactions
+2026-10-21 01:20:38.393 CST [82449] LOG:  background worker "logical replication launcher" (PID 82455) exited with exit code 1
+2026-10-21 01:20:38.393 CST [82450] LOG:  shutting down
+2026-10-21 01:20:38.394 CST [82450] LOG:  checkpoint starting: shutdown immediate
+2026-10-21 01:20:38.493 CST [82450] LOG:  checkpoint complete: wrote 1961 buffers (12.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.039 s, sync=0.060 s, total=0.100 s; sync files=772, longest=0.001 s, average=0.001 s; distance=9325 kB, estimate=9325 kB; lsn=0/1DAE3A0, redo lsn=0/1DAE3A0
+2026-10-21 01:20:38.499 CST [82449] LOG:  database system is shut down
+2026-10-21 01:43:29.882 CST [83996] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-21 01:43:29.883 CST [83996] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-sy0_gzor/socket/.s.PGSQL.5432"
+2026-10-21 01:43:29.888 CST [83999] LOG:  database system was shut down at 2026-10-21 01:43:29 CST
+2026-10-21 01:43:29.891 CST [83996] LOG:  database system is ready to accept connections
+2026-10-21 01:43:52.252 CST [83996] LOG:  received fast shutdown request
+2026-10-21 01:43:52.252 CST [83996] LOG:  aborting any active transactions
+2026-10-21 01:43:52.253 CST [83996] LOG:  background worker "logical replication launcher" (PID 84002) exited with exit code 1
+2026-10-21 01:43:52.253 CST [83997] LOG:  shutting down
+2026-10-21 01:43:52.254 CST [83997] LOG:  checkpoint starting: shutdown immediate
+2026-10-21 01:43:52.309 CST [83997] LOG:  checkpoint complete: wrote 1036 buffers (6.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.024 s, sync=0.031 s, total=0.056 s; sync files=407, longest=0.001 s, average=0.001 s; distance=4969 kB, estimate=4969 kB; lsn=0/196D2B8, redo lsn=0/196D2B8
+2026-10-21 01:43:52.315 CST [83996] LOG:  database system is shut down
+2026-10-21 02:03:29.722 CST [86510] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-21 02:03:29.723 CST [86510] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-97p1pmfh/socket/.s.PGSQL.5432"
+2026-10-21 02:03:29.730 CST [86513] LOG:  database system was shut down at 2026-10-21 02:03:29 CST
+2026-10-21 02:03:29.733 CST [86510] LOG:  database system is ready to accept connections
+2026-10-21 02:04:14.697 CST [86510] LOG:  received fast shutdown request
+2026-10-21 02:04:14.698 CST [86510] LOG:  aborting any active transactions
+2026-10-21 02:04:14.699 CST [86510] LOG:  background worker "logical replication launcher" (PID 86516) exited with exit code 1
+2026-10-21 02:04:14.699 CST [86511] LOG:  shutting down
+2026-10-21 02:04:14.700 CST [86511] LOG:  checkpoint starting: shutdown immediate
+2026-10-21 02:04:14.892 CST [86511] LOG:  checkpoint complete: wrote 1965 buffers (12.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.085 s, sync=0.106 s, total=0.193 s; sync files=772, longest=0.004 s, average=0.001 s; distance=9345 kB, estimate=9345 kB; lsn=0/1DB2FE0, redo lsn=0/1DB2FE0
+2026-10-21 02:04:14.902 CST [86510] LOG:  database system is shut down
+2026-10-21 02:06:18.074 CST [93429] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-21 02:06:18.075 CST [93429] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-lplsvl24/socket/.s.PGSQL.5432"
+2026-10-21 02:06:18.086 CST [93433] LOG:  database system was shut down at 2026-10-21 02:06:17 CST
+2026-10-21 02:06:18.094 CST [93429] LOG:  database system is ready to accept connections
+2026-10-21 02:07:03.475 CST [93429] LOG:  received fast shutdown request
+2026-10-21 02:07:03.475 CST [93429] LOG:  aborting any active transactions
+2026-10-21 02:07:03.477 CST [93429] LOG:  background worker "logical replication launcher" (PID 93436) exited with exit code 1
+2026-10-21 02:07:03.477 CST [93431] LOG:  shutting down
+2026-10-21 02:07:03.477 CST [93431] LOG:  checkpoint starting: shutdown immediate
+2026-10-21 02:07:03.652 CST [93431] LOG:  checkpoint complete: wrote 1968 buffers (12.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.081 s, sync=0.093 s, total=0.176 s; sync files=773, longest=0.001 s, average=0.001 s; distance=9384 kB, estimate=9384 kB; lsn=0/1DBCD20, redo lsn=0/1DBCD20
+2026-10-21 02:07:03.665 CST [93429] LOG:  database system is shut down
+2026-10-21 02:16:22.721 CST [10507] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-21 02:16:22.722 CST [10507] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-egd6svja/socket/.s.PGSQL.5432"
+2026-10-21 02:16:22.731 CST [10510] LOG:  database system was shut down at 2026-10-21 02:16:22 CST
+2026-10-21 02:16:22.738 CST [10507] LOG:  database system is ready to accept connections
+2026-10-21 02:16:59.748 CST [10507] LOG:  received fast shutdown request
+2026-10-21 02:16:59.749 CST [10507] LOG:  aborting any active transactions
+2026-10-21 02:16:59.750 CST [10507] LOG:  background worker "logical replication launcher" (PID 10513) exited with exit code 1
+2026-10-21 02:16:59.751 CST [10508] LOG:  shutting down
+2026-10-21 02:16:59.751 CST [10508] LOG:  checkpoint starting: shutdown immediate
+2026-10-21 02:16:59.905 CST [10508] LOG:  checkpoint complete: wrote 1968 buffers (12.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.067 s, sync=0.086 s, total=0.155 s; sync files=773, longest=0.001 s, average=0.001 s; distance=9384 kB, estimate=9384 kB; lsn=0/1DBCD60, redo lsn=0/1DBCD60
+2026-10-21 02:16:59.914 CST [10507] LOG:  database system is shut down
+2026-10-21 02:25:18.489 CST [14376] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-21 02:25:18.490 CST [14376] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-g4vby55m/socket/.s.PGSQL.5432"
+2026-10-21 02:25:18.494 CST [14379] LOG:  database system was shut down at 2026-10-21 02:25:18 CST
+2026-10-21 02:25:18.497 CST [14376] LOG:  database system is ready to accept connections
+2026-10-21 02:25:45.849 CST [14376] LOG:  received fast shutdown request
+2026-10-21 02:25:45.850 CST [14376] LOG:  aborting any active transactions
+2026-10-21 02:25:45.851 CST [14376] LOG:  background worker "logical replication launcher" (PID 14382) exited with exit code 1
+2026-10-21 02:25:45.851 CST [14377] LOG:  shutting down
+2026-10-21 02:25:45.852 CST [14377] LOG:  checkpoint starting: shutdown immediate
+2026-10-21 02:25:45.950 CST [14377] LOG:  checkpoint complete: wrote 1970 buffers (12.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.040 s, sync=0.058 s, total=0.099 s; sync files=773, longest=0.001 s, average=0.001 s; distance=9408 kB, estimate=9408 kB; lsn=0/1DC2C68, redo lsn=0/1DC2C68
+2026-10-21 02:25:45.958 CST [14376] LOG:  database system is shut down
+2026-10-21 02:28:07.870 CST [14776] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-21 02:28:07.871 CST [14776] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-h_vmbv80/socket/.s.PGSQL.5432"
+2026-10-21 02:28:07.879 CST [14779] LOG:  database system was shut down at 2026-10-21 02:28:07 CST
+2026-10-21 02:28:07.883 CST [14776] LOG:  database system is ready to accept connections
+2026-10-21 02:28:56.608 CST [14776] LOG:  received fast shutdown request
+2026-10-21 02:28:56.609 CST [14776] LOG:  aborting any active transactions
+2026-10-21 02:28:56.612 CST [14776] LOG:  background worker "logical replication launcher" (PID 14782) exited with exit code 1
+2026-10-21 02:28:56.613 CST [14777] LOG:  shutting down
+2026-10-21 02:28:56.613 CST [14777] LOG:  checkpoint starting: shutdown immediate
+2026-10-21 02:28:56.818 CST [14777] LOG:  checkpoint complete: wrote 1970 buffers (12.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.077 s, sync=0.126 s, total=0.206 s; sync files=773, longest=0.005 s, average=0.001 s; distance=9409 kB, estimate=9409 kB; lsn=0/1DC33A8, redo lsn=0/1DC33A8
+2026-10-21 02:28:56.834 CST [14776] LOG:  database system is shut down

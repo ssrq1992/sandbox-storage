@@ -1,0 +1,130 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ssf-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata: {name: ssf-node, namespace: ssf-system}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata: {name: ssf-guard, namespace: ssf-system}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: {name: ssf-node}
+rules:
+  - apiGroups: ['']
+    resources: [secrets]
+    verbs: [get]
+  - apiGroups: ['']
+    resources: [persistentvolumeclaims, persistentvolumes, nodes]
+    verbs: [get]
+  - apiGroups: [storage.k8s.io]
+    resources: [csinodes]
+    verbs: [get]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata: {name: ssf-node}
+roleRef: {apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: ssf-node}
+subjects: [{kind: ServiceAccount, name: ssf-node, namespace: ssf-system}]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: {name: ssf-guard}
+rules:
+  - apiGroups: [snapshot.storage.k8s.io]
+    resources: [volumesnapshots, volumesnapshotcontents]
+    verbs: [get]
+  - apiGroups: [storage.k8s.io]
+    resources: [storageclasses]
+    verbs: [get]
+  - apiGroups: ['']
+    resources: [persistentvolumeclaims]
+    verbs: [get]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata: {name: ssf-guard}
+roleRef: {apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: ssf-guard}
+subjects: [{kind: ServiceAccount, name: ssf-guard, namespace: ssf-system}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: ssf-guard, namespace: ssf-system}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: ssf-guard}}
+  template:
+    metadata: {labels: {app: ssf-guard}}
+    spec:
+      serviceAccountName: ssf-guard
+      containers:
+        - name: guard
+          image: ssf:0.1.0
+          command: [ssf-guard]
+          args: [-config, /etc/ssf/config.json]
+          ports: [{name: https, containerPort: 9443}]
+          env:
+            - name: SSF_DATABASE_URL
+              valueFrom: {secretKeyRef: {name: ssf-ledger, key: url}}
+          readinessProbe: {httpGet: {path: /readyz, port: https, scheme: HTTPS}}
+          resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {memory: 512Mi}}
+          securityContext: {runAsNonRoot: true, readOnlyRootFilesystem: true, allowPrivilegeEscalation: false}
+          volumeMounts:
+            - {name: config, mountPath: /etc/ssf, readOnly: true}
+            - {name: tls, mountPath: /etc/ssf-tls, readOnly: true}
+      volumes:
+        - name: config
+          configMap: {name: ssf-guard-config}
+        - name: tls
+          secret: {secretName: ssf-guard-tls}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: ssf-guard, namespace: ssf-system}
+spec:
+  selector: {app: ssf-guard}
+  ports: [{port: 443, targetPort: https}]
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata: {name: ssf-node, namespace: ssf-system}
+spec:
+  selector: {matchLabels: {app: ssf-node}}
+  template:
+    metadata: {labels: {app: ssf-node}}
+    spec:
+      serviceAccountName: ssf-node
+      nodeSelector: {kubernetes.io/os: linux, ssf.dev/enabled: 'true'}
+      containers:
+        - name: node
+          image: ssf:0.1.0
+          command: [ssf-node]
+          args: [-config, /etc/ssf/config.json]
+          env:
+            - name: SSF_NODE_NAME
+              valueFrom: {fieldRef: {fieldPath: spec.nodeName}}
+          ports: [{name: grpc, containerPort: 9443}, {name: health, containerPort: 9090}]
+          securityContext: {privileged: true, runAsUser: 0}
+          resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {memory: 1Gi}}
+          livenessProbe: {httpGet: {path: /livez, port: health}}
+          volumeMounts:
+            - {name: config, mountPath: /etc/ssf, readOnly: true}
+            - {name: tls, mountPath: /etc/ssf-tls, readOnly: true}
+            - {name: state, mountPath: /var/lib/ssf, mountPropagation: Bidirectional}
+            - {name: plugins, mountPath: /var/lib/kubelet/plugins, readOnly: true}
+            - {name: dev, mountPath: /dev}
+      volumes:
+        - name: config
+          configMap: {name: ssf-node-config}
+        - name: tls
+          secret: {secretName: ssf-node-tls}
+        - name: state
+          hostPath: {path: /var/lib/ssf, type: DirectoryOrCreate}
+        - name: plugins
+          hostPath: {path: /var/lib/kubelet/plugins, type: Directory}
+        - name: dev
+          hostPath: {path: /dev, type: Directory}

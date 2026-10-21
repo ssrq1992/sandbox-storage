@@ -1,0 +1,6 @@
+{
+  "scope": "tool-contract-only",
+  "status": "passed",
+  "external_commands_executed": false,
+  "real_fault_injection_executed": false
+}

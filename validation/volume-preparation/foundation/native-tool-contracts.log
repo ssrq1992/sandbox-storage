@@ -1,0 +1,14 @@
+test_api_does_not_accept_200_for_create (test_native_lifecycle_tools.NativeToolTests.test_api_does_not_accept_200_for_create) ... ok
+test_cleanup_keeps_user_volumes_and_checks_ownership (test_native_lifecycle_tools.NativeToolTests.test_cleanup_keeps_user_volumes_and_checks_ownership) ... ok
+test_guest_uses_native_proxy_and_requires_exit (test_native_lifecycle_tools.NativeToolTests.test_guest_uses_native_proxy_and_requires_exit) ... ok
+test_missing_exit_is_not_success (test_native_lifecycle_tools.NativeToolTests.test_missing_exit_is_not_success) ... ok
+test_rejection_requires_the_expected_status (test_native_lifecycle_tools.NativeToolTests.test_rejection_requires_the_expected_status) ... ok
+test_report_redacts_credentials (test_native_lifecycle_tools.NativeToolTests.test_report_redacts_credentials) ... ok
+test_truncated_stream_is_not_success (test_native_lifecycle_tools.NativeToolTests.test_truncated_stream_is_not_success) ... ok
+test_unexpected_successful_writer_is_recorded_for_cleanup (test_native_lifecycle_tools.NativeToolTests.test_unexpected_successful_writer_is_recorded_for_cleanup) ... ok
+test_vendor_settings_preserved_and_class_not_overwritten (test_volume_preparation_tools.PreparationRenderTests.test_vendor_settings_preserved_and_class_not_overwritten) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.079s
+
+OK

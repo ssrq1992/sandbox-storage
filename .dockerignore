@@ -1,0 +1,4 @@
+.git
+bin
+test-results
+sdk/rust/target

@@ -1,0 +1,440 @@
+diff --git a/src/cfg.rs b/src/cfg.rs
+index 27c2c6c..3ab7f42 100644
+--- a/src/cfg.rs
++++ b/src/cfg.rs
+@@ -656,10 +656,21 @@ pub struct OrchestratorConfig {
+ /// Custom extension service integration.
+ ///
+ /// The custom extension is an external HTTP service that extends node
+-/// behavior. Its only current capability is sandbox lifecycle hooks
+-/// (`/sandbox-hook/*`), but more may be added in the future.
++/// behavior through lifecycle hooks (`/sandbox-hook/*`) and an optional generic
++/// external block provider (`/storage/*`). Both are disabled by default.
+ #[derive(Debug, Config, Clone)]
+ pub struct CustomExtensionConfig {
++    /// Require a generic external-storage launch ticket on dedicated nodes.
++    #[config(default = false, env = "AENV_EXTERNAL_STORAGE_REQUIRED")]
++    pub storage_required: bool,
++    #[config(default = "/var/lib/agentenv-external")]
++    pub storage_state_dir: PathBuf,
++    #[config(default = "/var/lib/ssf")]
++    pub storage_device_root: PathBuf,
++    /// The last N reserved volume slots are read-only in new templates.
++    #[config(default = 0usize)]
++    pub storage_readonly_slots: usize,
++
+     /// Optional HTTP base URL of the custom extension service.
+     /// When unset, the custom extension integration is fully disabled.
+     #[config(env = "AENV_CUSTOM_EXTENSION_URL", parse_env = parse_trimmed_string)]
+diff --git a/src/orchestrator/service.rs b/src/orchestrator/service.rs
+index 06c1d9c..1844ccd 100644
+--- a/src/orchestrator/service.rs
++++ b/src/orchestrator/service.rs
+@@ -417,6 +417,14 @@ where
+     /// This call only returns after the sandbox is fully ready and persisted
+     /// as `Running`, so callers can treat a successful return as immediately
+     /// usable without additional polling.
++    async fn reject_external_lifecycle(&self, id: SandboxId) -> Result<()> {
++        if let Some(metadata) = self.store.get(&id).await? {
++            crate::sandbox::custom_extension::storage::reject_managed(metadata.custom_extension_params.as_ref())
++                .map_err(|e| OrchestratorError::InternalError(e.to_string()))?;
++        }
++        Ok(())
++    }
++
+     pub async fn create_sandbox(
+         self: &Arc<Self>,
+         request: CreateSandboxRequest,
+@@ -471,6 +479,11 @@ where
+             extra_drives: launch_extra_drives,
+             extra_drives_in_snapshot,
+         } = request;
++        if crate::sandbox::custom_extension::storage::requested(custom_extension_params.as_ref()) {
++            if auto_resume || !matches!(timeout_action, super::SandboxTimeoutAction::Delete) {
++                return Err(OrchestratorError::InternalError("external storage requires delete-on-timeout and disables automatic resume".into()));
++            }
++        }
+         let envd_access_token = secure.then(|| self.access_tokens.generate(sandbox_id));
+         info!(timeout = ?timeout, "creating sandbox");
+ 
+@@ -632,6 +645,7 @@ where
+         count: u32,
+         new_timeout: NewTimeout,
+     ) -> Result<Vec<SandboxForkOutcome>> {
++        self.reject_external_lifecycle(source_sandbox_id).await?;
+         if self
+             .store
+             .get(&source_sandbox_id)
+@@ -658,6 +672,7 @@ where
+         child_specs: Vec<SandboxForkChildSpec>,
+         new_timeout: NewTimeout,
+     ) -> Result<Vec<SandboxForkOutcome>> {
++        self.reject_external_lifecycle(source_sandbox_id).await?;
+         let this = Arc::clone(self);
+         self.run_cancellation_safe("fork", source_sandbox_id, async move {
+             this.fork_sandbox_inner(source_sandbox_id, child_specs, new_timeout)
+@@ -1389,6 +1404,7 @@ where
+     /// sandbox (`Pausing` state), this call waits for it to complete and then
+     /// returns the outcome rather than duplicating the work.
+     pub async fn pause_sandbox(self: &Arc<Self>, sandbox_id: SandboxId) -> Result<()> {
++        self.reject_external_lifecycle(sandbox_id).await?;
+         let this = Arc::clone(self);
+         self.run_cancellation_safe("pause", sandbox_id, async move {
+             this.pause_sandbox_inner(sandbox_id).await
+@@ -1633,6 +1649,7 @@ where
+         sandbox_id: SandboxId,
+         timeout: NewTimeout,
+     ) -> Result<SandboxMetadata> {
++        self.reject_external_lifecycle(sandbox_id).await?;
+         let this = Arc::clone(self);
+         self.run_cancellation_safe("resume", sandbox_id, async move {
+             this.resume_sandbox_inner(sandbox_id, timeout).await
+@@ -1767,6 +1784,7 @@ where
+         self: &Arc<Self>,
+         sandbox_id: SandboxId,
+     ) -> Result<SnapshotCaptureResult> {
++        self.reject_external_lifecycle(sandbox_id).await?;
+         let this = Arc::clone(self);
+         self.run_cancellation_safe("snapshot", sandbox_id, async move {
+             this.capture_snapshot_inner(sandbox_id).await
+@@ -1861,6 +1879,7 @@ where
+     /// Seals writable persistent-volume uppers without capturing the VM's
+     /// rootfs, memory, or device state so callers can clone them locally.
+     pub async fn snapshot_volume_mounts(self: &Arc<Self>, sandbox_id: SandboxId) -> Result<()> {
++        self.reject_external_lifecycle(sandbox_id).await?;
+         let this = Arc::clone(self);
+         self.run_cancellation_safe("snapshot_volumes", sandbox_id, async move {
+             this.snapshot_volume_mounts_inner(sandbox_id).await
+@@ -2009,6 +2028,7 @@ where
+         sandbox_id: SandboxId,
+         patch: serde_json::Map<String, serde_json::Value>,
+     ) -> Result<Option<CustomExtensionParams>> {
++        self.reject_external_lifecycle(sandbox_id).await?;
+         let this = Arc::clone(self);
+         self.run_cancellation_safe("patch_custom_extension_params", sandbox_id, async move {
+             this.patch_sandbox_custom_extension_params_inner(sandbox_id, patch)
+@@ -2812,7 +2832,7 @@ where
+                         unreachable!("paused sandboxes should have been filtered out")
+                     }
+                     SandboxState::Running => {
+-                        let result = if metadata.template_builder {
++                        let result = if metadata.template_builder || crate::sandbox::custom_extension::storage::requested(metadata.custom_extension_params.as_ref()) {
+                             self.delete_sandbox_inner(sandbox_id).await
+                         } else {
+                             self.pause_sandbox_inner(sandbox_id).await
+diff --git a/src/sandbox/custom_extension/mod.rs b/src/sandbox/custom_extension/mod.rs
+index 5f31f4e..b69bb3e 100644
+--- a/src/sandbox/custom_extension/mod.rs
++++ b/src/sandbox/custom_extension/mod.rs
+@@ -1,8 +1,9 @@
+ //! Custom extension integration: an optional external HTTP service
+-//! (`[custom_extension].url`) extending sandbox behavior. Its only current
+-//! capability is sandbox lifecycle hooks; see [`client`].
++//! (`[custom_extension].url`) extending sandbox behavior through lifecycle
++//! hooks and an optional generic external block provider; see [`client`] and [`storage`].
+ 
+ pub(crate) mod client;
++pub(crate) mod storage;
+ 
+ pub(crate) use client::{
+     custom_extension_params_is_empty, CustomExtensionClient, CustomExtensionHookGuard,
+diff --git a/src/sandbox/firecracker/config.rs b/src/sandbox/firecracker/config.rs
+index 0cb3999..ef35466 100644
+--- a/src/sandbox/firecracker/config.rs
++++ b/src/sandbox/firecracker/config.rs
+@@ -158,6 +158,8 @@ pub struct FirecrackerCommonConfig {
+     /// Existing placeholder drives that can be rebound to launch-time volumes.
+     #[serde(default)]
+     pub volume_drive_slots: usize,
++    #[serde(default)]
++    pub volume_readonly_slots: usize,
+     pub ublk_config: Option<UblkConfig>,
+     /// Cluster-wide CPU intersection received from the scheduler.
+     /// When set, applied via `PUT /cpu-config` before the VM boots.
+@@ -207,6 +209,7 @@ impl FirecrackerCommonConfig {
+             extra_drives: Vec::new(),
+             physical_extra_drive_count: 0,
+             volume_drive_slots: 0,
++            volume_readonly_slots: 0,
+             ublk_config: None,
+             cpu_config_json: None,
+             network_policy: None,
+@@ -547,6 +550,7 @@ impl FirecrackerSnapshotConfig {
+             extra_drives,
+             physical_extra_drive_count,
+             volume_drive_slots: manifest.volume_drive_slots,
++            volume_readonly_slots: manifest.volume_readonly_slots,
+             ..base_common
+         };
+ 
+diff --git a/src/sandbox/firecracker/sandbox.rs b/src/sandbox/firecracker/sandbox.rs
+index 6fb27b5..a54d768 100644
+--- a/src/sandbox/firecracker/sandbox.rs
++++ b/src/sandbox/firecracker/sandbox.rs
+@@ -27,6 +27,7 @@ use crate::sandbox::custom_extension::{
+     CustomExtensionClient, CustomExtensionHookGuard, CustomExtensionParams,
+ };
+ use crate::sandbox::manifest::SandboxSnapshotManifest;
++use crate::sandbox::custom_extension::storage::ExternalStorage;
+ 
+ use crate::cfg::ConfigManager;
+ use crate::sandbox::access::EnvdAccessToken;
+@@ -198,6 +199,8 @@ pub struct FirecrackerSandbox {
+     /// waits out the fallback with no notification.
+     rootfs_image_config_path: Option<PathBuf>,
+     extra_drive_runtimes: Vec<OverlaybdRuntimeHandle>,
++    external_storage: Option<ExternalStorage>,
++    external_resources: Option<(u32, u64)>,
+     frozen_volume_mounts: Vec<(PathBuf, String)>,
+     /// Drives added to a committed snapshot at launch time are not represented
+     /// in its guest mount namespace. Mount only those drives after envd is
+@@ -697,7 +700,12 @@ impl FirecrackerSandbox {
+             tools_drive_version = %config.common.tools_drive_version,
+             "creating fresh firecracker sandbox"
+         );
+-        Self::build(id, LaunchMode::Fresh(config))
++        config.common.volume_readonly_slots = ConfigManager::global_config()
++            .custom_extension.storage_readonly_slots.min(config.common.volume_drive_slots);
++        let resources = (config.vcpu_count, u64::from(config.mem_size_mib));
++        let mut sandbox = Self::build(id, LaunchMode::Fresh(config))?;
++        sandbox.external_resources = Some(resources);
++        Ok(sandbox)
+     }
+ 
+     /// Create a sandbox handle that resumes from the provided snapshot config.
+@@ -779,6 +787,7 @@ impl FirecrackerSandbox {
+             launch_config.sandbox_id,
+             LaunchMode::Resume(snapshot_config),
+         )?;
++        sandbox.external_resources = Some((snapshot.resources().cpu_count, u64::from(snapshot.resources().memory_mib)));
+         sandbox.initial_guest_drive_mounts = initial_guest_drive_mounts;
+         Ok(sandbox)
+     }
+@@ -857,9 +866,21 @@ impl FirecrackerSandbox {
+     /// This only waits for the Firecracker API socket to be available and
+     /// returns immediately after VM start command is issued.
+     pub(crate) async fn start_nowait(&mut self) -> Result<()> {
++        if self.external_storage.is_none() {
++            let (cpu, memory) = self.external_resources.unwrap_or((0, 0));
++            self.external_storage = ExternalStorage::prepare(
++                self.id, self.launch.common().custom_extension_params.as_ref(), cpu, memory,
++            ).await?;
++            if let Some(storage) = &self.external_storage {
++                let c = self.launch.common();
++                storage.assignments(c.volume_drive_slots, c.volume_readonly_slots,
++                    c.extra_drives.len().saturating_sub(c.physical_extra_drive_count))?;
++            }
++        }
+         self.prepare_tools_drive().await?;
+         self.launch.validate()?;
+         trace!("launch config validated");
++        if let Some(storage) = &self.external_storage { storage.before_launch().await?; }
+         match &self.launch {
+             LaunchMode::Fresh(config) => self.start_fresh(config.clone()).await,
+             LaunchMode::Resume(config) => self.start_resume(config.clone()).await,
+@@ -920,6 +941,7 @@ impl FirecrackerSandbox {
+                 .notify_sandbox_ready(device_key)
+                 .await;
+         }
++        self.mount_external_drives(envd_instance.clone()).await?;
+         envd_instance
+             .init(
+                 self.launch.common().env_vars.clone(),
+@@ -937,7 +959,47 @@ impl FirecrackerSandbox {
+                 .context("Sandbox is not running")?;
+             Self::mount_initial_guest_drives(envd, self.initial_guest_drive_mounts.clone()).await?;
+         }
++        if let Some(storage) = &self.external_storage { storage.ready().await?; }
++        Ok(())
++    }
+ 
++    async fn mount_external_drives(&self, envd: EnvdInstance) -> Result<()> {
++        let Some(storage) = &self.external_storage else { return Ok(()); };
++        let c = self.launch.common();
++        for (index, d) in storage.assignments(c.volume_drive_slots, c.volume_readonly_slots,
++            c.extra_drives.len().saturating_sub(c.physical_extra_drive_count))? {
++            let letter = char::from(b'c' + (c.physical_extra_drive_count + index) as u8);
++            let device = format!("vd{letter}");
++            // Arguments are passed as argv, never interpolated into shell code.
++            let script = r#"set -eu
++BB=/agentenv/bin/busybox
++dev="$1"; target="$2"; uuid="$3"; sectors="$4"; readonly="$5"
++test "$("$BB" cat "/sys/class/block/$dev/size")" = "$sectors"
++"$BB" blkid "/dev/$dev" | "$BB" grep -F "UUID=\"$uuid\"" >/dev/null
++if [ "$readonly" = 1 ]; then
++    test "$("$BB" cat "/sys/class/block/$dev/ro")" = 1
++    opts=ro
++else
++    opts=rw
++fi
++"$BB" mkdir -p "$target"
++if ! "$BB" mountpoint -q "$target"; then
++    "$BB" mount -t ext4 -o "$opts" "/dev/$dev" "$target"
++fi
++"$BB" awk -v t="$target" -v d="/dev/$dev" -v ro="$readonly" '
++ $2==t { if ($1!=d || $3!="ext4") exit 2; n=split($4,a,","); for(i=1;i<=n;i++) if(a[i]==(ro==1?"ro":"rw")) ok=1 }
++ END {if(!ok) exit 3}' /proc/mounts
++"#;
++            let envd = envd.clone();
++            let args = vec!["sh".into(), "-c".into(), script.into(), "--".into(), device,
++                d.guest_path.to_string_lossy().into_owned(), d.uuid.clone(), (d.bytes / 512).to_string(),
++                if d.readonly { "1" } else { "0" }.into()];
++            let output = tokio::task::spawn_blocking(move || {
++                tokio::runtime::Handle::current().block_on(Self::run_guest_command(
++                    envd, "/agentenv/bin/busybox".into(), args))
++            }).await??;
++            anyhow::ensure!(output.exit_code == 0, "external guest mount verification failed: {}", output.stderr);
++        }
+         Ok(())
+     }
+ 
+@@ -1159,6 +1221,7 @@ impl FirecrackerSandbox {
+         &mut self,
+         snapshot_dir: &Path,
+     ) -> Result<(FirecrackerSnapshotConfig, SandboxSnapshotManifest)> {
++        anyhow::ensure!(self.external_storage.is_none(), "pause unsupported for externally managed storage");
+         debug!(snapshot_dir = %snapshot_dir.display(), "pausing sandbox");
+         if self.has_writable_persistent_volumes() {
+             let envd = self
+@@ -1187,6 +1250,7 @@ impl FirecrackerSandbox {
+         &self,
+         snapshot_dir: &Path,
+     ) -> Result<(FirecrackerSnapshotConfig, SandboxSnapshotManifest)> {
++        anyhow::ensure!(self.external_storage.is_none(), "snapshot unsupported for externally managed storage");
+         let vm_state_path = snapshot_dir.join(VM_STATE_FILE_NAME);
+         // Local layers are always captured raw; when enabled, compression
+         // happens once at publish time under `[snapshot.publish_compression]`.
+@@ -1313,6 +1377,7 @@ impl FirecrackerSandbox {
+         )
+         .context("build firecracker snapshot manifest")?;
+         manifest.volume_drive_slots = snapshot_common.volume_drive_slots;
++        manifest.volume_readonly_slots = snapshot_common.volume_readonly_slots;
+         manifest.physical_extra_drive_count = manifest_extra_drives.len();
+ 
+         let snapshot = FirecrackerSnapshotConfig {
+@@ -1388,6 +1453,22 @@ impl FirecrackerSandbox {
+         if let Some(task) = prefetch.as_ref() {
+             task.cancel();
+         }
++        // Best-effort clean unmount before normal shutdown. Failed guest cleanup
++        // never substitutes for the subsequent confirmed VMM stop.
++        if let (Some(storage), Some(envd)) = (&self.external_storage, &self.envd_instance) {
++            for device in storage.devices.iter().rev() {
++                let envd = envd.clone();
++                let target = device.guest_path.to_string_lossy().into_owned();
++                let cleanup = tokio::task::spawn_blocking(move || {
++                    tokio::runtime::Handle::current().block_on(Self::run_guest_command(envd,
++                        "/agentenv/bin/busybox".into(), vec!["sh".into(), "-c".into(),
++                        "/agentenv/bin/busybox sync; /agentenv/bin/busybox umount \"$1\"".into(), "--".into(), target]))
++                });
++                if let Err(error) = tokio::time::timeout(std::time::Duration::from_secs(5), cleanup).await {
++                    warn!(error = %error, "external guest cleanup timed out before stop");
++                }
++            }
++        }
+         let vm_stop = self
+             .fc_instance
+             .stop(self.runtime_policy.socket_timeout)
+@@ -1402,6 +1483,7 @@ impl FirecrackerSandbox {
+             return Err(error);
+         }
+ 
++        if let Some(storage) = &self.external_storage { storage.stopped().await?; }
+         // Clear envd instance
+         if let Some(envd) = self.envd_instance.as_ref() {
+             envd.invalidate();
+@@ -1752,6 +1834,8 @@ impl FirecrackerSandbox {
+             mem_snapshot_image_config_path: None,
+             rootfs_image_config_path: None,
+             extra_drive_runtimes: Vec::new(),
++            external_storage: None,
++            external_resources: None,
+             frozen_volume_mounts: Vec::new(),
+             initial_guest_drive_mounts: Vec::new(),
+             live_snapshot_root: None,
+@@ -1927,6 +2011,9 @@ impl FirecrackerSandbox {
+             config.common.envd_access_token.clone(),
+         ));
+ 
++        if let Some(storage) = &self.external_storage {
++            storage.starting(self.fc_instance.pid()?.as_raw() as u32).await?;
++        }
+         // ── Configure microVM: tools drive as rootfs + user image + extras ──
+         self.fc_instance
+             .wait_for_ready(
+@@ -2122,6 +2209,9 @@ impl FirecrackerSandbox {
+                 .context("Failed to configure sandbox egress policy for resume")?;
+         }
+ 
++        if let Some(storage) = &self.external_storage {
++            storage.starting(self.fc_instance.pid()?.as_raw() as u32).await?;
++        }
+         // ── Custom extension hook: start-resume ──
+         // Pack-recording VMs are throwaway recorders: hooks must not fire
+         // for them (the extension would see a phantom sandbox start/stop).
+@@ -2297,6 +2387,14 @@ impl FirecrackerSandbox {
+                     })?;
+             }
+         }
++        if let Some(storage) = &self.external_storage {
++            for (index, device) in storage.assignments(config.common.volume_drive_slots,
++                config.common.volume_readonly_slots, volume_drive_attachments.len())? {
++                let slot = &volume_slots[index];
++                self.bind_volume_drive_slot(slot, &ExternalStorage::mount(device))?;
++                self.fc_instance.patch_drive_path(&slot.drive_id, &slot.attachment_path).await?;
++            }
++        }
+         let mmds_metadata = self.mmds_metadata(&config.common);
+         self.fc_instance.set_mmds(&mmds_metadata).await?;
+ 
+@@ -2475,6 +2573,12 @@ impl FirecrackerSandbox {
+                 )
+             })?;
+         }
++        if let Some(storage) = &self.external_storage {
++            for (index, device) in storage.assignments(config.common.volume_drive_slots,
++                config.common.volume_readonly_slots, volume_drive_attachments.len())? {
++                self.bind_volume_drive_slot(&volume_slots[index], &ExternalStorage::mount(device))?;
++            }
++        }
+         self.configure_extra_drives(&volume_slots).await?;
+ 
+         if self.network_slot.is_some() {
+@@ -2545,7 +2649,7 @@ impl FirecrackerSandbox {
+             slots.push(DriveMount {
+                 drive_id,
+                 attachment_path: PathBuf::from(attachment_name),
+-                read_only: false,
++                read_only: index >= count.saturating_sub(self.launch.common().volume_readonly_slots),
+             });
+         }
+         anyhow::ensure!(
+diff --git a/src/sandbox/manifest.rs b/src/sandbox/manifest.rs
+index 29a9db9..161ee7a 100644
+--- a/src/sandbox/manifest.rs
++++ b/src/sandbox/manifest.rs
+@@ -46,6 +46,8 @@ pub struct SandboxSnapshotManifest {
+     /// Number of reserved virtio-block slots available for launch-time volumes.
+     #[serde(default)]
+     pub volume_drive_slots: usize,
++    #[serde(default)]
++    pub volume_readonly_slots: usize,
+     /// Number of attached drives represented by IDs in the Firecracker snapshot.
+     /// Launch-time volumes use the reserved slots that follow these drives.
+     #[serde(default)]
+@@ -127,6 +129,7 @@ impl SandboxSnapshotManifest {
+             },
+             attached_drives: Vec::new(),
+             volume_drive_slots: 0,
++            volume_readonly_slots: 0,
+             physical_extra_drive_count: attached_drives.len(),
+             memory_startup_pack: None,
+         }
+@@ -259,6 +262,7 @@ mod tests {
+             },
+             attached_drives: vec![known],
+             volume_drive_slots: 0,
++            volume_readonly_slots: 0,
+             physical_extra_drive_count: 1,
+             memory_startup_pack: None,
+         };

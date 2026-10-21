@@ -1,0 +1,8 @@
+{
+  "command": "cargo check --offline --locked -p agentenv --lib",
+  "host": "darwin/amd64",
+  "exit_code": 101,
+  "status": "blocked_platform",
+  "native_linux_typecheck": "not_executed",
+  "log": "rust-host-typecheck.log"
+}

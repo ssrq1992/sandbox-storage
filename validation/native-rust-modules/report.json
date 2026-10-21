@@ -1,0 +1,13 @@
+{
+  "scope": "isolated-portable-rust-safety-modules",
+  "time": "2026-10-20T07:12:21.794499+00:00",
+  "agentenv_typechecked": false,
+  "kvm_executed": false,
+  "source_sha256": {
+    "AgentENV/src/sandbox/storage/freeze.rs": "30eb777ca71c220214fe403b91dcd3548105509602c2ae6948aba5b03d604cad",
+    "AgentENV/src/sandbox/storage/artifacts.rs": "a5dc0644c006b48dbdfffb46f229bdb1afcaa7160d96373aa7f5300d0d08e842",
+    "AgentENV/src/sandbox/storage/transition.rs": "824c9733e34d29efd84ae34debf13f3b7e97fa833257a7632f3e9d49e56dcc2f"
+  },
+  "status": "passed",
+  "exit_code": 0
+}

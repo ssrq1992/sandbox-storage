@@ -1,0 +1,12 @@
+{
+  "Listen": ":9443",
+  "HealthListen": ":9090",
+  "Root": "/var/lib/ssf",
+  "PlanPublicKey": "/etc/ssf/plan.pub",
+  "Cert": "/etc/ssf-tls/tls.crt",
+  "Key": "/etc/ssf-tls/tls.key",
+  "CA": "/etc/ssf-tls/ca.crt",
+  "AllowedPeers": ["spiffe://ssf/project/node-runtime"],
+  "EvidenceEndpoint": "https://runtime-verifier.example.internal/verify",
+  "Drivers": [{"Name": "example.csi.driver", "NodeEndpoint": "unix:///var/lib/kubelet/plugins/example.csi.driver/csi.sock", "Revision": "1"}]
+}

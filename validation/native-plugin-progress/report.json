@@ -1,0 +1,177 @@
+{
+  "scope": "native-integration-foundation-only",
+  "time": "2026-10-20T07:20:29.934431+00:00",
+  "host": "Darwin",
+  "checks": [
+    {
+      "name": "native-tool-contracts",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "native-tool-contracts.log"
+    },
+    {
+      "name": "ssf-unit",
+      "status": "passed_with_skips",
+      "exit_code": 0,
+      "log": "ssf-unit.log",
+      "skipped_tests": [
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeArtifactRetirementRequiresTerminalOwnerAndAllNativePins",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeCheckpointReferencesAndIndependentClonePVCs",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestFailedInternalCloneGCNeverDeletesExposedOrSharedVolumes",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeCommandRejectsWrongRunBeforeLifecycleMutation",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeCleanupStatusProtectsReadinessRacingDelete",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeBackgroundComputeUsesSharedReservationAndFixedIdentity",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeVolumeDeleteRespectsPauseHoldAndUID",
+        "ssf.dev/ssf/consume/TestPostgresAbortUnattachedPartialAcquire",
+        "ssf.dev/ssf/consume/TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier",
+        "ssf.dev/ssf/consume/TestPostgresConsumptionLifecycle",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeOfflineExpansionRetainsFenceAndResumesAfterController",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeForkUsesIndependentAdmissionAndOriginalChildID",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativePauseStateTransitions",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeUnplacedResumeRecoveryPreservesHold",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeUnpublishedCompensationNeverTreatsDispatchAsUnsent",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativePublicationDeletionCannotCollectUnknownCommit",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeTemplateDeleteWaitsForArtifactConsumer",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeReferenceGCWaitsForLogicalOwnerAndKeepsRetryableRuns",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeResumeUsesOneSuccessorAndDeleteFollowsIt",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativePausedResumeOnReplacementPodKeepsPhysicalPlacement",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeResumeMissingMappedCloneNeverFallsBack",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeObservedCapacityIncludesBackendRounding",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeInitializationCanContinueOnlyAfterPriorOperationReleased",
+        "ssf.dev/ssf/kubernetes/TestClusterNativeProvisioning",
+        "ssf.dev/ssf/ledger/TestPauseHoldResumeEpochAndDeletion",
+        "ssf.dev/ssf/ledger/TestCheckpointPinsAndDeleteTombstone",
+        "ssf.dev/ssf/ledger/TestCheckpointReferenceOwnsNativeAndCSIResourcesAfterParentRelease",
+        "ssf.dev/ssf/ledger/TestOfflineMaintenanceFencesWritersHoldsAndReclaim",
+        "ssf.dev/ssf/ledger/TestPostgresConcurrentWriterAndDrain"
+      ]
+    },
+    {
+      "name": "ssf-race",
+      "status": "passed_with_skips",
+      "exit_code": 0,
+      "log": "ssf-race.log",
+      "skipped_tests": [
+        "ssf.dev/ssf/consume/TestPostgresAbortUnattachedPartialAcquire",
+        "ssf.dev/ssf/consume/TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier",
+        "ssf.dev/ssf/consume/TestPostgresConsumptionLifecycle",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeArtifactRetirementRequiresTerminalOwnerAndAllNativePins",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeCheckpointReferencesAndIndependentClonePVCs",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestFailedInternalCloneGCNeverDeletesExposedOrSharedVolumes",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeCommandRejectsWrongRunBeforeLifecycleMutation",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeCleanupStatusProtectsReadinessRacingDelete",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeBackgroundComputeUsesSharedReservationAndFixedIdentity",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeVolumeDeleteRespectsPauseHoldAndUID",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeOfflineExpansionRetainsFenceAndResumesAfterController",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeForkUsesIndependentAdmissionAndOriginalChildID",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativePauseStateTransitions",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeUnplacedResumeRecoveryPreservesHold",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeUnpublishedCompensationNeverTreatsDispatchAsUnsent",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativePublicationDeletionCannotCollectUnknownCommit",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeTemplateDeleteWaitsForArtifactConsumer",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeReferenceGCWaitsForLogicalOwnerAndKeepsRetryableRuns",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeResumeUsesOneSuccessorAndDeleteFollowsIt",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativePausedResumeOnReplacementPodKeepsPhysicalPlacement",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeResumeMissingMappedCloneNeverFallsBack",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeObservedCapacityIncludesBackendRounding",
+        "ssf.dev/ssf/adapter/agentenvadapter/TestNativeInitializationCanContinueOnlyAfterPriorOperationReleased",
+        "ssf.dev/ssf/ledger/TestPauseHoldResumeEpochAndDeletion",
+        "ssf.dev/ssf/ledger/TestCheckpointPinsAndDeleteTombstone",
+        "ssf.dev/ssf/ledger/TestCheckpointReferenceOwnsNativeAndCSIResourcesAfterParentRelease",
+        "ssf.dev/ssf/ledger/TestOfflineMaintenanceFencesWritersHoldsAndReclaim",
+        "ssf.dev/ssf/ledger/TestPostgresConcurrentWriterAndDrain",
+        "ssf.dev/ssf/kubernetes/TestClusterNativeProvisioning"
+      ]
+    },
+    {
+      "name": "ssf-vet",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "ssf-vet.log"
+    },
+    {
+      "name": "ssf-linux-build",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "ssf-linux-build.log"
+    },
+    {
+      "name": "ssf-generated",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "ssf-generated.log"
+    },
+    {
+      "name": "native-openapi-compatible",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "native-openapi-compatible.log"
+    },
+    {
+      "name": "agentenv-services-unit",
+      "status": "passed_with_skips",
+      "exit_code": 0,
+      "log": "agentenv-services-unit.log",
+      "skipped_tests": [
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreGetCases",
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreRecordCases",
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreReconcileCases"
+      ]
+    },
+    {
+      "name": "agentenv-ssf-unit",
+      "status": "passed_with_skips",
+      "exit_code": 0,
+      "log": "agentenv-ssf-unit.log",
+      "skipped_tests": [
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreGetCases",
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreRecordCases",
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreReconcileCases"
+      ]
+    },
+    {
+      "name": "agentenv-ssf-race",
+      "status": "passed_with_skips",
+      "exit_code": 0,
+      "log": "agentenv-ssf-race.log",
+      "skipped_tests": [
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreGetCases",
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreRecordCases",
+        "agentenv/services/scheduler/internal/TestRedisBindingStoreReconcileCases"
+      ]
+    },
+    {
+      "name": "agentenv-ssf-vet",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "agentenv-ssf-vet.log"
+    },
+    {
+      "name": "agentenv-ssf-linux-build",
+      "status": "passed",
+      "exit_code": 0,
+      "log": "agentenv-ssf-linux-build.log"
+    },
+    {
+      "name": "postgres-integration",
+      "status": "not_executed",
+      "reason": "requires --database and dedicated SSF_TEST_DATABASE_URL"
+    },
+    {
+      "name": "rust-typecheck",
+      "status": "not_executed",
+      "reason": "requires Linux Rust toolchain and native build dependencies; not run by this foundation script"
+    },
+    {
+      "name": "linux-kvm-k8s-csi-e2e",
+      "status": "not_executed",
+      "reason": "requires completed native integration and real environment"
+    },
+    {
+      "name": "source-stability",
+      "status": "passed",
+      "reason": "validation must refer to one unchanged source snapshot"
+    }
+  ],
+  "complete_plan": false
+}

@@ -1,0 +1,728 @@
+ Downloading crates ...
+  Downloaded foreign-types-shared v0.1.1
+  Downloaded openssl-macros v0.1.1
+  Downloaded foreign-types v0.3.2
+  Downloaded openssl-probe v0.2.1
+  Downloaded openssl-sys v0.9.117
+  Downloaded netlink-packet-route v0.31.0
+  Downloaded openssl v0.10.81
+  Downloaded linux-raw-sys v0.4.15
+  Downloaded linux-raw-sys v0.12.1
+   Compiling proc-macro2 v1.0.106
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.45
+   Compiling libc v0.2.184
+   Compiling serde_core v1.0.228
+   Compiling serde v1.0.228
+    Checking cfg-if v1.0.4
+   Compiling shlex v1.3.0
+   Compiling find-msvc-tools v0.1.9
+    Checking pin-project-lite v0.2.17
+    Checking scopeguard v1.2.0
+    Checking log v0.4.29
+    Checking lock_api v0.4.14
+   Compiling portable-atomic v1.13.1
+    Checking memchr v2.8.0
+   Compiling parking_lot_core v0.9.12
+    Checking critical-section v1.2.0
+    Checking itoa v1.0.18
+    Checking futures-core v0.3.32
+   Compiling version_check v0.9.5
+   Compiling pkg-config v0.3.32
+    Checking slab v0.4.12
+    Checking futures-io v0.3.32
+    Checking futures-sink v0.3.32
+    Checking futures-channel v0.3.32
+    Checking futures-task v0.3.32
+    Checking subtle v2.6.1
+    Checking foldhash v0.2.0
+    Checking typenum v1.20.0
+   Compiling syn v2.0.117
+    Checking equivalent v1.0.2
+    Checking stable_deref_trait v1.2.1
+    Checking hashbrown v0.16.1
+    Checking bitflags v2.11.0
+    Checking percent-encoding v2.3.2
+   Compiling generic-array v0.14.7
+   Compiling cfg_aliases v0.2.2
+    Checking form_urlencoded v1.2.2
+    Checking base64 v0.22.1
+   Compiling dunce v1.0.5
+   Compiling httparse v1.10.1
+    Checking indexmap v2.13.1
+   Compiling fs_extra v1.3.0
+   Compiling jobserver v0.1.34
+    Checking rand_core v0.10.0
+    Checking writeable v0.6.3
+   Compiling cc v1.2.59
+    Checking atomic-waker v1.1.2
+    Checking socket2 v0.6.3
+    Checking errno v0.3.14
+    Checking mio v1.2.0
+    Checking signal-hook-registry v1.4.8
+    Checking getrandom v0.2.17
+    Checking litemap v0.8.2
+   Compiling thiserror v2.0.18
+   Compiling icu_properties_data v2.2.0
+   Compiling icu_normalizer_data v2.2.0
+    Checking fnv v1.0.7
+    Checking utf8_iter v1.0.4
+   Compiling aws-lc-rs v1.18.1
+   Compiling cmake v0.1.58
+    Checking tower-service v0.3.3
+    Checking untrusted v0.9.0
+    Checking try-lock v0.2.5
+    Checking cpufeatures v0.3.0
+    Checking httpdate v1.0.3
+    Checking want v0.3.1
+   Compiling rustls v0.23.37
+    Checking cpufeatures v0.2.17
+   Compiling anyhow v1.0.102
+   Compiling aws-lc-sys v0.45.0
+   Compiling ring v0.17.14
+   Compiling synstructure v0.13.2
+   Compiling either v1.15.0
+   Compiling getrandom v0.4.2
+    Checking crypto-common v0.1.7
+   Compiling zmij v1.0.21
+    Checking openssl-probe v0.2.1
+   Compiling vcpkg v0.2.15
+    Checking ryu v1.0.23
+   Compiling serde_json v1.0.149
+    Checking tower-layer v0.3.3
+   Compiling zerocopy v0.8.48
+    Checking chacha20 v0.10.0
+    Checking sync_wrapper v1.0.2
+   Compiling semver v1.0.28
+   Compiling serde_derive v1.0.228
+warning: ring@0.17.14: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: ring@0.17.14: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+error: failed to run custom build command for `ring v0.17.14`
+
+Caused by:
+  process didn't exit successfully: `/private/tmp/ssf-agentenv-linux-target/debug/build/ring-2c5468f69357abe5/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rerun-if-env-changed=CARGO_MANIFEST_DIR
+  cargo:rerun-if-env-changed=CARGO_PKG_NAME
+  cargo:rerun-if-env-changed=CARGO_PKG_VERSION_MAJOR
+  cargo:rerun-if-env-changed=CARGO_PKG_VERSION_MINOR
+  cargo:rerun-if-env-changed=CARGO_PKG_VERSION_PATCH
+  cargo:rerun-if-env-changed=CARGO_PKG_VERSION_PRE
+  cargo:rerun-if-env-changed=CARGO_MANIFEST_LINKS
+  cargo:rerun-if-env-changed=RING_PREGENERATE_ASM
+  cargo:rerun-if-env-changed=OUT_DIR
+  cargo:rerun-if-env-changed=CARGO_CFG_TARGET_ARCH
+  cargo:rerun-if-env-changed=CARGO_CFG_TARGET_OS
+  cargo:rerun-if-env-changed=CARGO_CFG_TARGET_ENV
+  cargo:rerun-if-env-changed=CARGO_CFG_TARGET_ENDIAN
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+
+  --- stderr
+
+
+  error occurred in cc-rs: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+
+
+warning: build failed, waiting for other jobs to finish...
+warning: aws-lc-sys@0.45.0: Environment Variable found 'CARGO_ENCODED_RUSTFLAGS': ''
+warning: aws-lc-sys@0.45.0: Emitting configuration: cargo:rustc-cfg=universal
+warning: aws-lc-sys@0.45.0: Building with: CC
+warning: aws-lc-sys@0.45.0: Symbol Prefix: Some("aws_lc_0_45_0")
+warning: aws-lc-sys@0.45.0: Target platform: 'x86_64-unknown-linux-gnu'
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compilation of 'c11.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"x86_64-linux-gnu-gcc\": No such file or directory (os error 2)" }).
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compilation of 'stdalign_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"x86_64-linux-gnu-gcc\": No such file or directory (os error 2)" }).
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compilation of 'builtin_swap_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"x86_64-linux-gnu-gcc\": No such file or directory (os error 2)" }).
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"x86_64-linux-gnu-gcc\": No such file or directory (os error 2)" }).
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"x86_64-linux-gnu-gcc\": No such file or directory (os error 2)" }).
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.45.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+error: failed to run custom build command for `aws-lc-sys v0.45.0`
+
+Caused by:
+  process didn't exit successfully: `/private/tmp/ssf-agentenv-linux-target/debug/build/aws-lc-sys-81955e0fbf129c38/build-script-main` (exit status: 1)
+  --- stdout
+  cargo:rerun-if-env-changed=AWS_LC_SYS_NO_PREFIX_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_NO_PREFIX
+  cargo:rerun-if-env-changed=AWS_LC_SYS_PREGENERATING_BINDINGS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_PREGENERATING_BINDINGS
+  cargo:rerun-if-env-changed=AWS_LC_SYS_EXTERNAL_BINDGEN_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_EXTERNAL_BINDGEN
+  cargo:rerun-if-env-changed=AWS_LC_SYS_NO_ASM_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_NO_ASM
+  cargo:rerun-if-env-changed=AWS_LC_SYS_PREBUILT_NASM_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_PREBUILT_NASM
+  cargo:rerun-if-env-changed=AWS_LC_SYS_C_STD_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_C_STD
+  cargo:rerun-if-env-changed=AWS_LC_SYS_CMAKE_BUILDER_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_CMAKE_BUILDER
+  cargo:rerun-if-env-changed=AWS_LC_SYS_NO_PREGENERATED_SRC_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_NO_PREGENERATED_SRC
+  cargo:rerun-if-env-changed=AWS_LC_SYS_SMALL_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_SMALL
+  cargo:rerun-if-env-changed=AWS_LC_SYS_EFFECTIVE_TARGET_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_EFFECTIVE_TARGET
+  cargo:rerun-if-env-changed=AWS_LC_SYS_NO_JITTER_ENTROPY_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_NO_JITTER_ENTROPY
+  cargo:rerun-if-env-changed=AWS_LC_SYS_NO_U1_BINDINGS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_NO_U1_BINDINGS
+  cargo:rerun-if-env-changed=AWS_LC_SYS_INCLUDES_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_INCLUDES
+  cargo:rerun-if-env-changed=AWS_LC_SYS_SANITIZER_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_SANITIZER
+  cargo:rerun-if-env-changed=AWS_LC_SYS_LINK_WHOLE_ARCHIVE_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_LINK_WHOLE_ARCHIVE
+  cargo:rerun-if-env-changed=AWS_LC_SYS_STATIC_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_STATIC
+  cargo:rerun-if-env-changed=AWS_LC_SYS_SYSTEM_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_SYSTEM_DIR
+  cargo:rerun-if-env-changed=AWS_LC_SYS_USE_SYSTEM_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_USE_SYSTEM
+  cargo:rerun-if-env-changed=AWS_LC_SYS_SYSTEM_BINDINGS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_SYSTEM_BINDINGS
+  cargo:rerun-if-env-changed=AWS_LC_SYS_SYSTEM_SKIP_VERSION_CHECK_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_SYSTEM_SKIP_VERSION_CHECK
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:warning=Environment Variable found 'CARGO_ENCODED_RUSTFLAGS': ''
+  cargo:warning=Emitting configuration: cargo:rustc-cfg=universal
+  cargo:rustc-cfg=universal
+  cargo:rerun-if-env-changed=OPENSSL_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=OPENSSL_DIR
+  cargo:rerun-if-env-changed=OPENSSL_INCLUDE_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=OPENSSL_INCLUDE_DIR
+  cargo:rerun-if-env-changed=OPENSSL_LIB_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=OPENSSL_LIB_DIR
+  cargo:rerun-if-env-changed=OPENSSL_NO_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG_ALLOW_CROSS
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=AWS_LC_NO_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG_ALLOW_CROSS
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=LIBCRYPTO_NO_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG_ALLOW_CROSS
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=LIBCRYPTO_AWSLC_NO_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG_ALLOW_CROSS
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=CARGO_FEATURE_SSL
+  cargo:warning=Building with: CC
+  cargo:warning=Symbol Prefix: Some("aws_lc_0_45_0")
+  cargo:rerun-if-env-changed=CARGO_FEATURE_SSL
+  cargo:warning=Target platform: 'x86_64-unknown-linux-gnu'
+  cargo:root=/private/tmp/ssf-agentenv-linux-target/x86_64-unknown-linux-gnu/debug/build/aws-lc-sys-0cfe88f9024d5314/out
+  cargo:rerun-if-env-changed=AWS_LC_SYS_TARGET_CFLAGS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_TARGET_CFLAGS
+  cargo:rerun-if-env-changed=TARGET_CFLAGS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  cargo:rerun-if-env-changed=AWS_LC_SYS_CFLAGS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_CFLAGS
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=CFLAGS
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_FORCE_DISABLE
+  CC_FORCE_DISABLE = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:warning=Compilation of 'c11.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"x86_64-linux-gnu-gcc\": No such file or directory (os error 2)" }).
+  cargo:rerun-if-env-changed=AWS_LC_SYS_TARGET_CC_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_TARGET_CC
+  cargo:rerun-if-env-changed=TARGET_CC_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_CC
+  cargo:rerun-if-env-changed=AWS_LC_SYS_CC_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_CC
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=CC
+  cargo:rerun-if-env-changed=AWS_LC_SYS_TARGET_CXX_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_TARGET_CXX
+  cargo:rerun-if-env-changed=TARGET_CXX_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=TARGET_CXX
+  cargo:rerun-if-env-changed=AWS_LC_SYS_CXX_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=AWS_LC_SYS_CXX
+  cargo:rerun-if-env-changed=CXX_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=CXX
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_FORCE_DISABLE
+  CC_FORCE_DISABLE = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:warning=Compilation of 'stdalign_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"x86_64-linux-gnu-gcc\": No such file or directory (os error 2)" }).
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_FORCE_DISABLE
+  CC_FORCE_DISABLE = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:warning=Compilation of 'builtin_swap_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"x86_64-linux-gnu-gcc\": No such file or directory (os error 2)" }).
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_FORCE_DISABLE
+  CC_FORCE_DISABLE = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:warning=Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"x86_64-linux-gnu-gcc\": No such file or directory (os error 2)" }).
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_FORCE_DISABLE
+  CC_FORCE_DISABLE = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:warning=Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"x86_64-linux-gnu-gcc\": No such file or directory (os error 2)" }).
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_FORCE_DISABLE
+  CC_FORCE_DISABLE = None
+  cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+  CC_x86_64-unknown-linux-gnu = None
+  cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+  CC_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  PATH = Some(/private/tmp/ssf-cargo/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/admin/.codex/tmp/arg0/codex-arg0yMFqIp:/usr/local/opt/node@22/bin:/Users/admin/go/bin:/Users/admin/.local/bin:/Users/admin/.vscode/extensions/openai.chatgpt-26.1007.21434-darwin-x64/bin/macos-x86_64)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+  CFLAGS_x86_64_unknown_linux_gnu = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+  CFLAGS_x86_64-unknown-linux-gnu = None
+
+  --- stderr
+
+
+  error occurred in cc-rs: failed to find tool "x86_64-linux-gnu-gcc": No such file or directory (os error 2)
+
+

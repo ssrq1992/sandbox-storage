@@ -1,0 +1,8 @@
+{
+  "scope": "linux-cross-typecheck",
+  "status": "failed_before_agentenv_typecheck",
+  "agentenv_typechecked": false,
+  "target": "x86_64-unknown-linux-gnu",
+  "reason": "Linux cross C compiler x86_64-linux-gnu-gcc unavailable; native dependency build failed",
+  "kvm_executed": false
+}
