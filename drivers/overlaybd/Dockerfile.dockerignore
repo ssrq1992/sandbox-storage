@@ -1,0 +1,12 @@
+# Paths are relative to the shared sandboxstorage build context.
+**/.git
+**/target
+**/node_modules
+**/__pycache__
+**/.DS_Store
+**/*.key
+refactor-baseline
+design
+sandbox-storage/validation
+sandbox-storage/test-results
+sandbox-storage/bin

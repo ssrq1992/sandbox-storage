@@ -1,10 +1,12 @@
 # SSF — Sandbox Storage Framework
 
-新增 [自动卷准备与直接 PVC 实现/部署/验证](../design/22-volume-preparation-implementation.md)：Kubernetes 创建 PVC 后，原 AgentENV 创建接口通过 `volumeMounts[].pvc` 引用。具体通过、未执行和未完成边界以该记录为准。
+当前实现与验证见 [26 独立公共协调服务](../design/26-independent-coordinator-implementation.md)，部署使用框架仓库的联合构建入口和 overlay。
 
-SSF 使用 Kubernetes 管理 PVC/PV、供卷、快照、克隆、扩容与回收。沙箱消费由嵌入式 Go 协调库直接执行 Attach，并通过签名计划驱动公共 Node Agent 的 Stage/Publish。没有逐沙箱 Pod，也没有必需的 SSF Controller Deployment。
+Kubernetes 创建 PVC 后，原 AgentENV 创建接口通过 `volumeMounts[].pvc` 引用。自动准备的此前实施记录见 [22](../design/22-volume-preparation-implementation.md)，本轮独立服务的验证结果以 [26](../design/26-independent-coordinator-implementation.md) 和 `validation/control-service` 为准。
 
-公共核心提供框架与验证工程；`runtime/verification` 明确拒绝宣称真实 guest 已就绪。[AgentENV 原生插件](adapter/agentenvadapter/README.md) 保留原 Gateway、Scheduler、Orchestrator 和沙箱 API，实现存储接入、完整生命周期与交付工具；旧独立沙箱控制面已移除。架构依据为 [原生插件设计](../design/16-agentenvadapter-native-integration-design.md) 和 [实施与验收](../design/17-agentenvadapter-refactoring-and-validation.md)。本机验证与 Linux/KVM/K8s/真实 CSI 未执行项目见 [实现状态](../design/18-native-integration-implementation-status.md)。SSF 核心不依赖项目适配器。
+SSF 使用 Kubernetes 管理 PVC/PV、供卷、快照、克隆、扩容与回收。沙箱消费由公共 Go 协调库直接执行 Attach；当前 AgentENV 由独立 `ssf-coordinator` 承载，并通过签名计划驱动公共 Node Agent 的 Stage/Publish。没有逐沙箱 Pod，当前 AgentENV 具有独立协调服务 Deployment，保留原 Scheduler 的计算选点。
+
+公共核心提供框架与验证工程；`runtime/verification` 明确拒绝宣称真实 guest 已就绪。[AgentENV 原生插件](adapter/agentenvadapter/README.md) 保留原 Gateway、Scheduler、Orchestrator 和沙箱 API，实现存储接入、完整生命周期与交付工具；旧独立沙箱控制面已移除。当前架构见 [23](../design/23-current-implementation-architecture.md)，完整回归及真实环境未执行项见 [14](../design/14-agentenvadapter-real-environment-test-plan.md)。SSF 核心不依赖项目适配器。
 
 ## 构建与检查
 
@@ -19,20 +21,20 @@ make linux
 make check-generated
 ```
 
-Go 1.26；生产节点运行 Linux。`go.sum` 固定依赖校验值。Rust 客户端：`cargo check --manifest-path sdk/rust/Cargo.toml`，构建使用同一份 protobuf；本机临时 Rust 工具链可用；主 AgentENV crate 的 macOS 类型检查受 Linux 专用依赖阻断，生成 API crate 类型检查已通过。
+Go 1.26；生产节点运行 Linux。`go.sum` 固定依赖校验值。Node Rust 客户端使用 `sdk/rust/Cargo.toml`；原生运行时 adapter crate 使用 `cargo test --locked --manifest-path adapter/agentenvadapter/runtime/Cargo.toml`。主 AgentENV 的 Linux 类型检查与本机可移植单测分开记录，当前结果见 `validation/control-service`。
 
 ## 组件
 
 | 入口 | 形态与职责 |
 | --- | --- |
-| `consume.Coordinator` | 嵌入项目控制面；授权、绑定、事务预留、Attach、签名计划、释放、恢复 |
+| `ssf-coordinator` / `consume.Coordinator` | 独立服务承载公共库；授权、绑定、事务预留、Attach、签名计划、释放、恢复 |
 | `ssf-node` | Linux 常驻进程 / DaemonSet；本地 CSI、bbolt 日志、实际资源检查 |
 | `ssf-guard` | Kubernetes validating webhook；受管资源删除与权威保护 |
 | `ssf-csi-gateway` | 可选厂商 Controller 同 Pod 代理；只开放消费 RPC |
 | `ssfctl` | `migrate`、`keygen`、`inspect` |
 | `ssf-test-driver` | 仅限一次性 Linux 测试环境的文件/loop 块设备 CSI fixture |
 
-`api/ssf/v1/node.proto` 是实际线协议；`sdk/go` 与 `sdk/rust` 是节点客户端。控制面以 Go 库集成，不开放一个未经项目鉴权的通用租户 HTTP API。
+`api/ssf/v1/node.proto` 是实际线协议；`sdk/go` 与 `sdk/rust` 是节点客户端。控制面服务使用 `ssf.control.v1` 私有 mTLS JSON 协议，轻量客户端位于 `sdk/go/control`；不开放替代沙箱 API。
 
 ## 接入流程
 
@@ -47,13 +49,13 @@ Go 1.26；生产节点运行 Linux。`go.sum` 固定依赖校验值。Rust 客�
 
 ## 部署顺序
 
-1. 准备 PostgreSQL 和角色权限，执行 `SSF_DATABASE_URL=... go run ./cmd/ssfctl -action migrate`。Guard 的数据库账号只需读取 permit 表；消费账号需要读写消费表。账本不可被每个项目独立复制。
+1. 准备 PostgreSQL 和角色权限，执行 `SSF_DATABASE_URL=... go run ./cmd/ssfctl -action migrate`。Guard 使用受限读取角色；消费账号需要读写消费表。协调服务另会幂等迁移 adapter 专用表。账本不可被每个项目独立复制。
 2. 生成签名密钥并分发公钥；配置 mTLS 证书及 URI SAN allowlist。生产证书由部署方管理。Guard 证书 SAN 必须包含 `ssf-guard.ssf-system.svc`。
 3. 按 `deploy/*.example.json` 建立 ConfigMap 和 TLS Secret，部署 Guard，检查 `/readyz`，替换 `deploy/webhook.yaml` 的 `CA_BUNDLE` 再注册 webhook。
 4. 部署 Node Agent。CSI Node Driver 必须看到同一绝对路径 `/var/lib/ssf`，具备正确 mount propagation；仅挂载 socket 不足以完成集成。Node、Driver、Runtime 的路径与可见域必须一致。
 5. 需要网络访问 Controller UDS 时，将 Gateway 加到厂商 Controller Pod，共享 `/csi` socket，使用 `deploy/gateway.example.json` 和共享账本只读账号（通过 `SSF_DATABASE_URL`）；它验证 Binding 元数据与 attachment 状态，不替换原生 provisioner/resizer/snapshotter。
 6. 原生 StorageClass 使用 Retain；PVC 标记 `ssf.dev/managed=true`；静态候选 CSI PV 同样标记。Resolver 在验证真实 claim UID 后为动态 PV补充标记。Guard 在这之前也检查 PV 引用的受管 PVC。
-7. 为项目控制面绑定消费权限并开放请求入口。示例 RBAC 是功能集合，应按已认证租户 namespace、Secret 范围拆分生产 Role；租户不得直接修改 PV、受管标签、选点注解或使用管理 ServiceAccount。
+7. AgentENV 按 [13 部署文档](../design/13-agentenvadapter-installation-and-deployment.md) 安装独立协调服务和原工作负载增量，将消费 RBAC 绑定 `ssf-coordinator`。原 Scheduler 只保留原生发现权限。示例 RBAC 是功能集合，应按已认证租户 namespace、Secret 范围拆分生产 Role；租户不得直接修改 PV、受管标签、选点注解或使用管理 ServiceAccount。
 
 `deploy/base.yaml` 包含部署资源，不包含真实密钥或数据库口令；`ssf-ledger` Secret 的 `url` 提供连接串。Node 以 root/privileged 运行是挂载可见性需要，Guard 无此要求。
 
@@ -71,4 +73,4 @@ SSF_TEST_KUBECONFIG=/path/to/config go test -v ./kubernetes -run TestCluster
 
 消费请求支持 PVCRef 或已登记 `VolumeUID`，两者互斥。删除从未消费的 Pending PVC 使用 `Coordinator.DeletePVC`；其 `ClaimDeleted` 只表示观察到原生 claim 已删除，不伪装成后端 DeleteVolume 的完成证明。`Ledger.Uses` 可列出排空尚未完成的消费者，由项目生命周期负责停止它们。
 
-实现过程、测试执行状态和设计对应关系见 [实施记录](../design/09-implementation-log.md)、[验证报告](../design/10-implementation-validation.md)、[覆盖矩阵](../design/11-implementation-coverage.md)。
+本轮实现、测试状态和侵入量见 [26](../design/26-independent-coordinator-implementation.md)。[09](../design/09-implementation-log.md)、[10](../design/10-implementation-validation.md)、[11](../design/11-implementation-coverage.md) 保留早期公共框架实施记录，不能替代本轮验收。

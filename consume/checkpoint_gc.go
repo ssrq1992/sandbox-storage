@@ -28,6 +28,9 @@ func (c *Checkpoints) Reap(ctx context.Context, id string) error {
 		if checkpoint.State != "Released" {
 			return core.ErrConflict
 		}
+		if done, e := c.Ledger.CompleteDirectSourceGC(ctx, id); e != nil || done {
+			return e
+		}
 		var manifest CaptureManifest
 		if err = json.Unmarshal(checkpoint.Descriptor, &manifest); err != nil {
 			return err

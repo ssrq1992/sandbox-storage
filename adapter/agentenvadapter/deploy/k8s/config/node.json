@@ -1,0 +1,33 @@
+{
+  "native_mode": true,
+  "listen": ":9444",
+  "health_listen": ":9094",
+  "hook_listen": "127.0.0.1:9445",
+  "hook_token_file": "/etc/agentenv-storage/hook-token",
+  "dispatch_key_file": "/etc/agentenv-storage/dispatch-key",
+  "node_control_key_file": "/etc/agentenv-storage/node-key",
+  "cert": "/etc/agentenv-storage-tls/tls.crt",
+  "key": "/etc/agentenv-storage-tls/tls.key",
+  "ca": "/etc/agentenv-storage-tls/ca.crt",
+  "plan_public_key": "/etc/agentenv-storage/plan.pub",
+  "control_peers": [
+    "spiffe://ssf/agentenv/coordinator"
+  ],
+  "evidence_peers": [
+    "spiffe://ssf/agentenv/coordinator",
+    "spiffe://ssf/agentenv/ssf-node"
+  ],
+  "ssf_endpoint": "127.0.0.1:9443",
+  "agent_url": "http://127.0.0.1:8000",
+  "agent_key_file": "/etc/agentenv-native-auth/AENV_API_KEY",
+  "root": "/var/lib/agentenvadapter",
+  "runtime_root": "/var/lib/agentenv-external",
+  "device_root": "/var/lib/ssf",
+  "coordinator": {
+    "endpoint": "https://ssf-coordinator.agentenv-system.svc:9446",
+    "cert": "/etc/agentenv-storage-tls/tls.crt",
+    "key": "/etc/agentenv-storage-tls/tls.key",
+    "ca": "/etc/agentenv-storage-tls/ca.crt",
+    "peer": "spiffe://ssf/agentenv/coordinator"
+  }
+}

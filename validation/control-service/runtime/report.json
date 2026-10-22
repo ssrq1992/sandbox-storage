@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "scope": "portable external Rust adapter executable unit tests on macOS",
+  "tests_passed": 9,
+  "native_linux_tests_executed": false,
+  "command": "cargo test --locked --offline --manifest-path adapter/agentenvadapter/runtime/Cargo.toml",
+  "source_sha256": {
+    "adapter/agentenvadapter/runtime/src/artifact_gc.rs": "e08cebd341cecfa83ddef5d89a136d06721b04cc1869f7f4f630c0e473dfd289",
+    "adapter/agentenvadapter/runtime/src/artifacts.rs": "a5dc0644c006b48dbdfffb46f229bdb1afcaa7160d96373aa7f5300d0d08e842",
+    "adapter/agentenvadapter/runtime/src/devices.rs": "bc976e9709569e8f6b5d3785c4ba895533fdf625feb3d8be6fafced13b091a3e",
+    "adapter/agentenvadapter/runtime/src/freeze.rs": "30eb777ca71c220214fe403b91dcd3548105509602c2ae6948aba5b03d604cad",
+    "adapter/agentenvadapter/runtime/src/guest.rs": "36399f5f02900f98532eef3d873afa49bdd1e45e0d0e5a9bf545dce46a8fdd55",
+    "adapter/agentenvadapter/runtime/src/lib.rs": "684a6db0a4cc3ff228fe84fef2a1df3c847579b778f8336802fca549eb5b840e",
+    "adapter/agentenvadapter/runtime/src/repository.rs": "b6487a5cd9edc2341ac6290876a7bd8c95225130c070f0fa0d62affa0f60e747",
+    "adapter/agentenvadapter/runtime/src/transition.rs": "78b2b8f7cf0962a5d2166d3027cffec07f1e4e46a53eb0783c7fbc30737c5e7d"
+  }
+}

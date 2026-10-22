@@ -63,7 +63,27 @@ INSERT INTO ssf_checkpoint_pins(checkpoint_id,resource_uid)
  WHERE cp.state<>'Released' AND v.pvc_uid<>''
  ON CONFLICT DO NOTHING;
 DELETE FROM ssf_permits WHERE pvc_uid IN (SELECT resource_uid FROM ssf_checkpoint_pins);
-INSERT INTO ssf_meta(version) VALUES (5) ON CONFLICT DO NOTHING;`
+INSERT INTO ssf_meta(version) VALUES (5) ON CONFLICT DO NOTHING;
+CREATE TABLE IF NOT EXISTS ssf_backend_tombstones(volume_key text PRIMARY KEY,operation text NOT NULL);
+INSERT INTO ssf_meta(version) VALUES (6) ON CONFLICT DO NOTHING;
+CREATE TABLE IF NOT EXISTS ssf_snapshot_captures (
+ namespace text NOT NULL,name text NOT NULL,
+ checkpoint_id text NOT NULL REFERENCES ssf_checkpoint_sets(id),binding_id text NOT NULL,
+ descriptor jsonb NOT NULL,PRIMARY KEY(namespace,name),UNIQUE(checkpoint_id,binding_id)
+);
+INSERT INTO ssf_meta(version) VALUES (7) ON CONFLICT DO NOTHING;
+CREATE TABLE IF NOT EXISTS ssf_idle_captures (
+ id text PRIMARY KEY,volume_key text REFERENCES ssf_volumes(key),pvc_uid text,
+ digest text NOT NULL,state text NOT NULL CHECK(state IN ('Capturing','Ready','Released')),
+ receipt jsonb,CHECK(state='Released' OR (volume_key IS NOT NULL AND pvc_uid IS NOT NULL))
+);
+CREATE INDEX IF NOT EXISTS ssf_idle_captures_live ON ssf_idle_captures(volume_key) WHERE state<>'Released';
+INSERT INTO ssf_meta(version) VALUES (8) ON CONFLICT DO NOTHING;
+CREATE TABLE IF NOT EXISTS ssf_direct_snapshots (
+ id text PRIMARY KEY,snapshot_uid text NOT NULL UNIQUE,content_uid text NOT NULL UNIQUE,
+ descriptor jsonb NOT NULL,retired boolean NOT NULL DEFAULT false
+);
+INSERT INTO ssf_meta(version) VALUES (9) ON CONFLICT DO NOTHING;`
 
 func Open(ctx context.Context, url string) (*Store, error) {
 	p, e := pgxpool.New(ctx, url)
@@ -83,6 +103,25 @@ func (s *Store) Migrate(ctx context.Context) error {
 			return err
 		}
 		defer tx.Rollback(ctx)
+		var versionTable *string
+		if err = tx.QueryRow(ctx, `SELECT to_regclass('ssf_meta')::text`).Scan(&versionTable); err != nil {
+			return err
+		}
+		if versionTable != nil {
+			var version int
+			if err = tx.QueryRow(ctx, `SELECT COALESCE(max(version),0) FROM ssf_meta`).Scan(&version); err != nil {
+				return err
+			}
+			if version > 9 {
+				return errors.New("SSF ledger schema is newer than this service")
+			}
+			// Replaying ALTER TABLE against active Acquire transactions can
+			// deadlock on relation lock upgrades. Completed migrations are
+			// immutable and atomically versioned; replicas must not rerun DDL.
+			if version == 9 {
+				return tx.Commit(ctx)
+			}
+		}
 		if _, err = tx.Exec(ctx, Schema); err != nil {
 			return err
 		}
@@ -91,20 +130,38 @@ func (s *Store) Migrate(ctx context.Context) error {
 }
 func (s *Store) Close() { s.Pool.Close() }
 func (s *Store) Register(ctx context.Context, v core.Volume) error {
-	b, e := json.Marshal(v)
-	if e != nil {
-		return e
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
 	}
-	_, e = s.executor(ctx).Exec(ctx, `INSERT INTO ssf_volumes(key,pvc_uid,descriptor) VALUES($1,$2,$3) ON CONFLICT(key) DO NOTHING`, v.Key(), v.PVC.UID, b)
-	if e != nil {
-		return e
+	tx, err := s.executor(ctx).Begin(ctx)
+	if err != nil {
+		return err
 	}
-	var uid string
-	e = s.executor(ctx).QueryRow(ctx, `SELECT pvc_uid FROM ssf_volumes WHERE key=$1`, v.Key()).Scan(&uid)
-	if e == nil && uid != v.PVC.UID {
+	defer tx.Rollback(ctx)
+	// The same canonical lock protects deletion before the first PVC observer
+	// has registered a backend. No synthetic PVC or sandbox is needed.
+	if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, "ssf/backend/"+v.Key()); err != nil {
+		return err
+	}
+	var deleted bool
+	if err = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM ssf_backend_tombstones WHERE volume_key=$1)`, v.Key()).Scan(&deleted); err != nil {
+		return err
+	}
+	if deleted {
 		return core.ErrConflict
 	}
-	return e
+	if _, err = tx.Exec(ctx, `INSERT INTO ssf_volumes(key,pvc_uid,descriptor) VALUES($1,$2,$3) ON CONFLICT(key) DO NOTHING`, v.Key(), v.PVC.UID, b); err != nil {
+		return err
+	}
+	var uid string
+	if err = tx.QueryRow(ctx, `SELECT pvc_uid FROM ssf_volumes WHERE key=$1`, v.Key()).Scan(&uid); err != nil {
+		return err
+	}
+	if uid != v.PVC.UID {
+		return core.ErrConflict
+	}
+	return tx.Commit(ctx)
 }
 
 // Acquire serializes on canonical physical volume rows in stable order. Writer
@@ -175,7 +232,7 @@ func (s *Store) Acquire(ctx context.Context, op, digest string, bs []core.Bindin
 			return core.ErrConflict
 		}
 		var maintenance bool
-		if e = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM ssf_volume_maintenance WHERE volume_key=$1 AND state='Active')`, k).Scan(&maintenance); e != nil {
+		if e = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM ssf_volume_maintenance WHERE volume_key=$1 AND state='Active') OR EXISTS(SELECT 1 FROM ssf_idle_captures WHERE volume_key=$1 AND state='Capturing')`, k).Scan(&maintenance); e != nil {
 			return e
 		}
 		if maintenance {
@@ -405,7 +462,7 @@ func (s *Store) Permit(ctx context.Context, uid, action string, ttl time.Duratio
 		return e
 	}
 	var n int
-	e = tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM ssf_bindings WHERE volume_key=$1 AND state<>'Released') + (SELECT count(*) FROM ssf_use_holds WHERE volume_key=$1) + (SELECT count(*) FROM ssf_volume_maintenance WHERE volume_key=$1 AND state='Active') + (SELECT count(*) FROM ssf_attachments WHERE volume_key=$1 AND state<>'Detached')`, key).Scan(&n)
+	e = tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM ssf_bindings WHERE volume_key=$1 AND state<>'Released') + (SELECT count(*) FROM ssf_use_holds WHERE volume_key=$1) + (SELECT count(*) FROM ssf_volume_maintenance WHERE volume_key=$1 AND state='Active') + (SELECT count(*) FROM ssf_attachments WHERE volume_key=$1 AND state<>'Detached') + (SELECT count(*) FROM ssf_idle_captures WHERE volume_key=$1 AND state<>'Released')`, key).Scan(&n)
 	if e != nil {
 		return e
 	}

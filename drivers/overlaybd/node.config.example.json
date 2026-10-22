@@ -1,0 +1,16 @@
+{
+  "role": "node",
+  "socket": "/run/ssf-overlaybd-csi/csi.sock",
+  "backendSocket": "/run/ssf-overlaybd/backend.sock",
+  "wal": "/var/lib/ssf/overlaybd/node/sessions.db",
+  "node": "node-a",
+  "nodeUID": "REPLACE_WITH_KUBERNETES_NODE_UID",
+  "csiNode": "node-a",
+  "root": "/var/lib/ssf/node",
+  "planPublicKey": "/etc/ssf/plan-public-key",
+  "evidenceURL": "https://127.0.0.1:9444/v1/evidence",
+  "certificate": "/etc/ssf/tls/tls.crt",
+  "key": "/etc/ssf/tls/tls.key",
+  "ca": "/etc/ssf/tls/ca.crt",
+  "captureEvidenceURL": "https://127.0.0.1:9444/v1/capture/evidence"
+}

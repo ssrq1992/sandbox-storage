@@ -53,3 +53,20 @@ func TestPreparationRebootKeepsLogicalDeviceAndFormatIntent(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestOverlayBDPreparationNeverFormats(t *testing.T) {
+	n := &Node{}
+	spec := core.PreparationSpec{Profile: DescribeOverlayBDVolumeProfile(), PVC: core.PVCRef{UID: "pvc"}, PVUID: "pv", SourceRevision: core.Digest("blank"), ExpectedUUID: "29aff887-2fe8-431a-a1a5-ad5766b7bf0a"}
+	if _, err := n.Plan(context.Background(), spec); err != nil {
+		t.Fatal(err)
+	}
+	spec.Initialize = true
+	if _, err := n.Plan(context.Background(), spec); err == nil {
+		t.Fatal("OverlayBD authorized generic formatting")
+	}
+	spec.Initialize = false
+	spec.ExpectedUUID = ""
+	if _, err := n.Plan(context.Background(), spec); err == nil {
+		t.Fatal("OverlayBD accepted unpinned content")
+	}
+}

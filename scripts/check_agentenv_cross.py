@@ -5,6 +5,7 @@ No toolchain is downloaded and no global configuration is changed.
 """
 import argparse
 import datetime
+import fcntl
 import hashlib
 import json
 import os
@@ -25,11 +26,22 @@ def main():
     parser.add_argument('--jobs', default=4, type=int)
     parser.add_argument('--lib-only', action='store_true')
     parser.add_argument('--offline', action='store_true')
+    target_group=parser.add_mutually_exclusive_group()
+    target_group.add_argument('--ublk-daemon',action='store_true',help='Type-check native daemon including its test targets; does not execute Linux tests')
+    target_group.add_argument('--overlaybd-host', action='store_true',
+                        help='Check the native OverlayBD host including its volume engine')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     native = root.parent / 'AgentENV'
     out = args.output if args.output.is_absolute() else root / args.output
     out.mkdir(parents=True, exist_ok=True)
+    # Do not let overlapping checks truncate each other's log/report.
+    output_lock = (out / '.run.lock').open('a')
+    try:
+        fcntl.flock(output_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        print(f'check already running in {out}', file=sys.stderr)
+        return 2
     report = dict(scope='linux-target-rust-typecheck', host=platform.platform(),
                   target='x86_64-unknown-linux-gnu', native_tests_executed=False,
                   kvm_executed=False, csi_executed=False,
@@ -37,12 +49,13 @@ def main():
 
     def hashes():
         result = {}
-        for directory, dirs, files in os.walk(native):
-            dirs[:] = sorted(d for d in dirs if d not in {'.git', 'target', 'node_modules', '.venv'})
-            for name in sorted(files):
-                path = Path(directory) / name
-                if path.suffix == '.rs' or name in {'Cargo.toml', 'Cargo.lock'}:
-                    result[str(path.relative_to(root.parent))] = hashlib.sha256(path.read_bytes()).hexdigest()
+        for source in (native, root / 'adapter/agentenvadapter/runtime', root / 'drivers/overlaybd/native'):
+            for directory, dirs, files in os.walk(source):
+                dirs[:] = sorted(d for d in dirs if d not in {'.git', 'target', 'node_modules', '.venv'})
+                for name in sorted(files):
+                    path = Path(directory) / name
+                    if path.suffix == '.rs' or name in {'Cargo.toml', 'Cargo.lock'}:
+                        result[str(path.relative_to(root.parent))] = hashlib.sha256(path.read_bytes()).hexdigest()
         return result
 
     try:
@@ -83,6 +96,18 @@ def main():
         command = [str(args.cargo.absolute()), 'check', '--locked', '-p', 'agentenv',
                    '--lib' if args.lib_only else '--all-targets', '--target', report['target'],
                    '--features', 'vendored-openssl', '-j', str(args.jobs)]
+        if args.overlaybd_host:
+            env['CARGO_TARGET_DIR'] = str(native / 'target')
+            command = [str(args.cargo.absolute()), 'check', '--locked', '--manifest-path',
+                       str(root / 'drivers/overlaybd/native/Cargo.toml'),
+                       '--lib' if args.lib_only else '--all-targets', '--target', report['target'],
+                       '--features', 'device-host', '-j', str(args.jobs)]
+            report['scope'] = 'linux-target-overlaybd-host-typecheck'
+        if args.ublk_daemon:
+            command = [str(args.cargo.absolute()), 'check', '--locked', '-p', 'uvm-ublk-daemon',
+                       '--lib' if args.lib_only else '--all-targets', '--target', report['target'],
+                       '-j',str(args.jobs)]
+            report['scope']='linux-target-ublk-daemon-typecheck'
         if args.offline:
             command.append('--offline')
         report['command'] = command

@@ -50,6 +50,10 @@ func (v nativeCaptureVerifier) VerifyCapture(ctx context.Context, q consume.Capt
 }
 
 func (c *NativeControl) Capture(ctx context.Context, id, nodeID string, receipt NativeCapture, proof string) (consume.CaptureManifest, error) {
+	return c.capturePhase(ctx, id, nodeID, receipt, proof, false)
+}
+
+func (c *NativeControl) capturePhase(ctx context.Context, id, nodeID string, receipt NativeCapture, proof string, sealOnly bool) (consume.CaptureManifest, error) {
 	var result consume.CaptureManifest
 	if !receipt.valid() {
 		return result, errors.New("invalid native capture receipt")
@@ -126,8 +130,12 @@ func (c *NativeControl) Capture(ctx context.Context, id, nodeID string, receipt 
 				return core.ErrConflict
 			}
 		}
-		checkpoints := consume.Checkpoints{Ledger: c.Ledger, Kube: c.Kube, Evidence: nativeCaptureVerifier{HTTP: c.HTTP, URL: candidate.PluginURL}}
-		result, err = checkpoints.Advance(ctx, q, proof)
+		checkpoints := consume.Checkpoints{CaptureParticipants: c.captureParticipants(d), PrepareParticipants: c.managedCapture(d, true, false), PublishParticipants: c.managedCapture(d, false, true), SealedParticipants: func(b core.Binding) bool { return b.Volume.Driver == "overlaybd.csi.ssf.dev" }, Ledger: c.Ledger, Kube: c.Kube, Evidence: nativeCaptureVerifier{HTTP: c.HTTP, URL: candidate.PluginURL}}
+		if sealOnly {
+			result, err = checkpoints.Seal(ctx, q, proof)
+		} else {
+			result, err = checkpoints.Advance(ctx, q, proof)
+		}
 		return err
 	})
 	return result, err

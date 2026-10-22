@@ -1,0 +1,509 @@
+2026-10-22 10:40:10.050 CST [40643] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 10:40:10.052 CST [40643] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-xkt6wh9a/socket/.s.PGSQL.5432"
+2026-10-22 10:40:10.065 CST [40647] LOG:  database system was shut down at 2026-10-22 10:40:09 CST
+2026-10-22 10:40:10.072 CST [40643] LOG:  database system is ready to accept connections
+2026-10-22 10:42:51.154 CST [40643] LOG:  received fast shutdown request
+2026-10-22 10:42:51.155 CST [40643] LOG:  aborting any active transactions
+2026-10-22 10:42:51.156 CST [40643] LOG:  background worker "logical replication launcher" (PID 40650) exited with exit code 1
+2026-10-22 10:42:51.158 CST [40645] LOG:  shutting down
+2026-10-22 10:42:51.159 CST [40645] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 10:42:51.360 CST [40645] LOG:  checkpoint complete: wrote 2010 buffers (12.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.089 s, sync=0.112 s, total=0.203 s; sync files=789, longest=0.003 s, average=0.001 s; distance=9598 kB, estimate=9598 kB; lsn=0/1DF2468, redo lsn=0/1DF2468
+2026-10-22 10:42:51.369 CST [40643] LOG:  database system is shut down
+2026-10-22 11:01:12.200 CST [59054] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 11:01:12.201 CST [59054] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-8xrsntlp/socket/.s.PGSQL.5432"
+2026-10-22 11:01:12.207 CST [59057] LOG:  database system was shut down at 2026-10-22 11:01:12 CST
+2026-10-22 11:01:12.210 CST [59054] LOG:  database system is ready to accept connections
+2026-10-22 11:01:47.009 CST [59054] LOG:  received fast shutdown request
+2026-10-22 11:01:47.010 CST [59054] LOG:  aborting any active transactions
+2026-10-22 11:01:47.010 CST [59054] LOG:  background worker "logical replication launcher" (PID 59060) exited with exit code 1
+2026-10-22 11:01:47.011 CST [59055] LOG:  shutting down
+2026-10-22 11:01:47.011 CST [59055] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 11:01:47.116 CST [59055] LOG:  checkpoint complete: wrote 1990 buffers (12.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.044 s, sync=0.061 s, total=0.106 s; sync files=781, longest=0.001 s, average=0.001 s; distance=9506 kB, estimate=9506 kB; lsn=0/1DDB498, redo lsn=0/1DDB498
+2026-10-22 11:01:47.124 CST [59054] LOG:  database system is shut down
+2026-10-22 12:09:57.414 CST [68110] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 12:09:57.415 CST [68110] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-f0rb1g7f/socket/.s.PGSQL.5432"
+2026-10-22 12:09:57.422 CST [68113] LOG:  database system was shut down at 2026-10-22 12:09:57 CST
+2026-10-22 12:09:57.425 CST [68110] LOG:  database system is ready to accept connections
+2026-10-22 12:10:27.346 CST [68110] LOG:  received fast shutdown request
+2026-10-22 12:10:27.346 CST [68110] LOG:  aborting any active transactions
+2026-10-22 12:10:27.347 CST [68110] LOG:  background worker "logical replication launcher" (PID 68116) exited with exit code 1
+2026-10-22 12:10:27.347 CST [68111] LOG:  shutting down
+2026-10-22 12:10:27.348 CST [68111] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 12:10:27.479 CST [68111] LOG:  checkpoint complete: wrote 2004 buffers (12.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.049 s, sync=0.081 s, total=0.132 s; sync files=792, longest=0.002 s, average=0.001 s; distance=9556 kB, estimate=9556 kB; lsn=0/1DE7D50, redo lsn=0/1DE7D50
+2026-10-22 12:10:27.487 CST [68110] LOG:  database system is shut down
+2026-10-22 12:15:09.473 CST [68693] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 12:15:09.474 CST [68693] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-652g8j_b/socket/.s.PGSQL.5432"
+2026-10-22 12:15:09.481 CST [68697] LOG:  database system was shut down at 2026-10-22 12:15:09 CST
+2026-10-22 12:15:09.484 CST [68693] LOG:  database system is ready to accept connections
+2026-10-22 12:15:35.452 CST [68693] LOG:  received fast shutdown request
+2026-10-22 12:15:35.452 CST [68693] LOG:  aborting any active transactions
+2026-10-22 12:15:35.453 CST [68693] LOG:  background worker "logical replication launcher" (PID 68700) exited with exit code 1
+2026-10-22 12:15:35.454 CST [68695] LOG:  shutting down
+2026-10-22 12:15:35.454 CST [68695] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 12:15:35.574 CST [68695] LOG:  checkpoint complete: wrote 2009 buffers (12.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.052 s, sync=0.066 s, total=0.120 s; sync files=800, longest=0.001 s, average=0.001 s; distance=9598 kB, estimate=9598 kB; lsn=0/1DF2720, redo lsn=0/1DF2720
+2026-10-22 12:15:35.583 CST [68693] LOG:  database system is shut down
+2026-10-22 12:23:49.154 CST [71944] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 12:23:49.155 CST [71944] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-8gmdj3lr/socket/.s.PGSQL.5432"
+2026-10-22 12:23:49.166 CST [71948] LOG:  database system was shut down at 2026-10-22 12:23:48 CST
+2026-10-22 12:23:49.176 CST [71944] LOG:  database system is ready to accept connections
+2026-10-22 12:24:47.888 CST [72693] ERROR:  deadlock detected at character 13
+2026-10-22 12:24:47.888 CST [72693] DETAIL:  Process 72693 waits for RowExclusiveLock on relation 16417 of database 16384; blocked by process 72695.
+	Process 72695 waits for AccessExclusiveLock on relation 16417 of database 16384; blocked by process 72693.
+	Process 72693: INSERT INTO ssf_bindings(id,volume_key,operation_id,node,sandbox,readonly,state,descriptor,owner_uid,run_uid) VALUES($1,$2,$3,$4,$5,$6,'Acquired',$7,$8,$9) ON CONFLICT(id) DO NOTHING
+	Process 72695: 
+	CREATE TABLE IF NOT EXISTS ssf_volumes (key text PRIMARY KEY, pvc_uid text NOT NULL UNIQUE, descriptor jsonb NOT NULL, draining boolean NOT NULL DEFAULT false);
+	CREATE TABLE IF NOT EXISTS ssf_volume_maintenance(volume_key text PRIMARY KEY REFERENCES ssf_volumes(key), token text NOT NULL, target_bytes bigint NOT NULL CHECK(target_bytes>0), state text NOT NULL);
+	CREATE TABLE IF NOT EXISTS ssf_operations (id text PRIMARY KEY, digest text NOT NULL, state text NOT NULL, reason text NOT NULL DEFAULT '', updated timestamptz NOT NULL DEFAULT now());
+	CREATE TABLE IF NOT EXISTS ssf_bindings (id text PRIMARY KEY, volume_key text NOT NULL REFERENCES ssf_volumes(key), operation_id text NOT NULL REFERENCES ssf_operations(id), node text NOT NULL, sandbox text NOT NULL, readonly boolean NOT NULL, state text NOT NULL, descriptor jsonb NOT NULL);
+	CREATE INDEX IF NOT EXISTS ssf_bindings_volume ON ssf_bindings(volume_key);
+	CREATE TABLE IF NOT EXISTS ssf_steps (id text PRIMARY KEY, digest text NOT NULL, state text NOT NULL, res
+2026-10-22 12:24:47.888 CST [72693] HINT:  See server log for query details.
+2026-10-22 12:24:47.888 CST [72693] STATEMENT:  INSERT INTO ssf_bindings(id,volume_key,operation_id,node,sandbox,readonly,state,descriptor,owner_uid,run_uid) VALUES($1,$2,$3,$4,$5,$6,'Acquired',$7,$8,$9) ON CONFLICT(id) DO NOTHING
+2026-10-22 12:25:09.598 CST [71944] LOG:  received fast shutdown request
+2026-10-22 12:25:09.600 CST [71944] LOG:  aborting any active transactions
+2026-10-22 12:25:09.613 CST [71944] LOG:  background worker "logical replication launcher" (PID 71951) exited with exit code 1
+2026-10-22 12:25:09.616 CST [71946] LOG:  shutting down
+2026-10-22 12:25:09.617 CST [71946] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 12:25:10.984 CST [71946] LOG:  checkpoint complete: wrote 1086 buffers (6.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.027 s, sync=1.309 s, total=1.368 s; sync files=436, longest=0.055 s, average=0.003 s; distance=5242 kB, estimate=5242 kB; lsn=0/19B17B0, redo lsn=0/19B17B0
+2026-10-22 12:25:10.989 CST [71944] LOG:  database system is shut down
+2026-10-22 12:27:01.600 CST [72946] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 12:27:01.601 CST [72946] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-t_tznifl/socket/.s.PGSQL.5432"
+2026-10-22 12:27:01.618 CST [72949] LOG:  database system was shut down at 2026-10-22 12:27:01 CST
+2026-10-22 12:27:01.622 CST [72946] LOG:  database system is ready to accept connections
+2026-10-22 12:27:32.464 CST [72946] LOG:  received fast shutdown request
+2026-10-22 12:27:32.464 CST [72946] LOG:  aborting any active transactions
+2026-10-22 12:27:32.465 CST [72946] LOG:  background worker "logical replication launcher" (PID 72952) exited with exit code 1
+2026-10-22 12:27:32.465 CST [72947] LOG:  shutting down
+2026-10-22 12:27:32.466 CST [72947] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 12:27:32.590 CST [72947] LOG:  checkpoint complete: wrote 2016 buffers (12.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.046 s, sync=0.078 s, total=0.125 s; sync files=805, longest=0.002 s, average=0.001 s; distance=9637 kB, estimate=9637 kB; lsn=0/1DFC2D8, redo lsn=0/1DFC2D8
+2026-10-22 12:27:32.599 CST [72946] LOG:  database system is shut down
+2026-10-22 12:41:01.348 CST [78882] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 12:41:01.349 CST [78882] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-h7ttynw1/socket/.s.PGSQL.5432"
+2026-10-22 12:41:01.355 CST [78885] LOG:  database system was shut down at 2026-10-22 12:41:01 CST
+2026-10-22 12:41:01.359 CST [78882] LOG:  database system is ready to accept connections
+2026-10-22 12:41:27.604 CST [78882] LOG:  received fast shutdown request
+2026-10-22 12:41:27.605 CST [78882] LOG:  aborting any active transactions
+2026-10-22 12:41:27.605 CST [78882] LOG:  background worker "logical replication launcher" (PID 78888) exited with exit code 1
+2026-10-22 12:41:27.606 CST [78883] LOG:  shutting down
+2026-10-22 12:41:27.606 CST [78883] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 12:41:27.715 CST [78883] LOG:  checkpoint complete: wrote 2016 buffers (12.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.039 s, sync=0.069 s, total=0.110 s; sync files=805, longest=0.001 s, average=0.001 s; distance=9637 kB, estimate=9637 kB; lsn=0/1DFC2F0, redo lsn=0/1DFC2F0
+2026-10-22 12:41:27.722 CST [78882] LOG:  database system is shut down
+2026-10-22 13:01:14.090 CST [81966] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 13:01:14.091 CST [81966] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-3c_01prt/socket/.s.PGSQL.5432"
+2026-10-22 13:01:14.097 CST [81972] LOG:  database system was shut down at 2026-10-22 13:01:13 CST
+2026-10-22 13:01:14.100 CST [81966] LOG:  database system is ready to accept connections
+2026-10-22 13:01:44.091 CST [81966] LOG:  received fast shutdown request
+2026-10-22 13:01:44.092 CST [81966] LOG:  aborting any active transactions
+2026-10-22 13:01:44.093 CST [81966] LOG:  background worker "logical replication launcher" (PID 81975) exited with exit code 1
+2026-10-22 13:01:44.093 CST [81970] LOG:  shutting down
+2026-10-22 13:01:44.093 CST [81970] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 13:01:44.195 CST [81970] LOG:  checkpoint complete: wrote 2015 buffers (12.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.041 s, sync=0.060 s, total=0.103 s; sync files=805, longest=0.001 s, average=0.001 s; distance=9638 kB, estimate=9638 kB; lsn=0/1DFC468, redo lsn=0/1DFC468
+2026-10-22 13:01:44.202 CST [81966] LOG:  database system is shut down
+2026-10-22 14:07:58.892 CST [87733] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 14:07:58.893 CST [87733] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-32bfi9_h/socket/.s.PGSQL.5432"
+2026-10-22 14:07:58.899 CST [87736] LOG:  database system was shut down at 2026-10-22 14:07:58 CST
+2026-10-22 14:07:58.902 CST [87733] LOG:  database system is ready to accept connections
+2026-10-22 14:08:29.797 CST [87733] LOG:  received fast shutdown request
+2026-10-22 14:08:29.798 CST [87733] LOG:  aborting any active transactions
+2026-10-22 14:08:29.798 CST [87733] LOG:  background worker "logical replication launcher" (PID 87739) exited with exit code 1
+2026-10-22 14:08:29.799 CST [87734] LOG:  shutting down
+2026-10-22 14:08:29.799 CST [87734] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 14:08:29.904 CST [87734] LOG:  checkpoint complete: wrote 2033 buffers (12.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.042 s, sync=0.063 s, total=0.106 s; sync files=811, longest=0.001 s, average=0.001 s; distance=9686 kB, estimate=9686 kB; lsn=0/1E084A8, redo lsn=0/1E084A8
+2026-10-22 14:08:29.912 CST [87733] LOG:  database system is shut down
+2026-10-22 14:09:26.073 CST [88043] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 14:09:26.074 CST [88043] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-eyc_vcaf/socket/.s.PGSQL.5432"
+2026-10-22 14:09:26.080 CST [88046] LOG:  database system was shut down at 2026-10-22 14:09:25 CST
+2026-10-22 14:09:26.083 CST [88043] LOG:  database system is ready to accept connections
+2026-10-22 14:09:46.611 CST [88043] LOG:  received fast shutdown request
+2026-10-22 14:09:46.611 CST [88043] LOG:  aborting any active transactions
+2026-10-22 14:09:46.612 CST [88043] LOG:  background worker "logical replication launcher" (PID 88049) exited with exit code 1
+2026-10-22 14:09:46.612 CST [88044] LOG:  shutting down
+2026-10-22 14:09:46.613 CST [88044] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 14:09:46.718 CST [88044] LOG:  checkpoint complete: wrote 2032 buffers (12.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.041 s, sync=0.064 s, total=0.107 s; sync files=811, longest=0.003 s, average=0.001 s; distance=9697 kB, estimate=9697 kB; lsn=0/1E0B348, redo lsn=0/1E0B348
+2026-10-22 14:09:46.726 CST [88043] LOG:  database system is shut down
+2026-10-22 14:11:12.201 CST [88290] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 14:11:12.202 CST [88290] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-g5ox0c95/socket/.s.PGSQL.5432"
+2026-10-22 14:11:12.207 CST [88293] LOG:  database system was shut down at 2026-10-22 14:11:12 CST
+2026-10-22 14:11:12.209 CST [88290] LOG:  database system is ready to accept connections
+2026-10-22 14:11:32.964 CST [88290] LOG:  received fast shutdown request
+2026-10-22 14:11:32.964 CST [88290] LOG:  aborting any active transactions
+2026-10-22 14:11:32.964 CST [88290] LOG:  background worker "logical replication launcher" (PID 88296) exited with exit code 1
+2026-10-22 14:11:32.965 CST [88291] LOG:  shutting down
+2026-10-22 14:11:32.965 CST [88291] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 14:11:33.071 CST [88291] LOG:  checkpoint complete: wrote 2032 buffers (12.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.040 s, sync=0.065 s, total=0.107 s; sync files=811, longest=0.001 s, average=0.001 s; distance=9704 kB, estimate=9704 kB; lsn=0/1E0CD60, redo lsn=0/1E0CD60
+2026-10-22 14:11:33.079 CST [88290] LOG:  database system is shut down
+2026-10-22 14:28:17.627 CST [90342] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 14:28:17.628 CST [90342] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-mvh81cca/socket/.s.PGSQL.5432"
+2026-10-22 14:28:17.634 CST [90345] LOG:  database system was shut down at 2026-10-22 14:28:17 CST
+2026-10-22 14:28:17.637 CST [90342] LOG:  database system is ready to accept connections
+2026-10-22 14:28:56.571 CST [90342] LOG:  received fast shutdown request
+2026-10-22 14:28:56.571 CST [90342] LOG:  aborting any active transactions
+2026-10-22 14:28:56.572 CST [90342] LOG:  background worker "logical replication launcher" (PID 90348) exited with exit code 1
+2026-10-22 14:28:56.573 CST [90343] LOG:  shutting down
+2026-10-22 14:28:56.573 CST [90343] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 14:28:56.702 CST [90343] LOG:  checkpoint complete: wrote 2032 buffers (12.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.048 s, sync=0.080 s, total=0.130 s; sync files=811, longest=0.002 s, average=0.001 s; distance=9703 kB, estimate=9703 kB; lsn=0/1E0C9E0, redo lsn=0/1E0C9E0
+2026-10-22 14:28:56.711 CST [90342] LOG:  database system is shut down
+2026-10-22 14:43:09.991 CST [93066] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 14:43:09.992 CST [93066] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-8ues01yc/socket/.s.PGSQL.5432"
+2026-10-22 14:43:09.998 CST [93069] LOG:  database system was shut down at 2026-10-22 14:43:09 CST
+2026-10-22 14:43:10.001 CST [93066] LOG:  database system is ready to accept connections
+2026-10-22 14:43:38.489 CST [93066] LOG:  received fast shutdown request
+2026-10-22 14:43:38.490 CST [93066] LOG:  aborting any active transactions
+2026-10-22 14:43:38.491 CST [93066] LOG:  background worker "logical replication launcher" (PID 93072) exited with exit code 1
+2026-10-22 14:43:38.491 CST [93067] LOG:  shutting down
+2026-10-22 14:43:38.491 CST [93067] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 14:43:38.591 CST [93067] LOG:  checkpoint complete: wrote 1057 buffers (6.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.030 s, sync=0.069 s, total=0.100 s; sync files=417, longest=0.003 s, average=0.001 s; distance=5135 kB, estimate=5135 kB; lsn=0/19969C0, redo lsn=0/19969C0
+2026-10-22 14:43:38.599 CST [93066] LOG:  database system is shut down
+2026-10-22 14:47:20.268 CST [93506] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 14:47:20.270 CST [93506] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-cnwdfrhs/socket/.s.PGSQL.5432"
+2026-10-22 14:47:20.280 CST [93509] LOG:  database system was shut down at 2026-10-22 14:47:20 CST
+2026-10-22 14:47:20.287 CST [93506] LOG:  database system is ready to accept connections
+2026-10-22 14:48:09.211 CST [93506] LOG:  received fast shutdown request
+2026-10-22 14:48:09.212 CST [93506] LOG:  aborting any active transactions
+2026-10-22 14:48:09.213 CST [93506] LOG:  background worker "logical replication launcher" (PID 93514) exited with exit code 1
+2026-10-22 14:48:09.213 CST [93507] LOG:  shutting down
+2026-10-22 14:48:09.214 CST [93507] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 14:48:09.329 CST [93507] LOG:  checkpoint complete: wrote 2057 buffers (12.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.051 s, sync=0.064 s, total=0.117 s; sync files=828, longest=0.001 s, average=0.001 s; distance=9799 kB, estimate=9799 kB; lsn=0/1E24A60, redo lsn=0/1E24A60
+2026-10-22 14:48:09.337 CST [93506] LOG:  database system is shut down
+2026-10-22 14:50:01.962 CST [94107] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 14:50:01.963 CST [94107] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-fotiqtu4/socket/.s.PGSQL.5432"
+2026-10-22 14:50:01.968 CST [94110] LOG:  database system was shut down at 2026-10-22 14:50:01 CST
+2026-10-22 14:50:01.970 CST [94107] LOG:  database system is ready to accept connections
+2026-10-22 14:50:25.782 CST [94107] LOG:  received fast shutdown request
+2026-10-22 14:50:25.782 CST [94107] LOG:  aborting any active transactions
+2026-10-22 14:50:25.783 CST [94107] LOG:  background worker "logical replication launcher" (PID 94113) exited with exit code 1
+2026-10-22 14:50:25.783 CST [94108] LOG:  shutting down
+2026-10-22 14:50:25.783 CST [94108] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 14:50:25.895 CST [94108] LOG:  checkpoint complete: wrote 2054 buffers (12.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.043 s, sync=0.068 s, total=0.113 s; sync files=828, longest=0.002 s, average=0.001 s; distance=9802 kB, estimate=9802 kB; lsn=0/1E25498, redo lsn=0/1E25498
+2026-10-22 14:50:25.904 CST [94107] LOG:  database system is shut down
+2026-10-22 14:53:52.662 CST [94560] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 14:53:52.663 CST [94560] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-hrcxqs5u/socket/.s.PGSQL.5432"
+2026-10-22 14:53:52.669 CST [94563] LOG:  database system was shut down at 2026-10-22 14:53:52 CST
+2026-10-22 14:53:52.672 CST [94560] LOG:  database system is ready to accept connections
+2026-10-22 14:54:28.433 CST [94560] LOG:  received fast shutdown request
+2026-10-22 14:54:28.446 CST [94560] LOG:  aborting any active transactions
+2026-10-22 14:54:28.446 CST [94560] LOG:  background worker "logical replication launcher" (PID 94566) exited with exit code 1
+2026-10-22 14:54:28.447 CST [94561] LOG:  shutting down
+2026-10-22 14:54:28.449 CST [94561] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 14:54:28.579 CST [94561] LOG:  checkpoint complete: wrote 2056 buffers (12.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.047 s, sync=0.071 s, total=0.132 s; sync files=828, longest=0.002 s, average=0.001 s; distance=9824 kB, estimate=9824 kB; lsn=0/1E2ACE8, redo lsn=0/1E2ACE8
+2026-10-22 14:54:28.587 CST [94560] LOG:  database system is shut down
+2026-10-22 14:57:13.802 CST [94872] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 14:57:13.802 CST [94872] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-wdmkymli/socket/.s.PGSQL.5432"
+2026-10-22 14:57:13.816 CST [94875] LOG:  database system was shut down at 2026-10-22 14:57:13 CST
+2026-10-22 14:57:13.819 CST [94872] LOG:  database system is ready to accept connections
+2026-10-22 14:57:35.905 CST [94872] LOG:  received fast shutdown request
+2026-10-22 14:57:35.905 CST [94872] LOG:  aborting any active transactions
+2026-10-22 14:57:35.906 CST [94872] LOG:  background worker "logical replication launcher" (PID 94878) exited with exit code 1
+2026-10-22 14:57:35.906 CST [94873] LOG:  shutting down
+2026-10-22 14:57:35.907 CST [94873] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 14:57:36.018 CST [94873] LOG:  checkpoint complete: wrote 2056 buffers (12.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.041 s, sync=0.069 s, total=0.112 s; sync files=828, longest=0.002 s, average=0.001 s; distance=9824 kB, estimate=9824 kB; lsn=0/1E2ADC0, redo lsn=0/1E2ADC0
+2026-10-22 14:57:36.025 CST [94872] LOG:  database system is shut down
+2026-10-22 15:01:35.983 CST [95305] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 15:01:35.985 CST [95305] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-gp88ukzi/socket/.s.PGSQL.5432"
+2026-10-22 15:01:35.991 CST [95308] LOG:  database system was shut down at 2026-10-22 15:01:35 CST
+2026-10-22 15:01:35.994 CST [95305] LOG:  database system is ready to accept connections
+2026-10-22 15:02:08.303 CST [95305] LOG:  received fast shutdown request
+2026-10-22 15:02:08.304 CST [95305] LOG:  aborting any active transactions
+2026-10-22 15:02:08.305 CST [95305] LOG:  background worker "logical replication launcher" (PID 95311) exited with exit code 1
+2026-10-22 15:02:08.305 CST [95306] LOG:  shutting down
+2026-10-22 15:02:08.305 CST [95306] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 15:02:08.536 CST [95306] LOG:  checkpoint complete: wrote 2056 buffers (12.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.045 s, sync=0.185 s, total=0.232 s; sync files=828, longest=0.078 s, average=0.001 s; distance=9823 kB, estimate=9823 kB; lsn=0/1E2A998, redo lsn=0/1E2A998
+2026-10-22 15:02:08.543 CST [95305] LOG:  database system is shut down
+2026-10-22 15:09:20.992 CST [95942] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 15:09:20.994 CST [95942] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-v8u4fdz1/socket/.s.PGSQL.5432"
+2026-10-22 15:09:20.999 CST [95945] LOG:  database system was shut down at 2026-10-22 15:09:20 CST
+2026-10-22 15:09:21.002 CST [95942] LOG:  database system is ready to accept connections
+2026-10-22 15:09:55.316 CST [95942] LOG:  received fast shutdown request
+2026-10-22 15:09:55.317 CST [95942] LOG:  aborting any active transactions
+2026-10-22 15:09:55.318 CST [95942] LOG:  background worker "logical replication launcher" (PID 95948) exited with exit code 1
+2026-10-22 15:09:55.318 CST [95943] LOG:  shutting down
+2026-10-22 15:09:55.318 CST [95943] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 15:09:55.429 CST [95943] LOG:  checkpoint complete: wrote 2065 buffers (12.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.045 s, sync=0.065 s, total=0.112 s; sync files=839, longest=0.001 s, average=0.001 s; distance=9891 kB, estimate=9891 kB; lsn=0/1E3B7D8, redo lsn=0/1E3B7D8
+2026-10-22 15:09:55.437 CST [95942] LOG:  database system is shut down
+2026-10-22 15:12:17.866 CST [97770] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 15:12:17.867 CST [97770] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-6zecyw52/socket/.s.PGSQL.5432"
+2026-10-22 15:12:17.875 CST [97773] LOG:  database system was shut down at 2026-10-22 15:12:17 CST
+2026-10-22 15:12:17.879 CST [97770] LOG:  database system is ready to accept connections
+2026-10-22 15:12:47.489 CST [97770] LOG:  received fast shutdown request
+2026-10-22 15:12:47.489 CST [97770] LOG:  aborting any active transactions
+2026-10-22 15:12:47.490 CST [97770] LOG:  background worker "logical replication launcher" (PID 97776) exited with exit code 1
+2026-10-22 15:12:47.490 CST [97771] LOG:  shutting down
+2026-10-22 15:12:47.491 CST [97771] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 15:12:47.736 CST [97771] LOG:  checkpoint complete: wrote 2065 buffers (12.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.045 s, sync=0.200 s, total=0.246 s; sync files=839, longest=0.043 s, average=0.001 s; distance=9906 kB, estimate=9906 kB; lsn=0/1E3F5D0, redo lsn=0/1E3F5D0
+2026-10-22 15:12:47.744 CST [97770] LOG:  database system is shut down
+2026-10-22 15:14:48.200 CST [99321] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 15:14:48.201 CST [99321] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-zelpsnmi/socket/.s.PGSQL.5432"
+2026-10-22 15:14:48.205 CST [99324] LOG:  database system was shut down at 2026-10-22 15:14:48 CST
+2026-10-22 15:14:48.208 CST [99321] LOG:  database system is ready to accept connections
+2026-10-22 15:15:14.219 CST [99321] LOG:  received fast shutdown request
+2026-10-22 15:15:14.219 CST [99321] LOG:  aborting any active transactions
+2026-10-22 15:15:14.220 CST [99321] LOG:  background worker "logical replication launcher" (PID 99327) exited with exit code 1
+2026-10-22 15:15:14.220 CST [99322] LOG:  shutting down
+2026-10-22 15:15:14.221 CST [99322] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 15:15:14.356 CST [99322] LOG:  checkpoint complete: wrote 2072 buffers (12.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.042 s, sync=0.092 s, total=0.136 s; sync files=840, longest=0.021 s, average=0.001 s; distance=9913 kB, estimate=9913 kB; lsn=0/1E411F0, redo lsn=0/1E411F0
+2026-10-22 15:15:14.365 CST [99321] LOG:  database system is shut down
+2026-10-22 15:16:31.073 CST [99610] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 15:16:31.074 CST [99610] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-jh3d2rxu/socket/.s.PGSQL.5432"
+2026-10-22 15:16:31.079 CST [99613] LOG:  database system was shut down at 2026-10-22 15:16:30 CST
+2026-10-22 15:16:31.082 CST [99610] LOG:  database system is ready to accept connections
+2026-10-22 15:17:02.924 CST [99610] LOG:  received fast shutdown request
+2026-10-22 15:17:02.924 CST [99610] LOG:  aborting any active transactions
+2026-10-22 15:17:02.925 CST [99610] LOG:  background worker "logical replication launcher" (PID 99616) exited with exit code 1
+2026-10-22 15:17:02.926 CST [99611] LOG:  shutting down
+2026-10-22 15:17:02.926 CST [99611] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 15:17:03.038 CST [99611] LOG:  checkpoint complete: wrote 2081 buffers (12.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.043 s, sync=0.068 s, total=0.113 s; sync files=847, longest=0.003 s, average=0.001 s; distance=9935 kB, estimate=9935 kB; lsn=0/1E46B98, redo lsn=0/1E46B98
+2026-10-22 15:17:03.046 CST [99610] LOG:  database system is shut down
+2026-10-22 15:22:46.031 CST [498] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 15:22:46.032 CST [498] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-knjbmtq1/socket/.s.PGSQL.5432"
+2026-10-22 15:22:46.039 CST [502] LOG:  database system was shut down at 2026-10-22 15:22:45 CST
+2026-10-22 15:22:46.042 CST [498] LOG:  database system is ready to accept connections
+2026-10-22 15:23:19.874 CST [498] LOG:  received fast shutdown request
+2026-10-22 15:23:19.874 CST [498] LOG:  aborting any active transactions
+2026-10-22 15:23:19.875 CST [498] LOG:  background worker "logical replication launcher" (PID 506) exited with exit code 1
+2026-10-22 15:23:19.875 CST [500] LOG:  shutting down
+2026-10-22 15:23:19.876 CST [500] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 15:23:19.989 CST [500] LOG:  checkpoint complete: wrote 2083 buffers (12.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.043 s, sync=0.069 s, total=0.114 s; sync files=847, longest=0.003 s, average=0.001 s; distance=9934 kB, estimate=9934 kB; lsn=0/1E464E8, redo lsn=0/1E464E8
+2026-10-22 15:23:19.996 CST [498] LOG:  database system is shut down
+2026-10-22 15:34:26.248 CST [1405] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 15:34:26.248 CST [1405] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-c2fxvuhy/socket/.s.PGSQL.5432"
+2026-10-22 15:34:26.253 CST [1408] LOG:  database system was shut down at 2026-10-22 15:34:26 CST
+2026-10-22 15:34:26.256 CST [1405] LOG:  database system is ready to accept connections
+2026-10-22 15:35:10.674 CST [1405] LOG:  received fast shutdown request
+2026-10-22 15:35:10.676 CST [1405] LOG:  aborting any active transactions
+2026-10-22 15:35:10.678 CST [1405] LOG:  background worker "logical replication launcher" (PID 1411) exited with exit code 1
+2026-10-22 15:35:10.678 CST [1406] LOG:  shutting down
+2026-10-22 15:35:10.679 CST [1406] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 15:35:10.792 CST [1406] LOG:  checkpoint complete: wrote 2094 buffers (12.8%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.046 s, sync=0.066 s, total=0.114 s; sync files=859, longest=0.002 s, average=0.001 s; distance=10013 kB, estimate=10013 kB; lsn=0/1E5A070, redo lsn=0/1E5A070
+2026-10-22 15:35:10.799 CST [1405] LOG:  database system is shut down
+2026-10-22 15:37:13.303 CST [1746] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 15:37:13.304 CST [1746] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-oe4wxxb8/socket/.s.PGSQL.5432"
+2026-10-22 15:37:13.309 CST [1749] LOG:  database system was shut down at 2026-10-22 15:37:13 CST
+2026-10-22 15:37:13.311 CST [1746] LOG:  database system is ready to accept connections
+2026-10-22 15:37:41.941 CST [1746] LOG:  received fast shutdown request
+2026-10-22 15:37:41.941 CST [1746] LOG:  aborting any active transactions
+2026-10-22 15:37:41.942 CST [1746] LOG:  background worker "logical replication launcher" (PID 1752) exited with exit code 1
+2026-10-22 15:37:41.942 CST [1747] LOG:  shutting down
+2026-10-22 15:37:41.943 CST [1747] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 15:37:42.049 CST [1747] LOG:  checkpoint complete: wrote 2094 buffers (12.8%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.042 s, sync=0.064 s, total=0.107 s; sync files=859, longest=0.001 s, average=0.001 s; distance=10034 kB, estimate=10034 kB; lsn=0/1E5F530, redo lsn=0/1E5F530
+2026-10-22 15:37:42.060 CST [1746] LOG:  database system is shut down
+2026-10-22 15:42:04.595 CST [2300] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 15:42:04.596 CST [2300] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-o_wdvrrx/socket/.s.PGSQL.5432"
+2026-10-22 15:42:04.601 CST [2303] LOG:  database system was shut down at 2026-10-22 15:42:04 CST
+2026-10-22 15:42:04.606 CST [2300] LOG:  database system is ready to accept connections
+2026-10-22 15:42:54.678 CST [2300] LOG:  received fast shutdown request
+2026-10-22 15:42:54.679 CST [2300] LOG:  aborting any active transactions
+2026-10-22 15:42:54.680 CST [2300] LOG:  background worker "logical replication launcher" (PID 2306) exited with exit code 1
+2026-10-22 15:42:54.681 CST [2301] LOG:  shutting down
+2026-10-22 15:42:54.681 CST [2301] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 15:42:54.830 CST [2301] LOG:  checkpoint complete: wrote 2095 buffers (12.8%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.063 s, sync=0.085 s, total=0.149 s; sync files=859, longest=0.001 s, average=0.001 s; distance=10033 kB, estimate=10033 kB; lsn=0/1E5F318, redo lsn=0/1E5F318
+2026-10-22 15:42:54.837 CST [2300] LOG:  database system is shut down
+2026-10-22 15:44:50.896 CST [2765] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 15:44:50.896 CST [2765] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-b8yqflyn/socket/.s.PGSQL.5432"
+2026-10-22 15:44:50.902 CST [2768] LOG:  database system was shut down at 2026-10-22 15:44:50 CST
+2026-10-22 15:44:50.905 CST [2765] LOG:  database system is ready to accept connections
+2026-10-22 15:45:17.702 CST [2906] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 15:45:17.702 CST [2906] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792655117681077000-snapshot) already exists.
+2026-10-22 15:45:17.702 CST [2906] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 15:45:28.457 CST [2765] LOG:  received fast shutdown request
+2026-10-22 15:45:28.457 CST [2765] LOG:  aborting any active transactions
+2026-10-22 15:45:28.457 CST [2765] LOG:  background worker "logical replication launcher" (PID 2771) exited with exit code 1
+2026-10-22 15:45:28.458 CST [2766] LOG:  shutting down
+2026-10-22 15:45:28.458 CST [2766] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 15:45:28.569 CST [2766] LOG:  checkpoint complete: wrote 2097 buffers (12.8%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.042 s, sync=0.068 s, total=0.111 s; sync files=860, longest=0.001 s, average=0.001 s; distance=10046 kB, estimate=10046 kB; lsn=0/1E62598, redo lsn=0/1E62598
+2026-10-22 15:45:28.576 CST [2765] LOG:  database system is shut down
+2026-10-22 16:03:50.540 CST [4811] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 16:03:50.542 CST [4811] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-wz1bk5gs/socket/.s.PGSQL.5432"
+2026-10-22 16:03:50.548 CST [4814] LOG:  database system was shut down at 2026-10-22 16:03:50 CST
+2026-10-22 16:03:50.550 CST [4811] LOG:  database system is ready to accept connections
+2026-10-22 16:04:22.175 CST [5046] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 16:04:22.175 CST [5046] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792656262139758000-snapshot) already exists.
+2026-10-22 16:04:22.175 CST [5046] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 16:04:27.657 CST [4811] LOG:  received fast shutdown request
+2026-10-22 16:04:27.657 CST [4811] LOG:  aborting any active transactions
+2026-10-22 16:04:27.659 CST [4811] LOG:  background worker "logical replication launcher" (PID 4817) exited with exit code 1
+2026-10-22 16:04:27.659 CST [4812] LOG:  shutting down
+2026-10-22 16:04:27.660 CST [4812] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 16:04:27.854 CST [4812] LOG:  checkpoint complete: wrote 2101 buffers (12.8%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.087 s, sync=0.106 s, total=0.195 s; sync files=860, longest=0.001 s, average=0.001 s; distance=10092 kB, estimate=10092 kB; lsn=0/1E6DE90, redo lsn=0/1E6DE90
+2026-10-22 16:04:27.862 CST [4811] LOG:  database system is shut down
+2026-10-22 16:08:21.157 CST [7524] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 16:08:21.158 CST [7524] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-p_xch6el/socket/.s.PGSQL.5432"
+2026-10-22 16:08:21.164 CST [7527] LOG:  database system was shut down at 2026-10-22 16:08:21 CST
+2026-10-22 16:08:21.168 CST [7524] LOG:  database system is ready to accept connections
+2026-10-22 16:08:54.618 CST [7754] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 16:08:54.618 CST [7754] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792656534589222000-snapshot) already exists.
+2026-10-22 16:08:54.618 CST [7754] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 16:09:03.459 CST [7524] LOG:  received fast shutdown request
+2026-10-22 16:09:03.460 CST [7524] LOG:  aborting any active transactions
+2026-10-22 16:09:03.460 CST [7524] LOG:  background worker "logical replication launcher" (PID 7530) exited with exit code 1
+2026-10-22 16:09:03.461 CST [7525] LOG:  shutting down
+2026-10-22 16:09:03.461 CST [7525] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 16:09:03.581 CST [7525] LOG:  checkpoint complete: wrote 2103 buffers (12.8%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.045 s, sync=0.075 s, total=0.121 s; sync files=860, longest=0.003 s, average=0.001 s; distance=10101 kB, estimate=10101 kB; lsn=0/1E70368, redo lsn=0/1E70368
+2026-10-22 16:09:03.589 CST [7524] LOG:  database system is shut down
+2026-10-22 16:51:48.739 CST [12997] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 16:51:48.740 CST [12997] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-b15da4_j/socket/.s.PGSQL.5432"
+2026-10-22 16:51:48.751 CST [13000] LOG:  database system was shut down at 2026-10-22 16:51:48 CST
+2026-10-22 16:51:48.758 CST [12997] LOG:  database system is ready to accept connections
+2026-10-22 16:52:23.559 CST [13171] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 16:52:23.559 CST [13171] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792659143464804000-snapshot) already exists.
+2026-10-22 16:52:23.559 CST [13171] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 16:52:32.216 CST [12997] LOG:  received fast shutdown request
+2026-10-22 16:52:32.216 CST [12997] LOG:  aborting any active transactions
+2026-10-22 16:52:32.217 CST [12997] LOG:  background worker "logical replication launcher" (PID 13003) exited with exit code 1
+2026-10-22 16:52:32.218 CST [12998] LOG:  shutting down
+2026-10-22 16:52:32.218 CST [12998] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 16:52:32.354 CST [12998] LOG:  checkpoint complete: wrote 2103 buffers (12.8%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.051 s, sync=0.084 s, total=0.137 s; sync files=860, longest=0.001 s, average=0.001 s; distance=10103 kB, estimate=10103 kB; lsn=0/1E708F0, redo lsn=0/1E708F0
+2026-10-22 16:52:32.363 CST [12997] LOG:  database system is shut down
+2026-10-22 17:08:41.107 CST [14950] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 17:08:41.109 CST [14950] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-ux5sw35f/socket/.s.PGSQL.5432"
+2026-10-22 17:08:41.121 CST [14953] LOG:  database system was shut down at 2026-10-22 17:08:40 CST
+2026-10-22 17:08:41.138 CST [14950] LOG:  database system is ready to accept connections
+2026-10-22 17:09:23.557 CST [15557] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 17:09:23.557 CST [15557] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792660163520798000-snapshot) already exists.
+2026-10-22 17:09:23.557 CST [15557] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 17:09:34.737 CST [14950] LOG:  received fast shutdown request
+2026-10-22 17:09:34.737 CST [14950] LOG:  aborting any active transactions
+2026-10-22 17:09:34.740 CST [14950] LOG:  background worker "logical replication launcher" (PID 14956) exited with exit code 1
+2026-10-22 17:09:34.740 CST [14951] LOG:  shutting down
+2026-10-22 17:09:34.741 CST [14951] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 17:09:34.939 CST [14951] LOG:  checkpoint complete: wrote 2107 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.080 s, sync=0.117 s, total=0.200 s; sync files=865, longest=0.001 s, average=0.001 s; distance=10134 kB, estimate=10134 kB; lsn=0/1E78720, redo lsn=0/1E78720
+2026-10-22 17:09:34.952 CST [14950] LOG:  database system is shut down
+2026-10-22 17:11:17.973 CST [17182] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 17:11:17.974 CST [17182] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-286ouw6_/socket/.s.PGSQL.5432"
+2026-10-22 17:11:17.987 CST [17185] LOG:  database system was shut down at 2026-10-22 17:11:17 CST
+2026-10-22 17:11:17.995 CST [17182] LOG:  database system is ready to accept connections
+2026-10-22 17:12:07.195 CST [17613] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 17:12:07.195 CST [17613] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792660327130659000-snapshot) already exists.
+2026-10-22 17:12:07.195 CST [17613] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 17:12:21.721 CST [17182] LOG:  received fast shutdown request
+2026-10-22 17:12:21.730 CST [17182] LOG:  aborting any active transactions
+2026-10-22 17:12:21.731 CST [17182] LOG:  background worker "logical replication launcher" (PID 17188) exited with exit code 1
+2026-10-22 17:12:21.734 CST [17183] LOG:  shutting down
+2026-10-22 17:12:21.734 CST [17183] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 17:12:21.909 CST [17183] LOG:  checkpoint complete: wrote 2111 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.062 s, sync=0.112 s, total=0.176 s; sync files=865, longest=0.001 s, average=0.001 s; distance=10153 kB, estimate=10153 kB; lsn=0/1E7D028, redo lsn=0/1E7D028
+2026-10-22 17:12:21.918 CST [17182] LOG:  database system is shut down
+2026-10-22 17:19:36.887 CST [18520] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 17:19:36.888 CST [18520] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-pk2roqsj/socket/.s.PGSQL.5432"
+2026-10-22 17:19:36.894 CST [18523] LOG:  database system was shut down at 2026-10-22 17:19:36 CST
+2026-10-22 17:19:36.902 CST [18520] LOG:  database system is ready to accept connections
+2026-10-22 17:20:07.899 CST [18663] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 17:20:07.899 CST [18663] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792660807870445000-snapshot) already exists.
+2026-10-22 17:20:07.899 CST [18663] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 17:20:19.996 CST [18520] LOG:  received fast shutdown request
+2026-10-22 17:20:19.996 CST [18520] LOG:  aborting any active transactions
+2026-10-22 17:20:19.997 CST [18520] LOG:  background worker "logical replication launcher" (PID 18526) exited with exit code 1
+2026-10-22 17:20:19.998 CST [18521] LOG:  shutting down
+2026-10-22 17:20:19.998 CST [18521] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 17:20:20.246 CST [18521] LOG:  checkpoint complete: wrote 2116 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.153 s, sync=0.092 s, total=0.249 s; sync files=865, longest=0.002 s, average=0.001 s; distance=10177 kB, estimate=10177 kB; lsn=0/1E83300, redo lsn=0/1E83300
+2026-10-22 17:20:20.253 CST [18520] LOG:  database system is shut down
+2026-10-22 17:22:47.274 CST [18973] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 17:22:47.275 CST [18973] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-3l5kxuwv/socket/.s.PGSQL.5432"
+2026-10-22 17:22:47.280 CST [18977] LOG:  database system was shut down at 2026-10-22 17:22:47 CST
+2026-10-22 17:22:47.283 CST [18973] LOG:  database system is ready to accept connections
+2026-10-22 17:23:09.877 CST [19108] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 17:23:09.877 CST [19108] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792660989760181000-snapshot) already exists.
+2026-10-22 17:23:09.877 CST [19108] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 17:23:20.076 CST [18973] LOG:  received fast shutdown request
+2026-10-22 17:23:20.077 CST [18973] LOG:  aborting any active transactions
+2026-10-22 17:23:20.077 CST [18973] LOG:  background worker "logical replication launcher" (PID 18980) exited with exit code 1
+2026-10-22 17:23:20.077 CST [18975] LOG:  shutting down
+2026-10-22 17:23:20.078 CST [18975] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 17:23:20.192 CST [18975] LOG:  checkpoint complete: wrote 2118 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.045 s, sync=0.069 s, total=0.115 s; sync files=866, longest=0.002 s, average=0.001 s; distance=10185 kB, estimate=10185 kB; lsn=0/1E85030, redo lsn=0/1E85030
+2026-10-22 17:23:20.200 CST [18973] LOG:  database system is shut down
+2026-10-22 17:48:59.797 CST [24035] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 17:48:59.798 CST [24035] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-a_7zse33/socket/.s.PGSQL.5432"
+2026-10-22 17:48:59.804 CST [24038] LOG:  database system was shut down at 2026-10-22 17:48:59 CST
+2026-10-22 17:48:59.807 CST [24035] LOG:  database system is ready to accept connections
+2026-10-22 17:49:42.922 CST [24576] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 17:49:42.922 CST [24576] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792662582872096000-snapshot) already exists.
+2026-10-22 17:49:42.922 CST [24576] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 17:49:55.553 CST [24035] LOG:  received fast shutdown request
+2026-10-22 17:49:55.553 CST [24035] LOG:  aborting any active transactions
+2026-10-22 17:49:55.554 CST [24035] LOG:  background worker "logical replication launcher" (PID 24041) exited with exit code 1
+2026-10-22 17:49:55.555 CST [24036] LOG:  shutting down
+2026-10-22 17:49:55.555 CST [24036] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 17:49:55.777 CST [24036] LOG:  checkpoint complete: wrote 2117 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.091 s, sync=0.128 s, total=0.223 s; sync files=866, longest=0.001 s, average=0.001 s; distance=10182 kB, estimate=10182 kB; lsn=0/1E844A8, redo lsn=0/1E844A8
+2026-10-22 17:49:55.788 CST [24035] LOG:  database system is shut down
+2026-10-22 17:51:51.141 CST [25727] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 17:51:51.141 CST [25727] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-9x3o0zmi/socket/.s.PGSQL.5432"
+2026-10-22 17:51:51.147 CST [25730] LOG:  database system was shut down at 2026-10-22 17:51:51 CST
+2026-10-22 17:51:51.150 CST [25727] LOG:  database system is ready to accept connections
+2026-10-22 17:52:23.072 CST [25858] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 17:52:23.072 CST [25858] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792662743033436000-snapshot) already exists.
+2026-10-22 17:52:23.072 CST [25858] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 17:52:32.663 CST [25727] LOG:  received fast shutdown request
+2026-10-22 17:52:32.663 CST [25727] LOG:  aborting any active transactions
+2026-10-22 17:52:32.664 CST [25727] LOG:  background worker "logical replication launcher" (PID 25733) exited with exit code 1
+2026-10-22 17:52:32.664 CST [25728] LOG:  shutting down
+2026-10-22 17:52:32.665 CST [25728] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 17:52:32.806 CST [25728] LOG:  checkpoint complete: wrote 2116 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.047 s, sync=0.093 s, total=0.142 s; sync files=866, longest=0.002 s, average=0.001 s; distance=10188 kB, estimate=10188 kB; lsn=0/1E85DE0, redo lsn=0/1E85DE0
+2026-10-22 17:52:32.815 CST [25727] LOG:  database system is shut down
+2026-10-22 18:14:00.261 CST [32063] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 18:14:00.262 CST [32063] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-z84v8c6t/socket/.s.PGSQL.5432"
+2026-10-22 18:14:00.275 CST [32070] LOG:  database system was shut down at 2026-10-22 18:14:00 CST
+2026-10-22 18:14:00.281 CST [32063] LOG:  database system is ready to accept connections
+2026-10-22 18:14:43.798 CST [32441] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 18:14:43.798 CST [32441] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792664083757810000-snapshot) already exists.
+2026-10-22 18:14:43.798 CST [32441] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 18:15:00.846 CST [32063] LOG:  received fast shutdown request
+2026-10-22 18:15:00.847 CST [32063] LOG:  aborting any active transactions
+2026-10-22 18:15:00.848 CST [32063] LOG:  background worker "logical replication launcher" (PID 32073) exited with exit code 1
+2026-10-22 18:15:00.848 CST [32068] LOG:  shutting down
+2026-10-22 18:15:00.849 CST [32068] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 18:15:01.100 CST [32068] LOG:  checkpoint complete: wrote 2118 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.153 s, sync=0.097 s, total=0.252 s; sync files=866, longest=0.002 s, average=0.001 s; distance=10193 kB, estimate=10193 kB; lsn=0/1E87168, redo lsn=0/1E87168
+2026-10-22 18:15:01.111 CST [32063] LOG:  database system is shut down
+2026-10-22 18:24:09.234 CST [34695] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 18:24:09.235 CST [34695] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-a7ko18a0/socket/.s.PGSQL.5432"
+2026-10-22 18:24:09.241 CST [34698] LOG:  database system was shut down at 2026-10-22 18:24:09 CST
+2026-10-22 18:24:09.243 CST [34695] LOG:  database system is ready to accept connections
+2026-10-22 18:24:35.680 CST [34868] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 18:24:35.680 CST [34868] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792664675572087000-snapshot) already exists.
+2026-10-22 18:24:35.680 CST [34868] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 18:24:46.145 CST [34695] LOG:  received fast shutdown request
+2026-10-22 18:24:46.145 CST [34695] LOG:  aborting any active transactions
+2026-10-22 18:24:46.146 CST [34695] LOG:  background worker "logical replication launcher" (PID 34701) exited with exit code 1
+2026-10-22 18:24:46.147 CST [34696] LOG:  shutting down
+2026-10-22 18:24:46.147 CST [34696] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 18:24:46.377 CST [34696] LOG:  checkpoint complete: wrote 2116 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.153 s, sync=0.077 s, total=0.231 s; sync files=866, longest=0.002 s, average=0.001 s; distance=10200 kB, estimate=10200 kB; lsn=0/1E88DC0, redo lsn=0/1E88DC0
+2026-10-22 18:24:46.386 CST [34695] LOG:  database system is shut down
+2026-10-22 18:33:18.748 CST [36973] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 18:33:18.749 CST [36973] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-gjcmzdq0/socket/.s.PGSQL.5432"
+2026-10-22 18:33:18.764 CST [36976] LOG:  database system was shut down at 2026-10-22 18:33:18 CST
+2026-10-22 18:33:18.773 CST [36973] LOG:  database system is ready to accept connections
+2026-10-22 18:33:48.819 CST [37189] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 18:33:48.819 CST [37189] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792665228782221000-snapshot) already exists.
+2026-10-22 18:33:48.819 CST [37189] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 18:34:02.213 CST [36973] LOG:  received fast shutdown request
+2026-10-22 18:34:02.213 CST [36973] LOG:  aborting any active transactions
+2026-10-22 18:34:02.214 CST [36973] LOG:  background worker "logical replication launcher" (PID 36979) exited with exit code 1
+2026-10-22 18:34:02.215 CST [36974] LOG:  shutting down
+2026-10-22 18:34:02.215 CST [36974] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 18:34:02.437 CST [36974] LOG:  checkpoint complete: wrote 2117 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.148 s, sync=0.073 s, total=0.222 s; sync files=866, longest=0.002 s, average=0.001 s; distance=10203 kB, estimate=10203 kB; lsn=0/1E898C8, redo lsn=0/1E898C8
+2026-10-22 18:34:02.445 CST [36973] LOG:  database system is shut down
+2026-10-22 18:40:26.999 CST [38567] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 18:40:27.000 CST [38567] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-14gfhkk7/socket/.s.PGSQL.5432"
+2026-10-22 18:40:27.012 CST [38571] LOG:  database system was shut down at 2026-10-22 18:40:26 CST
+2026-10-22 18:40:27.020 CST [38567] LOG:  database system is ready to accept connections
+2026-10-22 18:41:19.493 CST [39115] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 18:41:19.493 CST [39115] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792665679379258000-snapshot) already exists.
+2026-10-22 18:41:19.493 CST [39115] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 18:41:32.982 CST [38567] LOG:  received fast shutdown request
+2026-10-22 18:41:32.982 CST [38567] LOG:  aborting any active transactions
+2026-10-22 18:41:32.984 CST [38567] LOG:  background worker "logical replication launcher" (PID 38574) exited with exit code 1
+2026-10-22 18:41:32.985 CST [38569] LOG:  shutting down
+2026-10-22 18:41:32.986 CST [38569] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 18:41:33.409 CST [38569] LOG:  checkpoint complete: wrote 2117 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.250 s, sync=0.172 s, total=0.424 s; sync files=865, longest=0.003 s, average=0.001 s; distance=10231 kB, estimate=10231 kB; lsn=0/1E90A30, redo lsn=0/1E90A30
+2026-10-22 18:41:33.424 CST [38567] LOG:  database system is shut down
+2026-10-22 19:30:15.910 CST [50914] LOG:  starting PostgreSQL 17.6 on x86_64-apple-darwin22.6.0, compiled by Apple clang version 14.0.3 (clang-1403.0.22.14.1), 64-bit
+2026-10-22 19:30:15.911 CST [50914] LOG:  listening on Unix socket "/var/folders/x1/52htxhl13333hvq2pkhwvn480000gp/T/ssf-pg-cphqd6qx/socket/.s.PGSQL.5432"
+2026-10-22 19:30:15.917 CST [50917] LOG:  database system was shut down at 2026-10-22 19:30:15 CST
+2026-10-22 19:30:15.920 CST [50914] LOG:  database system is ready to accept connections
+2026-10-22 19:30:48.173 CST [51041] ERROR:  duplicate key value violates unique constraint "ssf_direct_snapshots_snapshot_uid_key"
+2026-10-22 19:30:48.173 CST [51041] DETAIL:  Key (snapshot_uid)=(TestPostgresDirectSnapshotRejectsAliasRequestIdentity-1792668648130771000-snapshot) already exists.
+2026-10-22 19:30:48.173 CST [51041] STATEMENT:  INSERT INTO ssf_direct_snapshots(id,snapshot_uid,content_uid,descriptor) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET id=excluded.id WHERE ssf_direct_snapshots.descriptor=excluded.descriptor AND NOT ssf_direct_snapshots.retired
+2026-10-22 19:31:03.239 CST [50914] LOG:  received fast shutdown request
+2026-10-22 19:31:03.240 CST [50914] LOG:  aborting any active transactions
+2026-10-22 19:31:03.241 CST [50914] LOG:  background worker "logical replication launcher" (PID 50920) exited with exit code 1
+2026-10-22 19:31:03.241 CST [50915] LOG:  shutting down
+2026-10-22 19:31:03.241 CST [50915] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 19:31:03.446 CST [50915] LOG:  checkpoint complete: wrote 2118 buffers (12.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.120 s, sync=0.084 s, total=0.206 s; sync files=866, longest=0.009 s, average=0.001 s; distance=10221 kB, estimate=10221 kB; lsn=0/1E8E1C0, redo lsn=0/1E8E1C0
+2026-10-22 19:31:03.455 CST [50914] LOG:  database system is shut down

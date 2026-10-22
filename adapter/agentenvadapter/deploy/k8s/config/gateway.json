@@ -1,0 +1,11 @@
+{
+  "log_level": "info",
+  "log_format": "json",
+  "gateway": {
+    "http_listen_addr": ":8080",
+    "scheduler_addr": "agentenv-scheduler:9090",
+    "request_timeout": "300s",
+    "forward_response_size": 4194304,
+    "sandbox_proxy_domains": []
+  }
+}

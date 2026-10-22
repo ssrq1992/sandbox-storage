@@ -17,6 +17,10 @@
     "agentenv-system"
   ],
   "CoordinatorUsers": [
-    "system:serviceaccount:agentenv-system:agentenv-scheduler"
+    "system:serviceaccount:agentenv-system:ssf-coordinator"
+  ],
+  "SnapshotControllerUsers": [
+    "system:serviceaccount:kube-system:snapshot-controller",
+    "system:serviceaccount:agentenv-system:ssf-overlaybd-controller"
   ]
 }

@@ -93,7 +93,7 @@ func Run(role, path string) error {
 		if e = kube.ValidateProfiles(c.VolumeProfiles); e != nil {
 			return e
 		}
-		handler := &guard.Handler{Ledger: db, API: api, Dynamic: dyn, VolumeProfiles: c.VolumeProfiles, ManagedNamespaces: c.ManagedNamespaces, CoordinatorUsers: c.CoordinatorUsers}
+		handler := &guard.Handler{Ledger: db, API: api, Dynamic: dyn, VolumeProfiles: c.VolumeProfiles, ManagedNamespaces: c.ManagedNamespaces, CoordinatorUsers: c.CoordinatorUsers, SnapshotControllerUsers: c.SnapshotControllerUsers}
 		mux.Handle("/validate", handler)
 		mutator := *handler
 		mutator.Mutating = true

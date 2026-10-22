@@ -791,6 +791,294 @@ func (x *VolumePreparation) GetProtocol() string {
 	return ""
 }
 
+type DriverFinalizeRequest struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	SignedNodePlan   string                 `protobuf:"bytes,1,opt,name=signed_node_plan,json=signedNodePlan,proto3" json:"signed_node_plan,omitempty"`
+	BindingUid       string                 `protobuf:"bytes,2,opt,name=binding_uid,json=bindingUid,proto3" json:"binding_uid,omitempty"`
+	DetachedEvidence string                 `protobuf:"bytes,3,opt,name=detached_evidence,json=detachedEvidence,proto3" json:"detached_evidence,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *DriverFinalizeRequest) Reset() {
+	*x = DriverFinalizeRequest{}
+	mi := &file_api_ssf_v1_node_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DriverFinalizeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DriverFinalizeRequest) ProtoMessage() {}
+
+func (x *DriverFinalizeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ssf_v1_node_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DriverFinalizeRequest.ProtoReflect.Descriptor instead.
+func (*DriverFinalizeRequest) Descriptor() ([]byte, []int) {
+	return file_api_ssf_v1_node_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *DriverFinalizeRequest) GetSignedNodePlan() string {
+	if x != nil {
+		return x.SignedNodePlan
+	}
+	return ""
+}
+
+func (x *DriverFinalizeRequest) GetBindingUid() string {
+	if x != nil {
+		return x.BindingUid
+	}
+	return ""
+}
+
+func (x *DriverFinalizeRequest) GetDetachedEvidence() string {
+	if x != nil {
+		return x.DetachedEvidence
+	}
+	return ""
+}
+
+type DriverPreparationReleaseRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	SignedNodePlan string                 `protobuf:"bytes,1,opt,name=signed_node_plan,json=signedNodePlan,proto3" json:"signed_node_plan,omitempty"`
+	BindingUid     string                 `protobuf:"bytes,2,opt,name=binding_uid,json=bindingUid,proto3" json:"binding_uid,omitempty"`
+	ReceiptJson    string                 `protobuf:"bytes,3,opt,name=receipt_json,json=receiptJson,proto3" json:"receipt_json,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *DriverPreparationReleaseRequest) Reset() {
+	*x = DriverPreparationReleaseRequest{}
+	mi := &file_api_ssf_v1_node_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DriverPreparationReleaseRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DriverPreparationReleaseRequest) ProtoMessage() {}
+
+func (x *DriverPreparationReleaseRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ssf_v1_node_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DriverPreparationReleaseRequest.ProtoReflect.Descriptor instead.
+func (*DriverPreparationReleaseRequest) Descriptor() ([]byte, []int) {
+	return file_api_ssf_v1_node_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *DriverPreparationReleaseRequest) GetSignedNodePlan() string {
+	if x != nil {
+		return x.SignedNodePlan
+	}
+	return ""
+}
+
+func (x *DriverPreparationReleaseRequest) GetBindingUid() string {
+	if x != nil {
+		return x.BindingUid
+	}
+	return ""
+}
+
+func (x *DriverPreparationReleaseRequest) GetReceiptJson() string {
+	if x != nil {
+		return x.ReceiptJson
+	}
+	return ""
+}
+
+type DriverCaptureRequest struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	SignedNodePlan    string                 `protobuf:"bytes,1,opt,name=signed_node_plan,json=signedNodePlan,proto3" json:"signed_node_plan,omitempty"`
+	BindingUid        string                 `protobuf:"bytes,2,opt,name=binding_uid,json=bindingUid,proto3" json:"binding_uid,omitempty"`
+	CaptureIntentJson string                 `protobuf:"bytes,3,opt,name=capture_intent_json,json=captureIntentJson,proto3" json:"capture_intent_json,omitempty"`
+	Evidence          string                 `protobuf:"bytes,4,opt,name=evidence,proto3" json:"evidence,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *DriverCaptureRequest) Reset() {
+	*x = DriverCaptureRequest{}
+	mi := &file_api_ssf_v1_node_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DriverCaptureRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DriverCaptureRequest) ProtoMessage() {}
+
+func (x *DriverCaptureRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ssf_v1_node_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DriverCaptureRequest.ProtoReflect.Descriptor instead.
+func (*DriverCaptureRequest) Descriptor() ([]byte, []int) {
+	return file_api_ssf_v1_node_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *DriverCaptureRequest) GetSignedNodePlan() string {
+	if x != nil {
+		return x.SignedNodePlan
+	}
+	return ""
+}
+
+func (x *DriverCaptureRequest) GetBindingUid() string {
+	if x != nil {
+		return x.BindingUid
+	}
+	return ""
+}
+
+func (x *DriverCaptureRequest) GetCaptureIntentJson() string {
+	if x != nil {
+		return x.CaptureIntentJson
+	}
+	return ""
+}
+
+func (x *DriverCaptureRequest) GetEvidence() string {
+	if x != nil {
+		return x.Evidence
+	}
+	return ""
+}
+
+type DriverCaptureResult struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	BindingUid     string                 `protobuf:"bytes,1,opt,name=binding_uid,json=bindingUid,proto3" json:"binding_uid,omitempty"`
+	CaptureId      string                 `protobuf:"bytes,2,opt,name=capture_id,json=captureId,proto3" json:"capture_id,omitempty"`
+	BarrierId      string                 `protobuf:"bytes,3,opt,name=barrier_id,json=barrierId,proto3" json:"barrier_id,omitempty"`
+	State          string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
+	SealedRevision string                 `protobuf:"bytes,5,opt,name=sealed_revision,json=sealedRevision,proto3" json:"sealed_revision,omitempty"`
+	PublishedHead  string                 `protobuf:"bytes,6,opt,name=published_head,json=publishedHead,proto3" json:"published_head,omitempty"`
+	CapacityBytes  uint64                 `protobuf:"varint,7,opt,name=capacity_bytes,json=capacityBytes,proto3" json:"capacity_bytes,omitempty"`
+	FilesystemUuid string                 `protobuf:"bytes,8,opt,name=filesystem_uuid,json=filesystemUuid,proto3" json:"filesystem_uuid,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *DriverCaptureResult) Reset() {
+	*x = DriverCaptureResult{}
+	mi := &file_api_ssf_v1_node_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DriverCaptureResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DriverCaptureResult) ProtoMessage() {}
+
+func (x *DriverCaptureResult) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ssf_v1_node_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DriverCaptureResult.ProtoReflect.Descriptor instead.
+func (*DriverCaptureResult) Descriptor() ([]byte, []int) {
+	return file_api_ssf_v1_node_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *DriverCaptureResult) GetBindingUid() string {
+	if x != nil {
+		return x.BindingUid
+	}
+	return ""
+}
+
+func (x *DriverCaptureResult) GetCaptureId() string {
+	if x != nil {
+		return x.CaptureId
+	}
+	return ""
+}
+
+func (x *DriverCaptureResult) GetBarrierId() string {
+	if x != nil {
+		return x.BarrierId
+	}
+	return ""
+}
+
+func (x *DriverCaptureResult) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *DriverCaptureResult) GetSealedRevision() string {
+	if x != nil {
+		return x.SealedRevision
+	}
+	return ""
+}
+
+func (x *DriverCaptureResult) GetPublishedHead() string {
+	if x != nil {
+		return x.PublishedHead
+	}
+	return ""
+}
+
+func (x *DriverCaptureResult) GetCapacityBytes() uint64 {
+	if x != nil {
+		return x.CapacityBytes
+	}
+	return 0
+}
+
+func (x *DriverCaptureResult) GetFilesystemUuid() string {
+	if x != nil {
+		return x.FilesystemUuid
+	}
+	return ""
+}
+
 var File_api_ssf_v1_node_proto protoreflect.FileDescriptor
 
 const file_api_ssf_v1_node_proto_rawDesc = "" +
@@ -859,8 +1147,39 @@ const file_api_ssf_v1_node_proto_rawDesc = "" +
 	"\x05state\x18\x02 \x01(\tR\x05state\x12!\n" +
 	"\freceipt_json\x18\x03 \x01(\tR\vreceiptJson\x12\x16\n" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12\x1a\n" +
-	"\bprotocol\x18\x05 \x01(\tR\bprotocol2\xb5\x04\n" +
-	"\x12RuntimeStorageNode\x12A\n" +
+	"\bprotocol\x18\x05 \x01(\tR\bprotocol\"\x8f\x01\n" +
+	"\x15DriverFinalizeRequest\x12(\n" +
+	"\x10signed_node_plan\x18\x01 \x01(\tR\x0esignedNodePlan\x12\x1f\n" +
+	"\vbinding_uid\x18\x02 \x01(\tR\n" +
+	"bindingUid\x12+\n" +
+	"\x11detached_evidence\x18\x03 \x01(\tR\x10detachedEvidence\"\x8f\x01\n" +
+	"\x1fDriverPreparationReleaseRequest\x12(\n" +
+	"\x10signed_node_plan\x18\x01 \x01(\tR\x0esignedNodePlan\x12\x1f\n" +
+	"\vbinding_uid\x18\x02 \x01(\tR\n" +
+	"bindingUid\x12!\n" +
+	"\freceipt_json\x18\x03 \x01(\tR\vreceiptJson\"\xad\x01\n" +
+	"\x14DriverCaptureRequest\x12(\n" +
+	"\x10signed_node_plan\x18\x01 \x01(\tR\x0esignedNodePlan\x12\x1f\n" +
+	"\vbinding_uid\x18\x02 \x01(\tR\n" +
+	"bindingUid\x12.\n" +
+	"\x13capture_intent_json\x18\x03 \x01(\tR\x11captureIntentJson\x12\x1a\n" +
+	"\bevidence\x18\x04 \x01(\tR\bevidence\"\xaa\x02\n" +
+	"\x13DriverCaptureResult\x12\x1f\n" +
+	"\vbinding_uid\x18\x01 \x01(\tR\n" +
+	"bindingUid\x12\x1d\n" +
+	"\n" +
+	"capture_id\x18\x02 \x01(\tR\tcaptureId\x12\x1d\n" +
+	"\n" +
+	"barrier_id\x18\x03 \x01(\tR\tbarrierId\x12\x14\n" +
+	"\x05state\x18\x04 \x01(\tR\x05state\x12'\n" +
+	"\x0fsealed_revision\x18\x05 \x01(\tR\x0esealedRevision\x12%\n" +
+	"\x0epublished_head\x18\x06 \x01(\tR\rpublishedHead\x12%\n" +
+	"\x0ecapacity_bytes\x18\a \x01(\x04R\rcapacityBytes\x12'\n" +
+	"\x0ffilesystem_uuid\x18\b \x01(\tR\x0efilesystemUuid2\x9c\x06\n" +
+	"\x12RuntimeStorageNode\x12K\n" +
+	"\x0ePrepareCapture\x12\x1c.ssf.v1.DriverCaptureRequest\x1a\x1b.ssf.v1.DriverCaptureResult\x12K\n" +
+	"\x0eInspectCapture\x12\x1c.ssf.v1.DriverCaptureRequest\x1a\x1b.ssf.v1.DriverCaptureResult\x12K\n" +
+	"\x0ePublishCapture\x12\x1c.ssf.v1.DriverCaptureRequest\x1a\x1b.ssf.v1.DriverCaptureResult\x12A\n" +
 	"\x0ePrepareVolumes\x12\x16.ssf.v1.PrepareRequest\x1a\x17.ssf.v1.PrepareResponse\x12=\n" +
 	"\x10MarkRuntimeReady\x12\x16.ssf.v1.RuntimeRequest\x1a\x11.ssf.v1.Operation\x12;\n" +
 	"\x0eReleaseVolumes\x12\x16.ssf.v1.RuntimeRequest\x1a\x11.ssf.v1.Operation\x12=\n" +
@@ -868,7 +1187,13 @@ const file_api_ssf_v1_node_proto_rawDesc = "" +
 	"\fExpandVolume\x12\x15.ssf.v1.ExpandRequest\x1a\x11.ssf.v1.Operation\x12I\n" +
 	"\x14PrepareVolumeContent\x12\x16.ssf.v1.PrepareRequest\x1a\x19.ssf.v1.VolumePreparation\x12M\n" +
 	"\x18InspectVolumePreparation\x12\x16.ssf.v1.InspectRequest\x1a\x19.ssf.v1.VolumePreparation\x12M\n" +
-	"\x18ReleaseVolumePreparation\x12\x16.ssf.v1.PrepareRequest\x1a\x19.ssf.v1.VolumePreparationB\x1eZ\x1cssf.dev/ssf/api/ssf/v1;ssfv1b\x06proto3"
+	"\x18ReleaseVolumePreparation\x12\x16.ssf.v1.PrepareRequest\x1a\x19.ssf.v1.VolumePreparation2\x95\x03\n" +
+	"\x14ManagedStorageDriver\x12K\n" +
+	"\x0ePrepareCapture\x12\x1c.ssf.v1.DriverCaptureRequest\x1a\x1b.ssf.v1.DriverCaptureResult\x12K\n" +
+	"\x0eInspectCapture\x12\x1c.ssf.v1.DriverCaptureRequest\x1a\x1b.ssf.v1.DriverCaptureResult\x12K\n" +
+	"\x0ePublishCapture\x12\x1c.ssf.v1.DriverCaptureRequest\x1a\x1b.ssf.v1.DriverCaptureResult\x12C\n" +
+	"\x0fFinalizeRuntime\x12\x1d.ssf.v1.DriverFinalizeRequest\x1a\x11.ssf.v1.Operation\x12Q\n" +
+	"\x13FinalizePreparation\x12'.ssf.v1.DriverPreparationReleaseRequest\x1a\x11.ssf.v1.OperationB\x1eZ\x1cssf.dev/ssf/api/ssf/v1;ssfv1b\x06proto3"
 
 var (
 	file_api_ssf_v1_node_proto_rawDescOnce sync.Once
@@ -882,42 +1207,62 @@ func file_api_ssf_v1_node_proto_rawDescGZIP() []byte {
 	return file_api_ssf_v1_node_proto_rawDescData
 }
 
-var file_api_ssf_v1_node_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_api_ssf_v1_node_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_api_ssf_v1_node_proto_goTypes = []any{
-	(*PrepareRequest)(nil),    // 0: ssf.v1.PrepareRequest
-	(*FileTree)(nil),          // 1: ssf.v1.FileTree
-	(*BlockDevice)(nil),       // 2: ssf.v1.BlockDevice
-	(*Endpoint)(nil),          // 3: ssf.v1.Endpoint
-	(*PrepareResponse)(nil),   // 4: ssf.v1.PrepareResponse
-	(*RuntimeRequest)(nil),    // 5: ssf.v1.RuntimeRequest
-	(*InspectRequest)(nil),    // 6: ssf.v1.InspectRequest
-	(*ExpandRequest)(nil),     // 7: ssf.v1.ExpandRequest
-	(*Operation)(nil),         // 8: ssf.v1.Operation
-	(*ErrorDetail)(nil),       // 9: ssf.v1.ErrorDetail
-	(*VolumePreparation)(nil), // 10: ssf.v1.VolumePreparation
+	(*PrepareRequest)(nil),                  // 0: ssf.v1.PrepareRequest
+	(*FileTree)(nil),                        // 1: ssf.v1.FileTree
+	(*BlockDevice)(nil),                     // 2: ssf.v1.BlockDevice
+	(*Endpoint)(nil),                        // 3: ssf.v1.Endpoint
+	(*PrepareResponse)(nil),                 // 4: ssf.v1.PrepareResponse
+	(*RuntimeRequest)(nil),                  // 5: ssf.v1.RuntimeRequest
+	(*InspectRequest)(nil),                  // 6: ssf.v1.InspectRequest
+	(*ExpandRequest)(nil),                   // 7: ssf.v1.ExpandRequest
+	(*Operation)(nil),                       // 8: ssf.v1.Operation
+	(*ErrorDetail)(nil),                     // 9: ssf.v1.ErrorDetail
+	(*VolumePreparation)(nil),               // 10: ssf.v1.VolumePreparation
+	(*DriverFinalizeRequest)(nil),           // 11: ssf.v1.DriverFinalizeRequest
+	(*DriverPreparationReleaseRequest)(nil), // 12: ssf.v1.DriverPreparationReleaseRequest
+	(*DriverCaptureRequest)(nil),            // 13: ssf.v1.DriverCaptureRequest
+	(*DriverCaptureResult)(nil),             // 14: ssf.v1.DriverCaptureResult
 }
 var file_api_ssf_v1_node_proto_depIdxs = []int32{
 	1,  // 0: ssf.v1.Endpoint.file_tree:type_name -> ssf.v1.FileTree
 	2,  // 1: ssf.v1.Endpoint.block_device:type_name -> ssf.v1.BlockDevice
 	3,  // 2: ssf.v1.PrepareResponse.endpoints:type_name -> ssf.v1.Endpoint
-	0,  // 3: ssf.v1.RuntimeStorageNode.PrepareVolumes:input_type -> ssf.v1.PrepareRequest
-	5,  // 4: ssf.v1.RuntimeStorageNode.MarkRuntimeReady:input_type -> ssf.v1.RuntimeRequest
-	5,  // 5: ssf.v1.RuntimeStorageNode.ReleaseVolumes:input_type -> ssf.v1.RuntimeRequest
-	6,  // 6: ssf.v1.RuntimeStorageNode.InspectOperation:input_type -> ssf.v1.InspectRequest
-	7,  // 7: ssf.v1.RuntimeStorageNode.ExpandVolume:input_type -> ssf.v1.ExpandRequest
-	0,  // 8: ssf.v1.RuntimeStorageNode.PrepareVolumeContent:input_type -> ssf.v1.PrepareRequest
-	6,  // 9: ssf.v1.RuntimeStorageNode.InspectVolumePreparation:input_type -> ssf.v1.InspectRequest
-	0,  // 10: ssf.v1.RuntimeStorageNode.ReleaseVolumePreparation:input_type -> ssf.v1.PrepareRequest
-	4,  // 11: ssf.v1.RuntimeStorageNode.PrepareVolumes:output_type -> ssf.v1.PrepareResponse
-	8,  // 12: ssf.v1.RuntimeStorageNode.MarkRuntimeReady:output_type -> ssf.v1.Operation
-	8,  // 13: ssf.v1.RuntimeStorageNode.ReleaseVolumes:output_type -> ssf.v1.Operation
-	8,  // 14: ssf.v1.RuntimeStorageNode.InspectOperation:output_type -> ssf.v1.Operation
-	8,  // 15: ssf.v1.RuntimeStorageNode.ExpandVolume:output_type -> ssf.v1.Operation
-	10, // 16: ssf.v1.RuntimeStorageNode.PrepareVolumeContent:output_type -> ssf.v1.VolumePreparation
-	10, // 17: ssf.v1.RuntimeStorageNode.InspectVolumePreparation:output_type -> ssf.v1.VolumePreparation
-	10, // 18: ssf.v1.RuntimeStorageNode.ReleaseVolumePreparation:output_type -> ssf.v1.VolumePreparation
-	11, // [11:19] is the sub-list for method output_type
-	3,  // [3:11] is the sub-list for method input_type
+	13, // 3: ssf.v1.RuntimeStorageNode.PrepareCapture:input_type -> ssf.v1.DriverCaptureRequest
+	13, // 4: ssf.v1.RuntimeStorageNode.InspectCapture:input_type -> ssf.v1.DriverCaptureRequest
+	13, // 5: ssf.v1.RuntimeStorageNode.PublishCapture:input_type -> ssf.v1.DriverCaptureRequest
+	0,  // 6: ssf.v1.RuntimeStorageNode.PrepareVolumes:input_type -> ssf.v1.PrepareRequest
+	5,  // 7: ssf.v1.RuntimeStorageNode.MarkRuntimeReady:input_type -> ssf.v1.RuntimeRequest
+	5,  // 8: ssf.v1.RuntimeStorageNode.ReleaseVolumes:input_type -> ssf.v1.RuntimeRequest
+	6,  // 9: ssf.v1.RuntimeStorageNode.InspectOperation:input_type -> ssf.v1.InspectRequest
+	7,  // 10: ssf.v1.RuntimeStorageNode.ExpandVolume:input_type -> ssf.v1.ExpandRequest
+	0,  // 11: ssf.v1.RuntimeStorageNode.PrepareVolumeContent:input_type -> ssf.v1.PrepareRequest
+	6,  // 12: ssf.v1.RuntimeStorageNode.InspectVolumePreparation:input_type -> ssf.v1.InspectRequest
+	0,  // 13: ssf.v1.RuntimeStorageNode.ReleaseVolumePreparation:input_type -> ssf.v1.PrepareRequest
+	13, // 14: ssf.v1.ManagedStorageDriver.PrepareCapture:input_type -> ssf.v1.DriverCaptureRequest
+	13, // 15: ssf.v1.ManagedStorageDriver.InspectCapture:input_type -> ssf.v1.DriverCaptureRequest
+	13, // 16: ssf.v1.ManagedStorageDriver.PublishCapture:input_type -> ssf.v1.DriverCaptureRequest
+	11, // 17: ssf.v1.ManagedStorageDriver.FinalizeRuntime:input_type -> ssf.v1.DriverFinalizeRequest
+	12, // 18: ssf.v1.ManagedStorageDriver.FinalizePreparation:input_type -> ssf.v1.DriverPreparationReleaseRequest
+	14, // 19: ssf.v1.RuntimeStorageNode.PrepareCapture:output_type -> ssf.v1.DriverCaptureResult
+	14, // 20: ssf.v1.RuntimeStorageNode.InspectCapture:output_type -> ssf.v1.DriverCaptureResult
+	14, // 21: ssf.v1.RuntimeStorageNode.PublishCapture:output_type -> ssf.v1.DriverCaptureResult
+	4,  // 22: ssf.v1.RuntimeStorageNode.PrepareVolumes:output_type -> ssf.v1.PrepareResponse
+	8,  // 23: ssf.v1.RuntimeStorageNode.MarkRuntimeReady:output_type -> ssf.v1.Operation
+	8,  // 24: ssf.v1.RuntimeStorageNode.ReleaseVolumes:output_type -> ssf.v1.Operation
+	8,  // 25: ssf.v1.RuntimeStorageNode.InspectOperation:output_type -> ssf.v1.Operation
+	8,  // 26: ssf.v1.RuntimeStorageNode.ExpandVolume:output_type -> ssf.v1.Operation
+	10, // 27: ssf.v1.RuntimeStorageNode.PrepareVolumeContent:output_type -> ssf.v1.VolumePreparation
+	10, // 28: ssf.v1.RuntimeStorageNode.InspectVolumePreparation:output_type -> ssf.v1.VolumePreparation
+	10, // 29: ssf.v1.RuntimeStorageNode.ReleaseVolumePreparation:output_type -> ssf.v1.VolumePreparation
+	14, // 30: ssf.v1.ManagedStorageDriver.PrepareCapture:output_type -> ssf.v1.DriverCaptureResult
+	14, // 31: ssf.v1.ManagedStorageDriver.InspectCapture:output_type -> ssf.v1.DriverCaptureResult
+	14, // 32: ssf.v1.ManagedStorageDriver.PublishCapture:output_type -> ssf.v1.DriverCaptureResult
+	8,  // 33: ssf.v1.ManagedStorageDriver.FinalizeRuntime:output_type -> ssf.v1.Operation
+	8,  // 34: ssf.v1.ManagedStorageDriver.FinalizePreparation:output_type -> ssf.v1.Operation
+	19, // [19:35] is the sub-list for method output_type
+	3,  // [3:19] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name
 	3,  // [3:3] is the sub-list for extension extendee
 	0,  // [0:3] is the sub-list for field type_name
@@ -938,9 +1283,9 @@ func file_api_ssf_v1_node_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_ssf_v1_node_proto_rawDesc), len(file_api_ssf_v1_node_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   15,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_api_ssf_v1_node_proto_goTypes,
 		DependencyIndexes: file_api_ssf_v1_node_proto_depIdxs,

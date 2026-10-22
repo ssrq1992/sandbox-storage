@@ -7,8 +7,8 @@ import (
 	"ssf.dev/ssf/core"
 )
 
-// NativeCommandResult is transport-neutral. The native Scheduler or the local
-// standalone host authenticates the caller and signs any returned dispatch.
+// NativeCommandResult is transport-neutral. The independent coordinator
+// authenticates the caller and signs any returned dispatch.
 type NativeCommandResult struct {
 	Data     any
 	Dispatch *NativeDispatch
@@ -34,7 +34,7 @@ func (c *NativeControl) Command(ctx context.Context, command NativeCommand, cand
 		}
 	}
 	switch command.Action {
-	case "ready", "pause", "cancel_pause", "resume", "fork", "delete", "stopped", "capture", "capture.retire", "cleanup.status":
+	case "ready", "pause", "cancel_pause", "resume", "fork", "delete", "stopped", "capture", "capture.seal", "capture.request", "capture.retire", "cleanup.status":
 		prior, err := c.Dispatch(ctx, event.RequestID)
 		if err != nil {
 			return out, err
@@ -83,8 +83,10 @@ func (c *NativeControl) Command(ctx context.Context, command NativeCommand, cand
 		if errors.Is(err, core.ErrPending) {
 			err = nil
 		}
-	case "capture":
-		manifest, captureErr := c.Capture(ctx, event.RequestID, command.NodeID, event.Capture, event.Proof)
+	case "capture.request":
+		err = c.AuthorizeDirectCapture(ctx, event.RequestID, command.NodeID, command.OwnerID, command.RunID, event.Capture.BarrierID)
+	case "capture", "capture.seal":
+		manifest, captureErr := c.capturePhase(ctx, event.RequestID, command.NodeID, event.Capture, event.Proof, command.Action == "capture.seal")
 		if errors.Is(captureErr, core.ErrPending) {
 			out.Data = map[string]any{"ready": false}
 		} else {

@@ -19,6 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	RuntimeStorageNode_PrepareCapture_FullMethodName           = "/ssf.v1.RuntimeStorageNode/PrepareCapture"
+	RuntimeStorageNode_InspectCapture_FullMethodName           = "/ssf.v1.RuntimeStorageNode/InspectCapture"
+	RuntimeStorageNode_PublishCapture_FullMethodName           = "/ssf.v1.RuntimeStorageNode/PublishCapture"
 	RuntimeStorageNode_PrepareVolumes_FullMethodName           = "/ssf.v1.RuntimeStorageNode/PrepareVolumes"
 	RuntimeStorageNode_MarkRuntimeReady_FullMethodName         = "/ssf.v1.RuntimeStorageNode/MarkRuntimeReady"
 	RuntimeStorageNode_ReleaseVolumes_FullMethodName           = "/ssf.v1.RuntimeStorageNode/ReleaseVolumes"
@@ -33,6 +36,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RuntimeStorageNodeClient interface {
+	PrepareCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error)
+	InspectCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error)
+	PublishCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error)
 	PrepareVolumes(ctx context.Context, in *PrepareRequest, opts ...grpc.CallOption) (*PrepareResponse, error)
 	MarkRuntimeReady(ctx context.Context, in *RuntimeRequest, opts ...grpc.CallOption) (*Operation, error)
 	ReleaseVolumes(ctx context.Context, in *RuntimeRequest, opts ...grpc.CallOption) (*Operation, error)
@@ -49,6 +55,36 @@ type runtimeStorageNodeClient struct {
 
 func NewRuntimeStorageNodeClient(cc grpc.ClientConnInterface) RuntimeStorageNodeClient {
 	return &runtimeStorageNodeClient{cc}
+}
+
+func (c *runtimeStorageNodeClient) PrepareCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DriverCaptureResult)
+	err := c.cc.Invoke(ctx, RuntimeStorageNode_PrepareCapture_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *runtimeStorageNodeClient) InspectCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DriverCaptureResult)
+	err := c.cc.Invoke(ctx, RuntimeStorageNode_InspectCapture_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *runtimeStorageNodeClient) PublishCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DriverCaptureResult)
+	err := c.cc.Invoke(ctx, RuntimeStorageNode_PublishCapture_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *runtimeStorageNodeClient) PrepareVolumes(ctx context.Context, in *PrepareRequest, opts ...grpc.CallOption) (*PrepareResponse, error) {
@@ -135,6 +171,9 @@ func (c *runtimeStorageNodeClient) ReleaseVolumePreparation(ctx context.Context,
 // All implementations must embed UnimplementedRuntimeStorageNodeServer
 // for forward compatibility.
 type RuntimeStorageNodeServer interface {
+	PrepareCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error)
+	InspectCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error)
+	PublishCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error)
 	PrepareVolumes(context.Context, *PrepareRequest) (*PrepareResponse, error)
 	MarkRuntimeReady(context.Context, *RuntimeRequest) (*Operation, error)
 	ReleaseVolumes(context.Context, *RuntimeRequest) (*Operation, error)
@@ -153,6 +192,15 @@ type RuntimeStorageNodeServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRuntimeStorageNodeServer struct{}
 
+func (UnimplementedRuntimeStorageNodeServer) PrepareCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error) {
+	return nil, status.Error(codes.Unimplemented, "method PrepareCapture not implemented")
+}
+func (UnimplementedRuntimeStorageNodeServer) InspectCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error) {
+	return nil, status.Error(codes.Unimplemented, "method InspectCapture not implemented")
+}
+func (UnimplementedRuntimeStorageNodeServer) PublishCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error) {
+	return nil, status.Error(codes.Unimplemented, "method PublishCapture not implemented")
+}
 func (UnimplementedRuntimeStorageNodeServer) PrepareVolumes(context.Context, *PrepareRequest) (*PrepareResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method PrepareVolumes not implemented")
 }
@@ -196,6 +244,60 @@ func RegisterRuntimeStorageNodeServer(s grpc.ServiceRegistrar, srv RuntimeStorag
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&RuntimeStorageNode_ServiceDesc, srv)
+}
+
+func _RuntimeStorageNode_PrepareCapture_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DriverCaptureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RuntimeStorageNodeServer).PrepareCapture(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RuntimeStorageNode_PrepareCapture_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RuntimeStorageNodeServer).PrepareCapture(ctx, req.(*DriverCaptureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RuntimeStorageNode_InspectCapture_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DriverCaptureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RuntimeStorageNodeServer).InspectCapture(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RuntimeStorageNode_InspectCapture_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RuntimeStorageNodeServer).InspectCapture(ctx, req.(*DriverCaptureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RuntimeStorageNode_PublishCapture_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DriverCaptureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RuntimeStorageNodeServer).PublishCapture(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RuntimeStorageNode_PublishCapture_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RuntimeStorageNodeServer).PublishCapture(ctx, req.(*DriverCaptureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _RuntimeStorageNode_PrepareVolumes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -350,6 +452,18 @@ var RuntimeStorageNode_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*RuntimeStorageNodeServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "PrepareCapture",
+			Handler:    _RuntimeStorageNode_PrepareCapture_Handler,
+		},
+		{
+			MethodName: "InspectCapture",
+			Handler:    _RuntimeStorageNode_InspectCapture_Handler,
+		},
+		{
+			MethodName: "PublishCapture",
+			Handler:    _RuntimeStorageNode_PublishCapture_Handler,
+		},
+		{
 			MethodName: "PrepareVolumes",
 			Handler:    _RuntimeStorageNode_PrepareVolumes_Handler,
 		},
@@ -380,6 +494,260 @@ var RuntimeStorageNode_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReleaseVolumePreparation",
 			Handler:    _RuntimeStorageNode_ReleaseVolumePreparation_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "api/ssf/v1/node.proto",
+}
+
+const (
+	ManagedStorageDriver_PrepareCapture_FullMethodName      = "/ssf.v1.ManagedStorageDriver/PrepareCapture"
+	ManagedStorageDriver_InspectCapture_FullMethodName      = "/ssf.v1.ManagedStorageDriver/InspectCapture"
+	ManagedStorageDriver_PublishCapture_FullMethodName      = "/ssf.v1.ManagedStorageDriver/PublishCapture"
+	ManagedStorageDriver_FinalizeRuntime_FullMethodName     = "/ssf.v1.ManagedStorageDriver/FinalizeRuntime"
+	ManagedStorageDriver_FinalizePreparation_FullMethodName = "/ssf.v1.ManagedStorageDriver/FinalizePreparation"
+)
+
+// ManagedStorageDriverClient is the client API for ManagedStorageDriver service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ManagedStorageDriverClient interface {
+	PrepareCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error)
+	InspectCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error)
+	PublishCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error)
+	FinalizeRuntime(ctx context.Context, in *DriverFinalizeRequest, opts ...grpc.CallOption) (*Operation, error)
+	FinalizePreparation(ctx context.Context, in *DriverPreparationReleaseRequest, opts ...grpc.CallOption) (*Operation, error)
+}
+
+type managedStorageDriverClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewManagedStorageDriverClient(cc grpc.ClientConnInterface) ManagedStorageDriverClient {
+	return &managedStorageDriverClient{cc}
+}
+
+func (c *managedStorageDriverClient) PrepareCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DriverCaptureResult)
+	err := c.cc.Invoke(ctx, ManagedStorageDriver_PrepareCapture_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managedStorageDriverClient) InspectCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DriverCaptureResult)
+	err := c.cc.Invoke(ctx, ManagedStorageDriver_InspectCapture_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managedStorageDriverClient) PublishCapture(ctx context.Context, in *DriverCaptureRequest, opts ...grpc.CallOption) (*DriverCaptureResult, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DriverCaptureResult)
+	err := c.cc.Invoke(ctx, ManagedStorageDriver_PublishCapture_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managedStorageDriverClient) FinalizeRuntime(ctx context.Context, in *DriverFinalizeRequest, opts ...grpc.CallOption) (*Operation, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Operation)
+	err := c.cc.Invoke(ctx, ManagedStorageDriver_FinalizeRuntime_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managedStorageDriverClient) FinalizePreparation(ctx context.Context, in *DriverPreparationReleaseRequest, opts ...grpc.CallOption) (*Operation, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Operation)
+	err := c.cc.Invoke(ctx, ManagedStorageDriver_FinalizePreparation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ManagedStorageDriverServer is the server API for ManagedStorageDriver service.
+// All implementations must embed UnimplementedManagedStorageDriverServer
+// for forward compatibility.
+type ManagedStorageDriverServer interface {
+	PrepareCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error)
+	InspectCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error)
+	PublishCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error)
+	FinalizeRuntime(context.Context, *DriverFinalizeRequest) (*Operation, error)
+	FinalizePreparation(context.Context, *DriverPreparationReleaseRequest) (*Operation, error)
+	mustEmbedUnimplementedManagedStorageDriverServer()
+}
+
+// UnimplementedManagedStorageDriverServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedManagedStorageDriverServer struct{}
+
+func (UnimplementedManagedStorageDriverServer) PrepareCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error) {
+	return nil, status.Error(codes.Unimplemented, "method PrepareCapture not implemented")
+}
+func (UnimplementedManagedStorageDriverServer) InspectCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error) {
+	return nil, status.Error(codes.Unimplemented, "method InspectCapture not implemented")
+}
+func (UnimplementedManagedStorageDriverServer) PublishCapture(context.Context, *DriverCaptureRequest) (*DriverCaptureResult, error) {
+	return nil, status.Error(codes.Unimplemented, "method PublishCapture not implemented")
+}
+func (UnimplementedManagedStorageDriverServer) FinalizeRuntime(context.Context, *DriverFinalizeRequest) (*Operation, error) {
+	return nil, status.Error(codes.Unimplemented, "method FinalizeRuntime not implemented")
+}
+func (UnimplementedManagedStorageDriverServer) FinalizePreparation(context.Context, *DriverPreparationReleaseRequest) (*Operation, error) {
+	return nil, status.Error(codes.Unimplemented, "method FinalizePreparation not implemented")
+}
+func (UnimplementedManagedStorageDriverServer) mustEmbedUnimplementedManagedStorageDriverServer() {}
+func (UnimplementedManagedStorageDriverServer) testEmbeddedByValue()                              {}
+
+// UnsafeManagedStorageDriverServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ManagedStorageDriverServer will
+// result in compilation errors.
+type UnsafeManagedStorageDriverServer interface {
+	mustEmbedUnimplementedManagedStorageDriverServer()
+}
+
+func RegisterManagedStorageDriverServer(s grpc.ServiceRegistrar, srv ManagedStorageDriverServer) {
+	// If the following call panics, it indicates UnimplementedManagedStorageDriverServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ManagedStorageDriver_ServiceDesc, srv)
+}
+
+func _ManagedStorageDriver_PrepareCapture_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DriverCaptureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagedStorageDriverServer).PrepareCapture(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ManagedStorageDriver_PrepareCapture_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagedStorageDriverServer).PrepareCapture(ctx, req.(*DriverCaptureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagedStorageDriver_InspectCapture_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DriverCaptureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagedStorageDriverServer).InspectCapture(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ManagedStorageDriver_InspectCapture_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagedStorageDriverServer).InspectCapture(ctx, req.(*DriverCaptureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagedStorageDriver_PublishCapture_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DriverCaptureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagedStorageDriverServer).PublishCapture(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ManagedStorageDriver_PublishCapture_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagedStorageDriverServer).PublishCapture(ctx, req.(*DriverCaptureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagedStorageDriver_FinalizeRuntime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DriverFinalizeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagedStorageDriverServer).FinalizeRuntime(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ManagedStorageDriver_FinalizeRuntime_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagedStorageDriverServer).FinalizeRuntime(ctx, req.(*DriverFinalizeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagedStorageDriver_FinalizePreparation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DriverPreparationReleaseRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagedStorageDriverServer).FinalizePreparation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ManagedStorageDriver_FinalizePreparation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagedStorageDriverServer).FinalizePreparation(ctx, req.(*DriverPreparationReleaseRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ManagedStorageDriver_ServiceDesc is the grpc.ServiceDesc for ManagedStorageDriver service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ManagedStorageDriver_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ssf.v1.ManagedStorageDriver",
+	HandlerType: (*ManagedStorageDriverServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "PrepareCapture",
+			Handler:    _ManagedStorageDriver_PrepareCapture_Handler,
+		},
+		{
+			MethodName: "InspectCapture",
+			Handler:    _ManagedStorageDriver_InspectCapture_Handler,
+		},
+		{
+			MethodName: "PublishCapture",
+			Handler:    _ManagedStorageDriver_PublishCapture_Handler,
+		},
+		{
+			MethodName: "FinalizeRuntime",
+			Handler:    _ManagedStorageDriver_FinalizeRuntime_Handler,
+		},
+		{
+			MethodName: "FinalizePreparation",
+			Handler:    _ManagedStorageDriver_FinalizePreparation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

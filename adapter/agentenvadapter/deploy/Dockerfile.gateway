@@ -1,0 +1,15 @@
+FROM golang:1.26.3-bookworm AS build
+ARG TARGETOS=linux
+ARG TARGETARCH
+WORKDIR /src/AgentENV/services
+COPY AgentENV/services/go.mod AgentENV/services/go.sum ./
+COPY sandbox-storage/sdk/go/control /src/sandbox-storage/sdk/go/control/
+RUN go mod download
+COPY AgentENV/services/ .
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /out/gateway ./gateway/cmd
+
+FROM gcr.io/distroless/static-debian12
+COPY --from=build /out/gateway /gateway
+COPY AgentENV/deploy/docker/config/default.json /config/default.json
+ENTRYPOINT ["/gateway"]
+CMD ["-config", "/config/default.json"]

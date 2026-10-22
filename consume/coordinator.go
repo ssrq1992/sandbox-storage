@@ -1,4 +1,5 @@
-// Package consume is embedded by the sandbox control plane.
+// Package consume implements shared storage consumption, hosted by the public
+// coordinator service or an exclusively authorized runtime integration.
 package consume
 
 import (
@@ -256,6 +257,13 @@ func (c *Coordinator) prepare(ctx context.Context, q Request) (Result, error) {
 			return result, errors.New("CSI node identity changed since attachment")
 		}
 		p.PublishContexts[b.ID] = attached.Context
+		if p.Preparation != nil && attached.Context[core.PublishedFilesystemUUIDKey] != "" {
+			uuid := attached.Context[core.PublishedFilesystemUUIDKey]
+			if p.Preparation.Initialize || (p.Preparation.ExpectedUUID != "" && p.Preparation.ExpectedUUID != uuid) {
+				return result, errors.New("driver-published filesystem conflicts with preparation intent")
+			}
+			p.Preparation.ExpectedUUID = uuid
+		}
 	}
 	if err = c.validatePlacement(ctx, &place); err != nil {
 		return result, err

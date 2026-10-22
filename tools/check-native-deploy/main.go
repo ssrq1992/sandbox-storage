@@ -46,7 +46,7 @@ func check(path, namespace string) error {
 		object := &unstructured.Unstructured{Object: raw}
 		objects[object.GetKind()+"/"+object.GetName()] = object
 	}
-	for _, key := range []string{"Deployment/agentenv-gateway", "Deployment/agentenv-scheduler", "DaemonSet/agentenv-node", "Service/agentenv-nodes", "Service/agentenv-scheduler", "ConfigMap/agentenv-ssf-config", "Secret/agentenv-auth"} {
+	for _, key := range []string{"Deployment/ssf-coordinator", "Service/ssf-coordinator", "Deployment/agentenv-gateway", "Deployment/agentenv-scheduler", "DaemonSet/agentenv-node", "Service/agentenv-nodes", "Service/agentenv-scheduler", "ConfigMap/agentenv-ssf-config", "Secret/agentenv-auth"} {
 		object := objects[key]
 		if object == nil || object.GetNamespace() != namespace {
 			return fmt.Errorf("missing native resource or namespace: %s", key)
@@ -91,12 +91,19 @@ func check(path, namespace string) error {
 		return errors.New("native heartbeat/listener or provider endpoint changed")
 	}
 	sidecars, _, _ := unstructured.NestedSlice(daemon, "spec", "template", "spec", "initContainers")
-	if len(sidecars) != 2 {
-		return errors.New("expected two ordered native sidecars")
+	expectedSidecars := []string{"ssf-node", "agentenv-storage"}
+	if objects["CSIDriver/overlaybd.csi.ssf.dev"] != nil {
+		expectedSidecars = []string{"overlaybd-config", "overlaybd-daemon", "overlaybd-native", "overlaybd-worker", "overlaybd-csi", "overlaybd-registrar", "ssf-node", "agentenv-storage"}
+		if objects["ConfigMap/ssf-overlaybd-node-config"] == nil {
+			return errors.New("native OverlayBD inventory missing")
+		}
 	}
-	for i, name := range []string{"ssf-node", "agentenv-storage"} {
+	if len(sidecars) != len(expectedSidecars) {
+		return errors.New("unexpected native storage sidecar count")
+	}
+	for i, name := range expectedSidecars {
 		c := sidecars[i].(map[string]any)
-		if c["name"] != name || c["restartPolicy"] != "Always" {
+		if c["name"] != name || (name != "overlaybd-config" && c["restartPolicy"] != "Always") || (name == "overlaybd-config" && c["restartPolicy"] != nil) {
 			return errors.New("native sidecar lifetime/order missing")
 		}
 	}
@@ -105,11 +112,32 @@ func check(path, namespace string) error {
 	if err = json.Unmarshal([]byte(data["node.json"]), &node); err != nil {
 		return err
 	}
-	if node["native_mode"] != true || node["hook_listen"] != "127.0.0.1:9445" || node["scheduler_endpoint"] != "agentenv-scheduler:9090" {
-		return errors.New("plugin config not wired into native scheduler")
+	if node["native_mode"] != true || node["hook_listen"] != "127.0.0.1:9445" || node["scheduler_endpoint"] != nil || node["coordinator"] == nil {
+		return errors.New("plugin config not wired directly into coordinator")
 	}
 	if _, ok := node["workers"]; ok {
 		return errors.New("static worker inventory forbidden")
+	}
+	schedulerContainers, _, _ := unstructured.NestedSlice(objects["Deployment/agentenv-scheduler"].Object, "spec", "template", "spec", "containers")
+	for _, item := range schedulerContainers {
+		container := item.(map[string]any)
+		env, _, _ := unstructured.NestedSlice(container, "env")
+		for _, entry := range env {
+			if entry.(map[string]any)["name"] == "SSF_DATABASE_URL" {
+				return errors.New("native scheduler still opens SSF database")
+			}
+		}
+	}
+	var client map[string]any
+	if err = json.Unmarshal([]byte(data["scheduler.json"]), &client); err != nil {
+		return err
+	}
+	if client["endpoint"] != "https://ssf-coordinator."+namespace+".svc:9446" || client["observe_listen"] != ":9447" {
+		return errors.New("remote scheduling boundary missing")
+	}
+	servicePorts, _, _ := unstructured.NestedSlice(objects["Service/agentenv-scheduler"].Object, "spec", "ports")
+	if len(servicePorts) < 2 {
+		return errors.New("native scheduler gRPC service port removed")
 	}
 	return nil
 }

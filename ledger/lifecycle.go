@@ -330,7 +330,7 @@ func (s *Store) SnapshotDeleteAllowed(ctx context.Context, uid string) (bool, er
 
 func (s *Store) SnapshotTracked(ctx context.Context, uid string) (bool, error) {
 	var ok bool
-	err := s.executor(ctx).QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM ssf_checkpoint_resources WHERE uid=$1)`, uid).Scan(&ok)
+	err := s.executor(ctx).QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM ssf_checkpoint_resources WHERE uid=$1) OR EXISTS(SELECT 1 FROM ssf_direct_snapshots WHERE snapshot_uid=$1 OR content_uid=$1)`, uid).Scan(&ok)
 	return ok, err
 }
 

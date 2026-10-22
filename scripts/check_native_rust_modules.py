@@ -21,7 +21,7 @@ out = Path(args.output)
 if not out.is_absolute():
     out = root / out
 out.mkdir(parents=True, exist_ok=True)
-modules = {name: source / 'src/sandbox/storage' / (name + '.rs') for name in ('freeze', 'artifacts', 'transition')}
+modules = {name: root / 'adapter/agentenvadapter/runtime/src' / (name + '.rs') for name in ('freeze', 'artifacts', 'transition')}
 report = {'scope': 'isolated-portable-rust-safety-modules',
           'time': datetime.datetime.now(datetime.timezone.utc).isoformat(),
           'agentenv_typechecked': False, 'kvm_executed': False,

@@ -9,12 +9,12 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/credentials/insecure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"net"
 	"net/http"
 	"os"
+	control "ssf.dev/control"
 	v1 "ssf.dev/ssf/api/ssf/v1"
 	"ssf.dev/ssf/auth"
 	"ssf.dev/ssf/config"
@@ -128,29 +128,53 @@ func Run(ctx context.Context, role string, c Config) error {
 			if c.HookTokenFile == "" || c.DispatchKeyFile == "" || c.NativeNodeID == "" {
 				return errors.New("native provider authentication and node identity required")
 			}
-			if c.StandaloneConfig != "" {
-				if c.SchedulerEndpoint != "" {
-					return errors.New("standalone cannot also use a scheduler endpoint")
-				}
-				close, err := n.openStandalone(ctx, c.StandaloneConfig)
-				if err != nil {
-					return err
-				}
-				defer close()
-			} else {
-				if c.NodeControlKeyFile == "" || c.SchedulerEndpoint == "" {
-					return errors.New("native scheduler authentication required")
-				}
-				// Role-separated payload authentication preserves native transport.
-				controlConn, err := grpc.NewClient(c.SchedulerEndpoint, grpc.WithTransportCredentials(insecure.NewCredentials()))
-				if err != nil {
-					return err
-				}
-				defer controlConn.Close()
-				n.Control = func(ctx context.Context, command NativeCommand) (json.RawMessage, error) {
-					return InvokeNativeControl(ctx, controlConn, c, command)
+			if c.NodeControlKeyFile == "" {
+				return errors.New("node coordinator authentication required")
+			}
+			controlConn, err := control.New(c.Coordinator)
+			if err != nil {
+				return err
+			}
+			defer controlConn.Close()
+			n.Control = func(ctx context.Context, command NativeCommand) (json.RawMessage, error) {
+				return InvokeNativeControl(ctx, controlConn, c, command)
+			}
+			if c.Standalone {
+				n.LocalPrepare = func(ctx context.Context, q NativeIntent) (NativeDispatch, error) {
+					var out NativeDispatch
+					key, err := LoadControlKey(c.NodeControlKeyFile)
+					if err != nil {
+						return out, err
+					}
+					data, err := json.Marshal(q)
+					if err != nil {
+						return out, err
+					}
+					id := newID()
+					signed, err := auth.SignJSONEnvelope(key, NativeStorageProtocol, "node", id, NativeCommand{NodeID: c.NativeNodeID, Data: data}, time.Now())
+					if err != nil {
+						return out, err
+					}
+					reply, err := controlConn.Call(ctx, "LocalLaunch", control.Request{Runtime: "agentenv", Envelope: signed})
+					if err != nil {
+						return out, err
+					}
+					dispatchKey, err := LoadControlKey(c.DispatchKeyFile)
+					if err != nil {
+						return out, err
+					}
+					envelope, err := auth.VerifyJSONEnvelope(dispatchKey, reply.Envelope, NativeStorageProtocol, "scheduler", time.Now())
+					if err != nil {
+						return out, err
+					}
+					if envelope.RequestID != id {
+						return out, errors.New("local launch correlation mismatch")
+					}
+					err = json.Unmarshal(envelope.Payload, &out)
+					return out, err
 				}
 			}
+
 		}
 		if c.NativeMode {
 			drain = func() {

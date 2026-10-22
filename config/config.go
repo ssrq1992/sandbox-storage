@@ -18,7 +18,7 @@ type Driver struct{ Name, ControllerEndpoint, NodeEndpoint, Revision string }
 type Config struct {
 	PreparationEndpoint, PreparationTokenFile                                                                                                         string
 	VolumeProfiles                                                                                                                                    []core.VolumeProfile
-	ManagedNamespaces, CoordinatorUsers                                                                                                               []string
+	ManagedNamespaces, CoordinatorUsers, SnapshotControllerUsers                                                                                      []string
 	Listen, HealthListen, DatabaseURL, Kubeconfig, Root, NodeName, BootID, PlanPublicKey, Cert, Key, CA, DriverName, DriverEndpoint, EvidenceEndpoint string
 	AllowedPeers                                                                                                                                      []string
 	Drivers                                                                                                                                           []Driver

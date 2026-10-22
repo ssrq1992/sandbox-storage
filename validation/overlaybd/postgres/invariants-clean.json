@@ -1,0 +1,53 @@
+{
+  "scope": "read-only-ledger-invariants",
+  "time": "2026-10-22T11:31:03.045194+00:00",
+  "vmm_guest_and_devices_verified": false,
+  "checks": [
+    {
+      "name": "preparation-ready-without-released-content",
+      "violations": 0,
+      "status": "passed"
+    },
+    {
+      "name": "preparation-uses-sandbox-identity",
+      "violations": 0,
+      "status": "passed"
+    },
+    {
+      "name": "exclusive-owner-collision",
+      "violations": 0,
+      "status": "passed"
+    },
+    {
+      "name": "concurrent-owner-runs",
+      "violations": 0,
+      "status": "passed"
+    },
+    {
+      "name": "maintenance-conflict",
+      "violations": 0,
+      "status": "passed"
+    },
+    {
+      "name": "idle-capture-use-conflict",
+      "violations": 0,
+      "status": "passed"
+    },
+    {
+      "name": "idle-capture-missing-receipt",
+      "violations": 0,
+      "status": "passed"
+    },
+    {
+      "name": "reclaim-idle-capture-reference",
+      "violations": 0,
+      "status": "passed"
+    },
+    {
+      "name": "reclaim-live-reference",
+      "violations": 0,
+      "status": "passed"
+    }
+  ],
+  "status": "passed"
+}

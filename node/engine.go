@@ -3,10 +3,12 @@ package node
 import (
 	"context"
 	"crypto/ed25519"
+	"encoding/json"
 	"errors"
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"os"
 	"path/filepath"
+	v1 "ssf.dev/ssf/api/ssf/v1"
 	"ssf.dev/ssf/auth"
 	"ssf.dev/ssf/core"
 	driver "ssf.dev/ssf/drivers/csi"
@@ -63,8 +65,15 @@ func (e *Engine) step(r *Record, key string, fn func() error) (result error) {
 	r.Steps[key] = "Done"
 	return e.WAL.Save(*r)
 }
-func (e *Engine) paths(b core.Binding) (string, string) {
-	return filepath.Join(e.Root, "stage", b.Volume.Key()), filepath.Join(e.Root, "publish", core.Hash(b.ID))
+
+// Stage scope comes from the signed controller publish context persisted in WAL.
+// A per-binding device session must never reuse another run's staging resource.
+func (e *Engine) paths(p core.Plan, b core.Binding) (string, string) {
+	key := b.Volume.Key()
+	if p.PublishContexts[b.ID][core.StageScopeKey] == core.StageScopeBinding {
+		key = core.Hash(key + "/" + b.ID)
+	}
+	return filepath.Join(e.Root, "stage", key), filepath.Join(e.Root, "publish", core.Hash(b.ID))
 }
 func (e *Engine) secret(ctx context.Context, v core.Volume, p string) (map[string]string, error) {
 	if e.Secrets == nil {
@@ -103,7 +112,7 @@ func (e *Engine) prepare(ctx context.Context, request, token string, content boo
 		if !errors.Is(err, ErrNotFound) {
 			return r, err
 		}
-		r = Record{Plan: p, Digest: digest, State: "Preparing", Steps: map[string]string{}}
+		r = Record{SignedPlan: token, Plan: p, Digest: digest, State: "Preparing", Steps: map[string]string{}}
 		if err = e.WAL.Save(r); err != nil {
 			return r, err
 		}
@@ -158,6 +167,7 @@ func (e *Engine) prepare(ctx context.Context, request, token string, content boo
 			return r, nil
 		}
 		r.Plan = p
+		r.SignedPlan = token
 	}
 	endpoints := make([]core.Endpoint, 0, len(p.Bindings))
 	for _, b := range p.Bindings {
@@ -171,7 +181,11 @@ func (e *Engine) prepare(ctx context.Context, request, token string, content boo
 		if p.NodeIDs[b.Volume.Driver] != s.NodeID {
 			return r, errors.New("CSI node identity changed")
 		}
-		stage, target := e.paths(b)
+		scope := p.PublishContexts[b.ID][core.StageScopeKey]
+		if scope != "" && scope != core.StageScopeBinding {
+			return r, errors.New("unsupported CSI staging scope")
+		}
+		stage, target := e.paths(r.Plan, b)
 		if err = e.checkCompatibility(r, b); err != nil {
 			return r, err
 		}
@@ -181,7 +195,7 @@ func (e *Engine) prepare(ctx context.Context, request, token string, content boo
 				return r, err
 			}
 			err = e.step(&r, "stage/"+b.ID, func() error {
-				if reusable, err := e.reusableStage(b); err != nil {
+				if reusable, err := e.reusableStage(r.Plan, b); err != nil {
 					return err
 				} else if reusable {
 					return nil
@@ -189,7 +203,7 @@ func (e *Engine) prepare(ctx context.Context, request, token string, content boo
 				if err := os.MkdirAll(stage, 0700); err != nil {
 					return err
 				}
-				_, err := s.Node.NodeStageVolume(ctx, &csi.NodeStageVolumeRequest{VolumeId: b.Volume.Handle, StagingTargetPath: stage, VolumeCapability: b.Volume.Capability, VolumeContext: b.Volume.Context, PublishContext: p.PublishContexts[b.ID], Secrets: secret})
+				_, err := s.Node.NodeStageVolume(auth.WithNodePlan(ctx, token, b.ID), &csi.NodeStageVolumeRequest{VolumeId: b.Volume.Handle, StagingTargetPath: stage, VolumeCapability: b.Volume.Capability, VolumeContext: b.Volume.Context, PublishContext: p.PublishContexts[b.ID], Secrets: secret})
 				return err
 			})
 			if err != nil {
@@ -225,7 +239,7 @@ func (e *Engine) prepare(ctx context.Context, request, token string, content boo
 			if s.Stage {
 				st = stage
 			}
-			_, err := s.Node.NodePublishVolume(ctx, &csi.NodePublishVolumeRequest{VolumeId: b.Volume.Handle, StagingTargetPath: st, TargetPath: target, VolumeCapability: b.Volume.Capability, VolumeContext: b.Volume.Context, PublishContext: p.PublishContexts[b.ID], Readonly: b.Volume.ReadOnly, Secrets: secret})
+			_, err := s.Node.NodePublishVolume(auth.WithNodePlan(ctx, token, b.ID), &csi.NodePublishVolumeRequest{VolumeId: b.Volume.Handle, StagingTargetPath: st, TargetPath: target, VolumeCapability: b.Volume.Capability, VolumeContext: b.Volume.Context, PublishContext: p.PublishContexts[b.ID], Readonly: b.Volume.ReadOnly, Secrets: secret})
 			return err
 		})
 		if err != nil {
@@ -258,7 +272,7 @@ func (e *Engine) prepare(ctx context.Context, request, token string, content boo
 	return r, err
 }
 
-func (e *Engine) reusableStage(b core.Binding) (bool, error) {
+func (e *Engine) reusableStage(p core.Plan, b core.Binding) (bool, error) {
 	records, err := e.WAL.ForVolume(b.Volume.Key())
 	if err != nil {
 		return false, err
@@ -272,10 +286,15 @@ func (e *Engine) reusableStage(b core.Binding) (bool, error) {
 			continue
 		}
 		for _, old := range r.Plan.Bindings {
+			wanted, _ := e.paths(p, b)
+			existing, _ := e.paths(r.Plan, old)
+			if wanted != existing {
+				continue
+			}
 			if old.ID == b.ID || old.Volume.Key() != b.Volume.Key() || r.Steps["stage/"+old.ID] != "Done" {
 				continue
 			}
-			_, target := e.paths(old)
+			_, target := e.paths(r.Plan, old)
 			if _, err := check(target, old.Volume.Capability.GetBlock() != nil, old.Volume.ReadOnly); err == nil {
 				return true, nil
 			}
@@ -344,6 +363,7 @@ func (e *Engine) Release(ctx context.Context, id, sandbox, proof string) (Record
 			return r, err
 		}
 		r.State = "Releasing"
+		r.ReleaseEvidence = proof
 		if err = e.WAL.Save(r); err != nil {
 			return r, err
 		}
@@ -357,9 +377,43 @@ func (e *Engine) release(ctx context.Context, r Record) (Record, error) {
 		if err != nil {
 			return r, err
 		}
-		stage, target := e.paths(b)
+		stage, target := e.paths(r.Plan, b)
 		if s.NodeID != r.Plan.NodeIDs[b.Volume.Driver] {
 			return r, errors.New("CSI node identity changed during release")
+		}
+		if s.Managed != nil && r.Plan.Purpose == "" && (r.Steps["stage/"+b.ID] != "" || r.Steps["publish/"+b.ID] != "") {
+			if r.SignedPlan == "" || r.ReleaseEvidence == "" {
+				return r, errors.New("managed driver cleanup lacks durable signed plan or runtime evidence")
+			}
+			err = e.step(&r, "finalize/"+b.ID, func() error {
+				receipt, err := s.Managed.FinalizeRuntime(ctx, &v1.DriverFinalizeRequest{SignedNodePlan: r.SignedPlan, BindingUid: b.ID, DetachedEvidence: r.ReleaseEvidence})
+				if err == nil && (receipt == nil || receipt.OperationId != b.ID || (receipt.State != "Finalized" && receipt.State != "Unstarted")) {
+					return errors.New("managed runtime finalization receipt mismatch")
+				}
+				return err
+			})
+			if err != nil {
+				return r, err
+			}
+		}
+		if s.Managed != nil && r.Plan.Purpose == core.PurposePreparation && (r.Steps["stage/"+b.ID] != "" || r.Steps["publish/"+b.ID] != "") {
+			if r.SignedPlan == "" || r.Preparation == nil || !r.Preparation.Released {
+				return r, errors.New("managed preparation cleanup lacks durable release receipt")
+			}
+			raw, err := json.Marshal(r.Preparation)
+			if err != nil {
+				return r, err
+			}
+			err = e.step(&r, "finalize/"+b.ID, func() error {
+				receipt, err := s.Managed.FinalizePreparation(ctx, &v1.DriverPreparationReleaseRequest{SignedNodePlan: r.SignedPlan, BindingUid: b.ID, ReceiptJson: string(raw)})
+				if err == nil && (receipt == nil || receipt.OperationId != b.ID || (receipt.State != "Finalized" && receipt.State != "Unstarted")) {
+					return errors.New("managed preparation finalization receipt mismatch")
+				}
+				return err
+			})
+			if err != nil {
+				return r, err
+			}
 		}
 		if r.Steps["publish/"+b.ID] != "" {
 			err = e.step(&r, "unpublish/"+b.ID, func() error {
@@ -402,6 +456,11 @@ func (e *Engine) stageHolders(current Record, b core.Binding) (int, error) {
 			continue
 		}
 		for _, x := range r.Plan.Bindings {
+			wanted, _ := e.paths(current.Plan, b)
+			existing, _ := e.paths(r.Plan, x)
+			if wanted != existing {
+				continue
+			}
 			if x.ID != b.ID && x.Volume.Key() == b.Volume.Key() && r.Steps["stage/"+x.ID] != "" && r.Steps["unpublish/"+x.ID] != "Done" {
 				n++
 			}
@@ -501,7 +560,7 @@ func (e *Engine) Expand(ctx context.Context, id, binding string, size int64) err
 		if err != nil {
 			return err
 		}
-		stage, target := e.paths(b)
+		stage, target := e.paths(r.Plan, b)
 		authorizer, ok := e.Secrets.(interface {
 			AuthorizeExpansion(context.Context, core.Volume, int64) error
 		})

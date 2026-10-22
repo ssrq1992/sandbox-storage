@@ -1,0 +1,16 @@
+warning: use of deprecated method `std::sync::atomic::Atomic::<i64>::fetch_update`: renamed to `try_update` for consistency
+   --> storage/overlaybd/src/download_gate.rs:187:10
+    |
+187 |         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+    |          ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+187 -         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+187 +         .try_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+    |
+
+warning: `overlaybd` (lib) generated 1 warning (run `cargo fix --lib -p overlaybd` to apply 1 suggestion)
+    Checking uvm-ublk-daemon v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/storage/ublk-daemon)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.26s

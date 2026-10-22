@@ -30,8 +30,8 @@ func (c preparationClient) ReleaseVolumePreparation(ctx context.Context, q *api.
 	return c.RuntimeStorageNodeClient.ReleaseVolumePreparation(ctx, q)
 }
 
-// The original native host owns this worker and its lifetime. Discovery still
-// passes through Refresh (including the scheduler's heartbeat filter).
+// The independent coordinator hosts this worker. Discovery still passes through
+// Refresh and the original Scheduler's authenticated heartbeat projection.
 func (c *NativeControl) openPreparation(cfg NativeConfig, tlsConfig *tls.Config) (func(), error) {
 	if len(cfg.VolumeProfiles) == 0 {
 		return func() {}, nil
@@ -40,7 +40,7 @@ func (c *NativeControl) openPreparation(cfg NativeConfig, tlsConfig *tls.Config)
 		return nil, err
 	}
 	for _, p := range cfg.VolumeProfiles {
-		if p != DescribeVolumeProfile() {
+		if !supportedVolumeProfile(p) {
 			return nil, errors.New("unsupported AgentENV content profile")
 		}
 	}
@@ -148,6 +148,17 @@ func (c *NativeControl) openPreparation(cfg NativeConfig, tlsConfig *tls.Config)
 			connections[address] = conn
 		}
 		return preparationClient{api.NewRuntimeStorageNodeClient(conn)}, nil
+	}
+	c.CaptureNode = func(ctx context.Context, p core.Placement) (api.RuntimeStorageNodeClient, error) {
+		client, err := co.Node(ctx, p)
+		if err != nil {
+			return nil, err
+		}
+		native, ok := client.(preparationClient)
+		if !ok {
+			return nil, errors.New("common Node client unavailable")
+		}
+		return native.RuntimeStorageNodeClient, nil
 	}
 	c.Preparation = co
 	return func() {

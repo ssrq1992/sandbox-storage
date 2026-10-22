@@ -5,6 +5,7 @@ import (
 	"context"
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -51,7 +52,7 @@ func (s *Server) ControllerPublishVolume(c context.Context, r *csi.ControllerPub
 	if e := s.Authorizer.Publish(c, r); e != nil {
 		return nil, status.Error(codes.PermissionDenied, e.Error())
 	}
-	return s.Controller.ControllerPublishVolume(c, r)
+	return s.Controller.ControllerPublishVolume(forwardBinding(c), r)
 }
 func (s *Server) ControllerUnpublishVolume(c context.Context, r *csi.ControllerUnpublishVolumeRequest) (*csi.ControllerUnpublishVolumeResponse, error) {
 	if s.Authorizer == nil {
@@ -60,5 +61,19 @@ func (s *Server) ControllerUnpublishVolume(c context.Context, r *csi.ControllerU
 	if e := s.Authorizer.Unpublish(c, r); e != nil {
 		return nil, status.Error(codes.PermissionDenied, e.Error())
 	}
-	return s.Controller.ControllerUnpublishVolume(c, r)
+	return s.Controller.ControllerUnpublishVolume(forwardBinding(c), r)
+}
+
+// Forward only the binding identity after Authorizer accepted it. Private
+// driver extensions may independently validate the same ledger intent; inbound
+// credentials and unrelated metadata are never copied to the CSI socket.
+func forwardBinding(ctx context.Context) context.Context {
+	incoming, _ := metadata.FromIncomingContext(ctx)
+	if ids := incoming.Get("ssf-binding-id"); len(ids) == 1 {
+		outgoing, _ := metadata.FromOutgoingContext(ctx)
+		outgoing = outgoing.Copy()
+		outgoing.Set("ssf-binding-id", ids[0])
+		return metadata.NewOutgoingContext(ctx, outgoing)
+	}
+	return ctx
 }

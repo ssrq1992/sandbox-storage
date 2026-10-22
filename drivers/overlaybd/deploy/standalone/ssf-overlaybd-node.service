@@ -1,0 +1,17 @@
+[Unit]
+Description=SSF OverlayBD CSI node
+After=ssf-overlaybd-host.service
+Wants=ssf-overlaybd-host.service
+Before=ssf-node.service agentenv-storage-node.service agentenv.service
+
+[Service]
+Type=simple
+UMask=0077
+ExecStart=/usr/local/bin/overlaybd-csi -config /etc/ssf-overlaybd/node.json
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=infinity
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

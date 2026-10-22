@@ -1,0 +1,26 @@
+# Build from sandboxstorage, the common parent of AgentENV and sandbox-storage:
+# docker build -f sandbox-storage/adapter/agentenvadapter/deploy/Dockerfile.scheduler .
+FROM golang:1.26.3-bookworm AS build
+ARG TARGETOS=linux
+ARG TARGETARCH=amd64
+WORKDIR /src/AgentENV/services
+COPY AgentENV/services/go.mod AgentENV/services/go.sum ./
+COPY sandbox-storage/sdk/go/control /src/sandbox-storage/sdk/go/control/
+RUN go mod download
+COPY AgentENV/services /src/AgentENV/services
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
+    go build -trimpath -o /out/scheduler ./scheduler/cmd
+
+FROM alpine:3.21 AS grpc-health-probe
+ARG TARGETARCH=amd64
+RUN apk add --no-cache curl \
+    && case "${TARGETARCH}" in amd64|arm64) ;; *) exit 1 ;; esac \
+    && curl -fL "https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.4.46/grpc_health_probe-linux-${TARGETARCH}" -o /grpc_health_probe \
+    && chmod +x /grpc_health_probe
+
+FROM gcr.io/distroless/static-debian12
+COPY --from=build /out/scheduler /scheduler
+COPY --from=grpc-health-probe /grpc_health_probe /grpc_health_probe
+COPY AgentENV/deploy/docker/config/default.json /config/default.json
+ENTRYPOINT ["/scheduler"]
+CMD ["-config", "/config/default.json"]

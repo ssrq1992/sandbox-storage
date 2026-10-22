@@ -1,0 +1,25 @@
+{
+  "listen": ":9446",
+  "health_listen": ":9096",
+  "tls": {
+    "endpoint": "",
+    "cert": "/etc/agentenv-storage-tls/tls.crt",
+    "key": "/etc/agentenv-storage-tls/tls.key",
+    "ca": "/etc/agentenv-storage-tls/ca.crt",
+    "peer": ""
+  },
+  "scheduler_peers": [
+    "spiffe://ssf/agentenv/scheduler"
+  ],
+  "node_peers": [
+    "spiffe://ssf/agentenv/node"
+  ],
+  "observer": {
+    "endpoint": "https://agentenv-scheduler.agentenv-system.svc:9447",
+    "cert": "/etc/agentenv-storage-tls/tls.crt",
+    "key": "/etc/agentenv-storage-tls/tls.key",
+    "ca": "/etc/agentenv-storage-tls/ca.crt",
+    "peer": "spiffe://ssf/agentenv/scheduler"
+  },
+  "runtime_config": "/etc/agentenv-ssf/control.json"
+}

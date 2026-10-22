@@ -1,9 +1,11 @@
 FROM golang:1.26.3-bookworm AS build
 WORKDIR /src
 COPY go.mod go.sum ./
+COPY sdk/go/control ./sdk/go/control
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 go build -o /out/ssf-node ./cmd/ssf-node && \
+RUN CGO_ENABLED=0 go build -o /out/ssf-coordinator ./cmd/ssf-coordinator && \
+    CGO_ENABLED=0 go build -o /out/ssf-node ./cmd/ssf-node && \
     CGO_ENABLED=0 go build -o /out/ssf-guard ./cmd/ssf-guard && \
     CGO_ENABLED=0 go build -o /out/ssf-csi-gateway ./cmd/ssf-csi-gateway && \
     CGO_ENABLED=0 go build -o /out/ssfctl ./cmd/ssfctl

@@ -1,0 +1,40 @@
+{
+  "namespace": "agentenv-system",
+  "principal": {
+    "tenant": "agentenv",
+    "namespaces": [
+      "agentenv-system"
+    ]
+  },
+  "recovery_seconds": 600,
+  "drivers": [
+    {
+      "Name": "example.csi.driver",
+      "ControllerEndpoint": "ssf-csi-gateway.ssf-system.svc:9443",
+      "Revision": "1"
+    }
+  ],
+  "signing_key": "/etc/agentenv-storage/plan.key",
+  "cert": "/etc/agentenv-storage-tls/tls.crt",
+  "key": "/etc/agentenv-storage-tls/tls.key",
+  "ca": "/etc/agentenv-storage-tls/ca.crt",
+  "agent_key_file": "/etc/agentenv-native-auth/AENV_API_KEY",
+  "gateway_key_file": "/etc/agentenv-storage/gateway-key",
+  "dispatch_key_file": "/etc/agentenv-storage/dispatch-key",
+  "node_key_file": "/etc/agentenv-storage/node-key",
+  "plugin_port": "9444",
+  "plugin_server_name": "agentenv-storage-node.agentenv-system.svc",
+  "required_profile": "agentenv-capture-clone-v1",
+  "volume_profiles": [
+    {
+      "name": "agentenv-block-ext4-v1",
+      "runtime": "agentenv",
+      "version": "volume-preparation-v1",
+      "volumeMode": "Block",
+      "filesystem": "ext4",
+      "initializeBlank": true
+    }
+  ],
+  "preparation_node_port": "9443",
+  "preparation_server_name": "agentenv-ssf-node.agentenv-system.svc"
+}

@@ -214,12 +214,13 @@ func TestPostgresPreparationRebootPreservesOperation(t *testing.T) {
 	ctx := context.Background()
 	n.losePrepareReply = true
 	n.failRelease = true
-	if _, err := c.Ensure(ctx, v, core.Placement{}, "", ""); err == nil {
+	_, initialErr := c.Ensure(ctx, v, core.Placement{}, "", "")
+	if initialErr == nil {
 		t.Fatal("lost reply not surfaced")
 	}
 	previous, err := c.Ledger.Preparation(ctx, v.PVC.UID)
 	if err != nil || previous.State != "NeedsRecovery" {
-		t.Fatalf("%+v %v", previous, err)
+		t.Fatalf("%+v %v; initial preparation error: %v", previous, err, initialErr)
 	}
 	n.boot = "new-boot"
 	n.losePrepareReply = false

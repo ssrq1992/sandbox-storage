@@ -1,0 +1,405 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "v1",
+      "kind": "ServiceAccount",
+      "metadata": {
+        "name": "ssf-overlaybd-controller",
+        "namespace": "ssf-overlaybd-test"
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ConfigMap",
+      "metadata": {
+        "name": "ssf-overlaybd-controller",
+        "namespace": "ssf-overlaybd-test"
+      },
+      "data": {
+        "controller.json": "{\n  \"role\": \"controller\",\n  \"socket\": \"/run/csi/private/csi.sock\",\n  \"databaseURLFile\": \"/etc/ssf/database-url\",\n  \"certificate\": \"/etc/ssf-tls/tls.crt\",\n  \"key\": \"/etc/ssf-tls/tls.key\",\n  \"ca\": \"/etc/ssf-tls/ca.crt\",\n  \"repositories\": [\n    {\n      \"id\": \"agentenv-overlaybd-node-a\",\n      \"endpoint\": \"node-a:9455\",\n      \"nodes\": [\n        \"node-a\"\n      ]\n    }\n  ],\n  \"captureCoordinator\": {\n    \"endpoint\": \"https://ssf-coordinator.ssf-overlaybd-test.svc:9446\",\n    \"cert\": \"/etc/ssf-tls/tls.crt\",\n    \"key\": \"/etc/ssf-tls/tls.key\",\n    \"ca\": \"/etc/ssf-tls/ca.crt\",\n    \"peer\": \"spiffe://ssf/agentenv/coordinator\"\n  },\n  \"offlineExpansion\": true\n}"
+      }
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "ClusterRole",
+      "metadata": {
+        "name": "ssf-overlaybd-test-ssf-overlaybd-controller"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            "admissionregistration.k8s.io"
+          ],
+          "resources": [
+            "validatingwebhookconfigurations"
+          ],
+          "resourceNames": [
+            "ssf-guard"
+          ],
+          "verbs": [
+            "get"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "persistentvolumes"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch",
+            "create",
+            "delete",
+            "update",
+            "patch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "persistentvolumeclaims",
+            "persistentvolumeclaims/status"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch",
+            "update",
+            "patch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "nodes"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "events"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch",
+            "create",
+            "update",
+            "patch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "storage.k8s.io"
+          ],
+          "resources": [
+            "storageclasses",
+            "csinodes",
+            "volumeattachments"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "snapshot.storage.k8s.io"
+          ],
+          "resources": [
+            "volumesnapshots",
+            "volumesnapshotclasses"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "snapshot.storage.k8s.io"
+          ],
+          "resources": [
+            "volumesnapshotcontents",
+            "volumesnapshotcontents/status"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch",
+            "update",
+            "patch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "ClusterRoleBinding",
+      "metadata": {
+        "name": "ssf-overlaybd-test-ssf-overlaybd-controller"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "ClusterRole",
+        "name": "ssf-overlaybd-test-ssf-overlaybd-controller"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "ssf-overlaybd-controller",
+          "namespace": "ssf-overlaybd-test"
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": {
+        "name": "ssf-overlaybd-controller",
+        "namespace": "ssf-overlaybd-test"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            "coordination.k8s.io"
+          ],
+          "resources": [
+            "leases"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch",
+            "create",
+            "update",
+            "patch",
+            "delete"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "RoleBinding",
+      "metadata": {
+        "name": "ssf-overlaybd-controller",
+        "namespace": "ssf-overlaybd-test"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "ssf-overlaybd-controller"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "ssf-overlaybd-controller",
+          "namespace": "ssf-overlaybd-test"
+        }
+      ]
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "ssf-overlaybd-controller",
+        "namespace": "ssf-overlaybd-test"
+      },
+      "spec": {
+        "replicas": 1,
+        "selector": {
+          "matchLabels": {
+            "app": "ssf-overlaybd-controller"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "ssf-overlaybd-controller"
+            }
+          },
+          "spec": {
+            "serviceAccountName": "ssf-overlaybd-controller",
+            "terminationGracePeriodSeconds": 300,
+            "containers": [
+              {
+                "name": "driver",
+                "image": "ssf-overlaybd:validation",
+                "args": [
+                  "-config",
+                  "/etc/overlaybd/controller.json"
+                ],
+                "readinessProbe": {
+                  "exec": {
+                    "command": [
+                      "/usr/local/bin/overlaybd-csi",
+                      "-config",
+                      "/etc/overlaybd/controller.json",
+                      "-probe"
+                    ]
+                  },
+                  "periodSeconds": 10,
+                  "timeoutSeconds": 6
+                },
+                "securityContext": {
+                  "runAsUser": 0,
+                  "allowPrivilegeEscalation": false,
+                  "readOnlyRootFilesystem": true,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "socket",
+                    "mountPath": "/run/csi"
+                  },
+                  {
+                    "name": "config",
+                    "mountPath": "/etc/overlaybd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "database",
+                    "mountPath": "/etc/ssf",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "tls",
+                    "mountPath": "/etc/ssf-tls",
+                    "readOnly": true
+                  }
+                ]
+              },
+              {
+                "name": "provisioner",
+                "image": "registry.k8s.io/sig-storage/csi-provisioner:v5.2.0",
+                "args": [
+                  "--csi-address=/run/csi/private/csi.sock",
+                  "--leader-election",
+                  "--leader-election-namespace=ssf-overlaybd-test",
+                  "--extra-create-metadata"
+                ],
+                "securityContext": {
+                  "runAsUser": 0,
+                  "allowPrivilegeEscalation": false,
+                  "readOnlyRootFilesystem": true,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "socket",
+                    "mountPath": "/run/csi"
+                  }
+                ]
+              },
+              {
+                "name": "snapshotter",
+                "image": "registry.k8s.io/sig-storage/csi-snapshotter:v8.2.0",
+                "args": [
+                  "--csi-address=/run/csi/private/csi.sock",
+                  "--leader-election",
+                  "--leader-election-namespace=ssf-overlaybd-test",
+                  "--extra-create-metadata"
+                ],
+                "securityContext": {
+                  "runAsUser": 0,
+                  "allowPrivilegeEscalation": false,
+                  "readOnlyRootFilesystem": true,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "socket",
+                    "mountPath": "/run/csi"
+                  }
+                ]
+              },
+              {
+                "name": "resizer",
+                "image": "registry.k8s.io/sig-storage/csi-resizer:v1.13.2",
+                "args": [
+                  "--csi-address=/run/csi/private/csi.sock",
+                  "--leader-election",
+                  "--leader-election-namespace=ssf-overlaybd-test",
+                  "--handle-volume-inuse-error=false"
+                ],
+                "securityContext": {
+                  "runAsUser": 0,
+                  "allowPrivilegeEscalation": false,
+                  "readOnlyRootFilesystem": true,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "socket",
+                    "mountPath": "/run/csi"
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "socket",
+                "emptyDir": {}
+              },
+              {
+                "name": "config",
+                "configMap": {
+                  "name": "ssf-overlaybd-controller"
+                }
+              },
+              {
+                "name": "database",
+                "secret": {
+                  "secretName": "ssf-overlaybd-database",
+                  "defaultMode": 256
+                }
+              },
+              {
+                "name": "tls",
+                "secret": {
+                  "secretName": "ssf-overlaybd-controller-tls",
+                  "defaultMode": 256
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

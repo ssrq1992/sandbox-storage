@@ -53,6 +53,12 @@ func TestCaptureRejectsIncompleteIdentity(t *testing.T) {
 }
 
 func TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier(t *testing.T) {
+	testJointCapture(t, false)
+}
+func TestPostgresJointCaptureSealsMixedVolumesBeforeThaw(t *testing.T) {
+	testJointCapture(t, true)
+}
+func testJointCapture(t *testing.T, sealedMode bool) {
 	url := os.Getenv("SSF_TEST_DATABASE_URL")
 	if url == "" {
 		t.Skip("requires dedicated PostgreSQL")
@@ -173,7 +179,41 @@ func TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier(t *testing
 	if _, err = dyn.Resource(contents).Update(ctx, content, metav1.UpdateOptions{}); err != nil {
 		t.Fatal(err)
 	}
+	prepared, published := 0, 0
+	if sealedMode {
+		// One managed participant can seal independently; the generic member
+		// already has its immutable Kubernetes snapshot and Content pinned.
+		c.SealedParticipants = func(b core.Binding) bool { return b.ID == bindings[0].ID }
+		c.PrepareParticipants = func(context.Context, CaptureIntent, []core.Binding, string) error { prepared++; return nil }
+		c.PublishParticipants = func(context.Context, CaptureIntent, []core.Binding, string) error {
+			if !proof.fail {
+				t.Error("publication did not follow simulated thaw")
+			}
+			published++
+			return nil
+		}
+		proof.failAt = proof.calls + 2
+		if _, err = c.Seal(ctx, q, "trusted-frozen-fixture"); err == nil {
+			t.Fatal("sealed after final barrier loss")
+		}
+		var stored string
+		if err = db.ReadStep(ctx, "checkpoint/sealed/"+q.ID, &stored); err == nil {
+			t.Fatal("failed barrier granted thaw")
+		}
+		proof.failAt = 0
+		if _, err = c.Seal(ctx, q, "trusted-frozen-fixture"); err != nil {
+			t.Fatal(err)
+		}
+		proof.fail = true // Only durable sealed layers may now be published.
+		before := proof.calls
+		if _, err = c.Seal(ctx, q, "trusted-frozen-fixture"); err != nil || proof.calls != before {
+			t.Fatalf("seal replay after thaw: %v", err)
+		}
+	}
 	complete, err := c.Advance(ctx, q, "trusted-frozen-fixture")
+	if sealedMode && (prepared != 2 || published != 1) {
+		t.Fatalf("phase calls: prepare=%d publish=%d", prepared, published)
+	}
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -281,5 +321,105 @@ func TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier(t *testing
 	}
 	if _, err = dyn.Resource(contents).Get(ctx, lateContent, metav1.GetOptions{}); !apierrors.IsNotFound(err) {
 		t.Fatalf("late content leaked: %v", err)
+	}
+}
+
+func TestPostgresManagedSealDefersKubernetesAndUploadUntilAfterThaw(t *testing.T) {
+	url := os.Getenv("SSF_TEST_DATABASE_URL")
+	if url == "" {
+		t.Skip("requires dedicated PostgreSQL")
+	}
+	ctx := context.Background()
+	db, err := ledger.Open(ctx, url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	if err = db.Migrate(ctx); err != nil {
+		t.Fatal(err)
+	}
+	id := fmt.Sprintf("capture-%d", time.Now().UnixNano())
+	q := CaptureIntent{Version: CaptureVersion, ID: id, Operation: id + "op", OwnerUID: id + "owner", RunUID: id + "run", BarrierID: id + "barrier", NativeArtifact: id + "native", NativeDigest: core.Hash("memory/rootfs/legacy"), Classes: map[string]string{}}
+	api := fake.NewClientset()
+	cls := &unstructured.Unstructured{Object: map[string]any{"apiVersion": "snapshot.storage.k8s.io/v1", "kind": "VolumeSnapshotClass", "metadata": map[string]any{"name": "retain"}, "driver": "fixture", "deletionPolicy": "Retain"}}
+	dyn := dynamicfake.NewSimpleDynamicClientWithCustomListKinds(kruntime.NewScheme(), map[schema.GroupVersionResource]string{
+		{Group: "snapshot.storage.k8s.io", Version: "v1", Resource: "volumesnapshots"}:        "VolumeSnapshotList",
+		{Group: "snapshot.storage.k8s.io", Version: "v1", Resource: "volumesnapshotcontents"}: "VolumeSnapshotContentList",
+	}, cls)
+	dyn.PrependReactor("create", "volumesnapshots", func(a ktesting.Action) (bool, kruntime.Object, error) {
+		obj := a.(ktesting.CreateAction).GetObject().(*unstructured.Unstructured)
+		obj.SetUID(types.UID(id + obj.GetName()))
+		return false, nil, nil
+	})
+	var bindings []core.Binding
+	epoch, err := db.RunEpoch(ctx, q.OwnerUID, q.RunUID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < 2; i++ {
+		ref := core.PVCRef{Namespace: "ns", Name: fmt.Sprintf("data%d", i), UID: fmt.Sprintf("%spvc%d", id, i)}
+		_, err = api.CoreV1().PersistentVolumeClaims("ns").Create(ctx, &v1.PersistentVolumeClaim{ObjectMeta: metav1.ObjectMeta{Name: ref.Name, Namespace: "ns", UID: types.UID(ref.UID), Labels: map[string]string{kube.ManagedLabel: "true"}}}, metav1.CreateOptions{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		v := core.Volume{Driver: "fixture", Handle: ref.UID, PVC: ref}
+		if err = db.Register(ctx, v); err != nil {
+			t.Fatal(err)
+		}
+		b := core.Binding{ID: fmt.Sprintf("%sb%d", id, i), Volume: v, OwnerUID: q.OwnerUID, RunUID: q.RunUID, Sandbox: q.RunUID, Epoch: epoch, Node: "node", MountID: ref.Name, GuestPath: "/" + ref.Name}
+		bindings = append(bindings, b)
+		q.Classes[b.ID] = "retain"
+	}
+	if err = db.Acquire(ctx, q.Operation, core.Digest(bindings), bindings); err != nil {
+		t.Fatal(err)
+	}
+	if err = db.SetOperation(ctx, q.Operation, "Ready", ""); err != nil {
+		t.Fatal(err)
+	}
+	proof := &captureProof{fail: true}
+	c := &Checkpoints{Ledger: db, Kube: &kube.Client{API: api, Dynamic: dyn}, Evidence: proof}
+
+	proof.fail = false
+	prepares, publishes := 0, 0
+	failPrepare := true
+	c.SealedParticipants = func(core.Binding) bool { return true }
+	c.PrepareParticipants = func(context.Context, CaptureIntent, []core.Binding, string) error {
+		prepares++
+		if failPrepare {
+			return errors.New("partial participant capture")
+		}
+		return nil
+	}
+	c.PublishParticipants = func(context.Context, CaptureIntent, []core.Binding, string) error { publishes++; return nil }
+	if _, err = c.Seal(ctx, q, "trusted-frozen-fixture"); err == nil {
+		t.Fatal("partial capture permitted thaw")
+	}
+	var receipt string
+	if err = db.ReadStep(ctx, "checkpoint/sealed/"+q.ID, &receipt); err == nil {
+		t.Fatal("partial seal persisted")
+	}
+	failPrepare = false
+	if _, err = c.Seal(ctx, q, "trusted-frozen-fixture"); err != nil {
+		t.Fatal(err)
+	}
+	if prepares != 2 || publishes != 0 {
+		t.Fatal("seal performed publication")
+	}
+	for _, action := range dyn.Actions() {
+		if action.GetVerb() == "create" {
+			t.Fatal("seal created managed snapshot before publication")
+		}
+	}
+	proof.fail = true
+	calls := proof.calls
+	if _, err = c.Seal(ctx, q, "trusted-frozen-fixture"); err != nil {
+		t.Fatal(err)
+	}
+	if prepares != 2 || proof.calls != calls {
+		t.Fatal("replay recaptured or required live VMM")
+	}
+	manifest, err := c.Advance(ctx, q, "trusted-frozen-fixture")
+	if !errors.Is(err, core.ErrPending) || len(manifest.Members) != 2 || publishes != 1 || proof.calls != calls {
+		t.Fatalf("post-thaw publication: %+v %v prepares=%d publishes=%d proof=%d", manifest, err, prepares, publishes, proof.calls)
 	}
 }

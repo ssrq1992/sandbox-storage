@@ -1,0 +1,17 @@
+[Unit]
+Description=SSF OverlayBD CSI controller
+After=network-online.target ssf-overlaybd-worker.service
+Wants=network-online.target
+Before=ssf-coordinator.service
+
+[Service]
+Type=simple
+UMask=0077
+ExecStart=/usr/local/bin/overlaybd-csi -config /etc/ssf-overlaybd/controller.json
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=infinity
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

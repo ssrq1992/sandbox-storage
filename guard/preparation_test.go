@@ -9,12 +9,40 @@ import (
 	authentication "k8s.io/api/authentication/v1"
 	v1 "k8s.io/api/core/v1"
 	storage "k8s.io/api/storage/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/fake"
 	"ssf.dev/ssf/core"
 	kube "ssf.dev/ssf/kubernetes"
 )
+
+func TestControllerFencedExpansionAdmitsOnlyGrowingIntentWithoutLedgerMutation(t *testing.T) {
+	for _, enabled := range []bool{false, true} {
+		profile := core.VolumeProfile{Name: "managed", Runtime: "runtime", Version: core.PreparationProtocol, VolumeMode: "Block", Filesystem: "ext4", ControllerOfflineExpansion: enabled}
+		class := "managed"
+		mode := v1.PersistentVolumeBlock
+		retain := v1.PersistentVolumeReclaimRetain
+		api := fake.NewClientset(&storage.StorageClass{ObjectMeta: metav1.ObjectMeta{Name: class, UID: "class-uid", Annotations: map[string]string{kube.VolumeProfileAnnotation: profile.Name}}, Provisioner: "managed.csi", ReclaimPolicy: &retain})
+		h := Handler{API: api, Ledger: permits(false), VolumeProfiles: []core.VolumeProfile{profile}, ManagedNamespaces: []string{"tenant"}}
+		old := v1.PersistentVolumeClaim{ObjectMeta: metav1.ObjectMeta{Name: "data", Namespace: "tenant", UID: "uid", Labels: map[string]string{kube.ManagedLabel: "true"}, Annotations: map[string]string{kube.VolumeProfileAnnotation: profile.Name, kube.ProfileRevisionAnnotation: core.Digest(profile), kube.ProfileClassUIDAnnotation: "class-uid", kube.SourceRevisionAnnotation: core.Digest("blank")}, Finalizers: []string{kube.VolumeProtectionFinalizer}}, Spec: v1.PersistentVolumeClaimSpec{StorageClassName: &class, VolumeMode: &mode, Resources: v1.VolumeResourceRequirements{Requests: v1.ResourceList{v1.ResourceStorage: resource.MustParse("1Gi")}}}}
+		next := old.DeepCopy()
+		next.Spec.Resources.Requests[v1.ResourceStorage] = resource.MustParse("2Gi")
+		before, _ := json.Marshal(old)
+		after, _ := json.Marshal(next)
+		dry := true
+		req := &admission.AdmissionRequest{Kind: metav1.GroupVersionKind{Kind: "PersistentVolumeClaim"}, Namespace: "tenant", Operation: admission.Update, OldObject: runtime.RawExtension{Raw: before}, Object: runtime.RawExtension{Raw: after}, DryRun: &dry}
+		allowed, reason := h.check(context.Background(), req)
+		if allowed != enabled {
+			t.Fatalf("enabled=%v allowed=%v: %s", enabled, allowed, reason)
+		}
+		next.Spec.Resources.Requests[v1.ResourceStorage] = resource.MustParse("512Mi")
+		req.Object.Raw, _ = json.Marshal(next)
+		if allowed, _ = h.check(context.Background(), req); allowed {
+			t.Fatal("profile allowed shrink")
+		}
+	}
+}
 
 func TestProfiledPVCProtection(t *testing.T) {
 	ctx := context.Background()

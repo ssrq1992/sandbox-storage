@@ -1,0 +1,34 @@
+{
+  "repository_volume": {
+    "hostPath": {
+      "path": "/var/lib/ssf-overlaybd-repository",
+      "type": "DirectoryOrCreate"
+    }
+  },
+  "overlaybd_config": {
+    "registryCacheDir": "/var/lib/ssf/overlaybd/cache",
+    "logPath": "/var/lib/ssf/overlaybd/overlaybd.log",
+    "auditPath": "/var/lib/ssf/overlaybd/audit.log"
+  },
+  "resize_config": {
+    "registryCacheDir": "/var/lib/ssf/overlaybd/resize-cache"
+  },
+  "nodes": [
+    {
+      "node": "node-a",
+      "repository": "agentenv-overlaybd-node-a",
+      "worker_endpoint": "node-a:9455",
+      "accessible_nodes": [
+        "node-a"
+      ],
+      "repository_backend": "posix_fs"
+    }
+  ],
+  "offline_expansion": true,
+  "overlaybd_tools_volume": {
+    "hostPath": {
+      "path": "/var/lib/aenv/env/overlaybd",
+      "type": "Directory"
+    }
+  }
+}

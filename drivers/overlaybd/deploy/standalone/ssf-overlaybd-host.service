@@ -1,0 +1,17 @@
+[Unit]
+Description=SSF native OverlayBD repository and device host
+After=local-fs.target network-online.target ssf-overlaybd-daemon.service
+Wants=network-online.target ssf-overlaybd-daemon.service
+Before=ssf-overlaybd-node.service ssf-overlaybd-worker.service
+
+[Service]
+Type=simple
+UMask=0077
+ExecStart=/usr/local/bin/ssf-overlaybd-native /etc/ssf-overlaybd/native.json
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=infinity
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

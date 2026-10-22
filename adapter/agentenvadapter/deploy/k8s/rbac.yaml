@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ssf-coordinator
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: agentenv-storage-node
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: agentenv-ssf-consumption
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ssf-consumption
+subjects:
+  - kind: ServiceAccount
+    name: ssf-coordinator
+    namespace: agentenv-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: agentenv-ssf-node
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ssf-node
+subjects:
+  - kind: ServiceAccount
+    name: agentenv-storage-node
+    namespace: agentenv-system

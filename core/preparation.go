@@ -18,6 +18,9 @@ type VolumeProfile struct {
 	VolumeMode      string `json:"volumeMode"`
 	Filesystem      string `json:"filesystem"`
 	InitializeBlank bool   `json:"initializeBlank"`
+	// The administrator asserts that this profile's CSI Controller acquires
+	// the public offline fence before changing content, and completes the FS.
+	ControllerOfflineExpansion bool `json:"controllerOfflineExpansion,omitempty"`
 }
 
 func (p VolumeProfile) Validate() error {

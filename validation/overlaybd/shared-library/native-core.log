@@ -1,0 +1,52 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.51s
+     Running unittests src/lib.rs (/tmp/ssf-overlaybd-native-target/debug/deps/aenv_volume_core-2adf608f394fcedb)
+
+running 1 test
+test digest::tests::describe_file_reports_stable_digest ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/catalog.rs (/tmp/ssf-overlaybd-native-target/debug/deps/catalog-56eef21581c3fdd7)
+
+running 3 tests
+test untrusted_paths_and_record_identity_mismatches_are_rejected ... ok
+test publication_does_not_restore_stale_reservation_or_bypass_uploading ... ok
+test competing_catalogs_have_one_writer_and_cannot_delete_it ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.86s
+
+     Running tests/heads.rs (/tmp/ssf-overlaybd-native-target/debug/deps/heads-69c50a2845e6333d)
+
+running 3 tests
+test corruption_and_foreign_identity_fail_closed ... ok
+test concurrent_publications_have_one_winner_and_retain_original_head ... ok
+test publication_replay_is_idempotent_and_stale_capacity_is_rejected ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s
+
+     Running tests/journal.rs (/tmp/ssf-overlaybd-native-target/debug/deps/journal-2165ddd653c2d07b)
+
+running 4 tests
+test mismatched_request_and_corrupt_state_fail_closed ... ok
+test journal_rejects_symlinks_and_invalid_completion ... ok
+test checkpoints_survive_crash_and_cannot_change ... ok
+test crash_after_dispatch_never_restarts_formatter ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running tests/object_catalog.rs (/tmp/ssf-overlaybd-native-target/debug/deps/object_catalog-6ac900de182abf1d)
+
+running 4 tests
+test missing_etag_fails_closed ... ok
+test unknown_create_cannot_steal_a_reserved_alias ... ok
+test concurrent_owners_and_stale_releases_preserve_one_writer ... ok
+test object_heads_cas_preserves_snapshot_heads_and_capacity_generation ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests aenv_volume_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

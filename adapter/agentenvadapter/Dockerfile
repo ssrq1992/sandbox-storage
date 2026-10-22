@@ -1,6 +1,7 @@
 FROM golang:1.26.0-bookworm AS build
 WORKDIR /src
 COPY go.mod go.sum ./
+COPY sdk/go/control ./sdk/go/control
 RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 go build -trimpath -o /agentenvadapter ./adapter/agentenvadapter/cmd/agentenvadapter

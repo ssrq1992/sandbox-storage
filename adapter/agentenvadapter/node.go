@@ -584,6 +584,10 @@ func (n *Node) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		problem(w, 403, errors.New("control peer forbidden"))
 		return
 	}
+	if n.Config.NativeMode && r.URL.Path == "/v1/native/capture" && r.Method == "POST" {
+		n.nativeStorageCapture(w, r)
+		return
+	}
 	if n.Config.NativeMode && r.URL.Path == "/v1/native/cancel" && r.Method == "POST" {
 		n.nativeCancel(w, r)
 		return

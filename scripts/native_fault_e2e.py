@@ -16,7 +16,10 @@ STAGES = ['reserve', 'bind', 'attach', 'dispatch', 'spawn', 'ready-commit',
           'pause', 'freeze', 'publish', 'release',
           'preparation-acquire', 'preparation-publish', 'preparation-format',
           'preparation-receipt', 'preparation-release', 'preparation-handoff',
-          'preparation-delete']
+          'preparation-delete',
+          'overlaybd-create', 'overlaybd-device-create', 'overlaybd-restack',
+          'overlaybd-upload', 'overlaybd-head-commit', 'overlaybd-daemon-restart',
+          'overlaybd-expansion-tool', 'overlaybd-expansion-seal']
 
 
 def command(value):
@@ -34,6 +37,8 @@ def main():
     p.add_argument('--namespace', required=True)
     p.add_argument('--fixture-pod')
     p.add_argument('--fixture-container', default='driver')
+    p.add_argument('--driver-kind', choices=('unspecified', 'fixture', 'vendor', 'native-overlaybd'),
+                   default='unspecified', help='Recorded evidence scope; native OverlayBD cannot use fixture CSI injection')
     p.add_argument('--timeout', type=int, default=900)
     a = p.parse_args()
     spec = json.loads(Path(a.scenarios).read_text())
@@ -53,10 +58,15 @@ def main():
             p.error('scenario must actually inject a fault')
         if case.get('csi_fault') and not a.fixture_pod:
             p.error('CSI fault requires explicit --fixture-pod')
+        if case.get('csi_fault') and a.driver_kind in ('vendor', 'native-overlaybd'):
+            p.error('fixture CSI injection cannot validate a real vendor or native OverlayBD driver')
+        if case['stage'].startswith('overlaybd-') and a.driver_kind != 'native-overlaybd':
+            p.error('OverlayBD failure stages require --driver-kind native-overlaybd')
     out = Path(a.output)
     out.mkdir(mode=0o700, parents=True, exist_ok=False)
     os.umask(0o077)
     report = {'version': 1, 'scope': 'real-fault-scenarios', 'executed': a.execute,
+              'driver_kind': a.driver_kind,
               'context': a.context, 'time': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'cases': []}
     def save():
         (out / 'report.json').write_text(json.dumps(report, indent=2) + '\n')

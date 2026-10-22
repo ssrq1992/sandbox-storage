@@ -26,6 +26,7 @@ type Handler struct {
 	Mutating                            bool
 	VolumeProfiles                      []core.VolumeProfile
 	ManagedNamespaces, CoordinatorUsers []string
+	SnapshotControllerUsers             []string
 	Ledger                              Permits
 	API                                 kubernetes.Interface
 	Dynamic                             dynamic.Interface
@@ -131,15 +132,22 @@ func (h *Handler) check(ctx context.Context, r *admission.AdmissionRequest) (boo
 		}
 		if r.Operation == admission.Update {
 			if next.Spec.Resources.Requests.Storage().Cmp(*old.Spec.Resources.Requests.Storage()) != 0 {
-				authority, ok := h.Ledger.(interface {
-					AllowedExpansion(context.Context, string, int64) (bool, error)
-				})
-				if !ok {
-					return false, "offline expansion reservation required"
-				}
-				allowed, err := authority.AllowedExpansion(ctx, string(old.UID), next.Spec.Resources.Requests.Storage().Value())
-				if err != nil || !allowed {
-					return false, "offline expansion reservation required"
+				// Admitting desired capacity performs no device mutation. Profiles
+				// with a fenced offline Controller may queue expansion through the
+				// original Kubernetes PVC API, including while a writer is active.
+				profile, managedProfile, profileErr := h.profile(ctx, &next)
+				deferred := profileErr == nil && managedProfile && profile.ControllerOfflineExpansion && next.Spec.Resources.Requests.Storage().Cmp(*old.Spec.Resources.Requests.Storage()) > 0
+				if !deferred {
+					authority, ok := h.Ledger.(interface {
+						AllowedExpansion(context.Context, string, int64) (bool, error)
+					})
+					if !ok {
+						return false, "offline expansion reservation required"
+					}
+					allowed, err := authority.AllowedExpansion(ctx, string(old.UID), next.Spec.Resources.Requests.Storage().Value())
+					if err != nil || !allowed {
+						return false, "offline expansion reservation required"
+					}
 				}
 			}
 			const selected = "volume.kubernetes.io/selected-node"

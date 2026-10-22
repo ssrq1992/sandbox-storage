@@ -1,0 +1,39 @@
+{
+  "time": "2026-10-22T12:01:57.730439+00:00",
+  "scope": "macOS actual file-layer tests and Go evidence unit tests; no ublk/KVM/K8s",
+  "checks": [
+    {
+      "name": "native-restack-files",
+      "command": [
+        "/tmp/ssf-rustup/toolchains/stable-x86_64-apple-darwin/bin/cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "-p",
+        "overlaybd",
+        "--lib",
+        "restack"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 5
+    },
+    {
+      "name": "evidence-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "./cmd/overlaybd-evidence",
+        "./drivers/overlaybd"
+      ],
+      "status": "passed",
+      "exit_code": 0
+    }
+  ],
+  "source_hashes": {
+    "AgentENV/storage/overlaybd/src/image/image_file.rs": "c51381aa4ae960f9c633ae41b7b07409178142156c0058e9b2a14ea18a2f2d61",
+    "sandbox-storage/cmd/overlaybd-evidence/main.go": "bc46c4e7a34919f5ae3c50a937ae0d9a341fb97e032b7d477a4008d8600b78b8",
+    "sandbox-storage/cmd/overlaybd-evidence/main_test.go": "2fe8bfe65d277ba41f6ac08d404752de54117ba603da18a3c7de1e7ffb4ffe0f"
+  }
+}

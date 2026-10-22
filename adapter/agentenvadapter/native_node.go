@@ -183,16 +183,46 @@ func (n *Node) nativeLifecycle(w http.ResponseWriter, r *http.Request) {
 		problem(w, 409, errors.New("native storage session unavailable"))
 		return
 	}
-	if q.Action == "capture" {
-		if q.Capture == nil || record.Runtime.Capture == nil || core.Digest(q.Capture) != core.Digest(record.Runtime.Capture) || record.Stop {
+	if q.Action == "capture" || q.Action == "capture.seal" {
+		// Publication after thaw is authorized only by a durable coordinator
+		// seal acknowledged for this exact native receipt, never by the caller.
+		sealed := q.Capture != nil && record.SealedCaptures[q.Capture.BarrierID] == core.Digest(q.Capture)
+		live := q.Capture != nil && record.Runtime.Capture != nil && core.Digest(q.Capture) == core.Digest(record.Runtime.Capture)
+		if q.Capture == nil || !q.Capture.valid() || (!live && !sealed) || record.Stop {
 			problem(w, 409, core.ErrConflict)
 			return
 		}
 		data, _ := json.Marshal(map[string]any{"request_id": record.Request.ID, "capture": q.Capture, "proof": n.captureProof(record, *q.Capture)})
-		result, err := n.Control(r.Context(), NativeCommand{Action: "capture", NodeID: n.Config.NativeNodeID, OwnerID: record.Native.OwnerUID, RunID: record.Native.RunUID, Data: data})
+		result, err := n.Control(r.Context(), NativeCommand{Action: q.Action, NodeID: n.Config.NativeNodeID, OwnerID: record.Native.OwnerUID, RunID: record.Native.RunUID, Data: data})
 		if err != nil {
 			problem(w, 409, err)
 			return
+		}
+		if q.Action == "capture.seal" {
+			var response struct {
+				Ready bool `json:"ready"`
+			}
+			if err = json.Unmarshal(result, &response); err != nil {
+				problem(w, 502, err)
+				return
+			}
+			if response.Ready {
+				_, err = n.Journal.Update(record.Request.ID, func(x *NodeRecord) error {
+					if x.SealedCaptures == nil {
+						x.SealedCaptures = map[string]string{}
+					}
+					digest := core.Digest(q.Capture)
+					if old := x.SealedCaptures[q.Capture.BarrierID]; old != "" && old != digest {
+						return core.ErrConflict
+					}
+					x.SealedCaptures[q.Capture.BarrierID] = digest
+					return nil
+				})
+				if err != nil {
+					problem(w, 503, err)
+					return
+				}
+			}
 		}
 		respond(w, 200, json.RawMessage(result))
 		return
@@ -233,7 +263,7 @@ func (n *Node) nativeLifecycle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	switch q.Action {
-	case "pause", "cancel_pause", "resume", "fork", "capture.retire", "cleanup.status":
+	case "pause", "cancel_pause", "resume", "fork", "capture.retire", "capture.request", "cleanup.status":
 	default:
 		problem(w, 400, ErrUnsupported)
 		return
@@ -250,7 +280,7 @@ func (n *Node) nativeLifecycle(w http.ResponseWriter, r *http.Request) {
 	if q.Action == "cleanup.status" {
 		dataFields["ever_ready"] = record.EverReady
 	}
-	if q.Action == "capture.retire" {
+	if q.Action == "capture.retire" || q.Action == "capture.request" {
 		if q.Capture == nil || !safeID.MatchString(q.Capture.BarrierID) {
 			problem(w, 400, core.ErrConflict)
 			return

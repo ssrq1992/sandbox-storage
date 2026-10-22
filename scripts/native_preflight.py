@@ -22,6 +22,8 @@ parser.add_argument('--storage-class')
 parser.add_argument('--snapshot-class')
 parser.add_argument('--volume-preparation', action='store_true',
                     help='also require the direct-PVC profile and mutating admission')
+parser.add_argument('--native-overlaybd', action='store_true',
+                    help='require native OverlayBD driver/profile and ublk host device')
 parser.add_argument('--output', default='native-preflight.json')
 args = parser.parse_args()
 checks = []
@@ -41,6 +43,9 @@ def cluster_json(*arguments):
 
 record('linux-host', platform.system() == 'Linux', platform.system())
 record('kvm-device', os.access('/dev/kvm', os.R_OK | os.W_OK), '/dev/kvm must be readable and writable by test runner')
+if args.native_overlaybd:
+    record('ublk-control', os.access('/dev/ublk-control', os.R_OK | os.W_OK),
+           'run host preflight on the actual native worker')
 for tool in ('cargo', 'rustc', 'go', 'protoc', 'cmake', 'clang', 'pkg-config', 'kubectl', 'openssl'):
     record('tool-' + tool, shutil.which(tool) is not None, shutil.which(tool) or 'missing')
 for directory in ('/var/lib/ssf', '/var/lib/aenv'):
@@ -58,11 +63,11 @@ if args.context and shutil.which('kubectl'):
             items = result.get('items', [])
             names = [item['metadata']['name'] for item in items]
             if name == 'native-deployments':
-                expected = {'agentenv-gateway', 'agentenv-scheduler'}
+                expected = {'agentenv-gateway', 'agentenv-scheduler', 'ssf-coordinator'}
             elif name == 'native-daemonsets':
                 expected = {'agentenv-node'}
             elif name == 'native-services':
-                expected = {'agentenv-nodes', 'agentenv-scheduler'}
+                expected = {'agentenv-nodes', 'agentenv-scheduler', 'ssf-coordinator'}
             else:
                 expected = set()
             record(name, bool(items) and expected.issubset(names), {'observed': names, 'required': sorted(expected)})
@@ -78,17 +83,21 @@ if args.context and shutil.which('kubectl'):
             if resource == 'storageclass':
                 detail = {field: obj.get(field) for field in ('provisioner', 'reclaimPolicy', 'volumeBindingMode', 'allowVolumeExpansion')}
                 valid = obj.get('reclaimPolicy') == 'Retain' and obj.get('volumeBindingMode', 'Immediate') in ('Immediate', 'WaitForFirstConsumer')
-                if args.volume_preparation:
+                if args.volume_preparation or args.native_overlaybd:
                     profile = obj.get('metadata', {}).get('annotations', {}).get('ssf.dev/volume-profile')
                     detail['volumeProfile'] = profile
-                    valid = valid and profile == 'agentenv-block-ext4-v1'
+                    valid = valid and profile == ('agentenv-overlaybd-ext4-v1' if args.native_overlaybd else 'agentenv-block-ext4-v1')
+                if args.native_overlaybd:
+                    valid = valid and obj.get('provisioner') == 'overlaybd.csi.ssf.dev'
             else:
                 detail = {field: obj.get(field) for field in ('driver', 'deletionPolicy')}
                 valid = obj.get('deletionPolicy') == 'Retain'
+                if args.native_overlaybd:
+                    valid = valid and obj.get('driver') == 'overlaybd.csi.ssf.dev'
             record(name, valid, detail)
         except (RuntimeError, subprocess.TimeoutExpired, ValueError) as error:
             record(name, False, str(error))
-    if args.volume_preparation:
+    if args.volume_preparation or args.native_overlaybd:
         try:
             obj = cluster_json('get', 'mutatingwebhookconfiguration', 'ssf-volume-profile')
             hooks = obj.get('webhooks', [])

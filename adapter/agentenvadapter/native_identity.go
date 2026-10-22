@@ -22,6 +22,7 @@ const NativeMaxPlanBytes = 256 << 10
 // NativeDefaults is read from the original authenticated node API. An old node
 // reporting only CPU/memory cannot silently be scheduled with a new plugin.
 type NativeDefaults struct {
+	StorageCaptureRequests bool `json:"storage_capture_requests"`
 	Resources
 	StorageProtocol string `json:"storage_protocol"`
 	HookVersion     int    `json:"storage_hook_version"`

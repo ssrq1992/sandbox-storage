@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: agentenv-node
+spec:
+  template:
+    spec:
+      serviceAccountName: agentenv-storage-node
+      shareProcessNamespace: true
+      # Native sidecars start before the VMM owner and terminate after it.
+      # Kubernetes native-sidecar support is required for this overlay.
+      initContainers:
+        - name: ssf-node
+          restartPolicy: Always
+          image: ssf:latest
+          imagePullPolicy: Always
+          command: [ssf-node]
+          args: [-config, /etc/agentenv-ssf/ssf-node.json]
+          env:
+            - name: SSF_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          ports:
+            - {name: ssf-grpc, containerPort: 9443}
+            - {name: ssf-health, containerPort: 9093}
+          startupProbe:
+            httpGet: {path: /livez, port: ssf-health}
+            periodSeconds: 2
+            failureThreshold: 60
+          readinessProbe:
+            httpGet: {path: /livez, port: ssf-health}
+          volumeMounts:
+            - {name: storage-config, mountPath: /etc/agentenv-ssf, readOnly: true}
+            - {name: storage-node-keys, mountPath: /etc/agentenv-storage, readOnly: true}
+            - {name: ssf-node-tls, mountPath: /etc/ssf-node-tls, readOnly: true}
+            - {name: ssf-state, mountPath: /var/lib/ssf, mountPropagation: Bidirectional}
+            - {name: csi-plugins, mountPath: /var/lib/kubelet/plugins}
+            - {name: host-dev, mountPath: /dev}
+        - name: agentenv-storage
+          restartPolicy: Always
+          image: agentenvadapter:latest
+          imagePullPolicy: Always
+          args: [node, -config, /etc/agentenv-ssf/node.json]
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: AENV_NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          ports:
+            - {name: storage-rpc, containerPort: 9444}
+            - {name: storage-health, containerPort: 9094}
+          startupProbe:
+            httpGet: {path: /livez, port: storage-health}
+            periodSeconds: 2
+            failureThreshold: 60
+          readinessProbe:
+            httpGet: {path: /readyz, port: storage-health}
+          volumeMounts:
+            - {name: storage-config, mountPath: /etc/agentenv-ssf, readOnly: true}
+            - {name: storage-node-keys, mountPath: /etc/agentenv-storage, readOnly: true}
+            - {name: storage-node-tls, mountPath: /etc/agentenv-storage-tls, readOnly: true}
+            - {name: native-auth, mountPath: /etc/agentenv-native-auth, readOnly: true}
+            - {name: storage-wal, mountPath: /var/lib/agentenvadapter}
+            - {name: storage-runtime, mountPath: /var/lib/agentenv-external}
+            - {name: ssf-state, mountPath: /var/lib/ssf, mountPropagation: HostToContainer}
+            - {name: host-dev, mountPath: /dev}
+      containers:
+        - name: agentenv
+          env:
+            - {name: AENV_STORAGE_PROVIDER_ENABLED, value: "true"}
+            - {name: AENV_STORAGE_PROVIDER_READONLY_SLOTS, value: "1"}
+            - {name: AENV_STORAGE_PROVIDER_URL, value: "http://127.0.0.1:9445"}
+            - {name: AENV_STORAGE_PROVIDER_TOKEN_FILE, value: /etc/agentenv-storage/hook-token}
+          volumeMounts:
+            - {name: storage-hook-token, mountPath: /etc/agentenv-storage, readOnly: true}
+            - {name: storage-runtime, mountPath: /var/lib/agentenv-external}
+            - {name: ssf-state, mountPath: /var/lib/ssf, mountPropagation: HostToContainer}
+      volumes:
+        - name: storage-config
+          configMap: {name: agentenv-ssf-config}
+        - name: storage-node-keys
+          secret: {secretName: agentenv-storage-node, defaultMode: 0400}
+        - name: storage-hook-token
+          secret:
+            secretName: agentenv-storage-node
+            defaultMode: 0400
+            items: [{key: hook-token, path: hook-token}]
+        - name: storage-node-tls
+          secret: {secretName: agentenv-storage-node-tls, defaultMode: 0400}
+        - name: ssf-node-tls
+          secret: {secretName: agentenv-ssf-node-tls, defaultMode: 0400}
+        - name: native-auth
+          secret: {secretName: agentenv-auth, defaultMode: 0400}
+        - name: storage-wal
+          hostPath: {path: /var/lib/agentenvadapter, type: DirectoryOrCreate}
+        - name: storage-runtime
+          hostPath: {path: /var/lib/agentenv-external, type: DirectoryOrCreate}
+        - name: ssf-state
+          hostPath: {path: /var/lib/ssf, type: DirectoryOrCreate}
+        - name: csi-plugins
+          hostPath: {path: /var/lib/kubelet/plugins, type: Directory}

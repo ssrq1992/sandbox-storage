@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentenv-gateway
+spec:
+  template:
+    spec:
+      containers:
+        - name: gateway
+          env:
+            - name: AENV_STORAGE_KEY_FILE
+              value: /etc/agentenv-storage/gateway-key
+          volumeMounts:
+            - name: storage-gateway-key
+              mountPath: /etc/agentenv-storage
+              readOnly: true
+      volumes:
+        - name: storage-gateway-key
+          secret:
+            secretName: agentenv-storage-gateway
+            defaultMode: 0400

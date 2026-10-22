@@ -12,6 +12,14 @@ import (
 )
 
 const AgentENVBlockProfile = "agentenv-block-ext4-v1"
+const AgentENVOverlayBDProfile = "agentenv-overlaybd-ext4-v1"
+
+func DescribeOverlayBDVolumeProfile() core.VolumeProfile {
+	return core.VolumeProfile{Name: AgentENVOverlayBDProfile, Runtime: "agentenv", Version: core.PreparationProtocol, VolumeMode: "Block", Filesystem: "ext4", InitializeBlank: false}
+}
+func supportedVolumeProfile(p core.VolumeProfile) bool {
+	return p == DescribeVolumeProfile() || p == DescribeOverlayBDVolumeProfile()
+}
 
 func DescribeVolumeProfile() core.VolumeProfile {
 	return core.VolumeProfile{Name: AgentENVBlockProfile, Runtime: "agentenv", Version: core.PreparationProtocol, VolumeMode: "Block", Filesystem: "ext4", InitializeBlank: true}
@@ -76,7 +84,7 @@ func (n *Node) validateContent(q runtime.PreparationRequest) error {
 	if _, err := n.Plan(context.Background(), q.Spec); err != nil {
 		return err
 	}
-	if !safeID.MatchString(q.Operation) || q.PlanDigest == "" || q.Spec.Profile != DescribeVolumeProfile() ||
+	if !safeID.MatchString(q.Operation) || q.PlanDigest == "" || !supportedVolumeProfile(q.Spec.Profile) ||
 		q.Endpoint.Kind != "BlockDevice" || q.Spec.PVC.UID != q.Endpoint.VolumeUID ||
 		q.Spec.PVUID == "" || q.Spec.SourceRevision == "" || q.Endpoint.NodeUID != n.Config.NodeUID ||
 		q.Endpoint.NodeBootID != n.BootID || q.Endpoint.Epoch == 0 ||
@@ -89,13 +97,16 @@ func (n *Node) validateContent(q runtime.PreparationRequest) error {
 var _ runtime.VolumePreparationPlanner = (*Node)(nil)
 
 func (n *Node) Describe(context.Context) ([]core.VolumeProfile, error) {
-	return []core.VolumeProfile{DescribeVolumeProfile()}, nil
+	return []core.VolumeProfile{DescribeVolumeProfile(), DescribeOverlayBDVolumeProfile()}, nil
 }
 
 func (n *Node) Plan(_ context.Context, spec core.PreparationSpec) (core.PreparationSpec, error) {
-	if spec.Profile != DescribeVolumeProfile() || spec.PVC.UID == "" ||
+	if !supportedVolumeProfile(spec.Profile) || spec.PVC.UID == "" ||
 		spec.PVUID == "" || spec.SourceRevision == "" {
 		return spec, errors.New("unsupported or unpinned AgentENV content intent")
+	}
+	if spec.Profile == DescribeOverlayBDVolumeProfile() && (spec.Initialize || spec.ExpectedUUID == "") {
+		return spec, errors.New("OverlayBD requires a published filesystem identity and prohibits generic formatting")
 	}
 	if spec.Initialize && spec.SourceRevision != core.Digest("blank") {
 		return spec, errors.New("restored content cannot authorize initialization")

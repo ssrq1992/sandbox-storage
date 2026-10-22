@@ -1,0 +1,1655 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ssf-overlaybd-test
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: agentenv-scheduler
+  namespace: ssf-overlaybd-test
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: agentenv-storage-node
+  namespace: ssf-overlaybd-test
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ssf-coordinator
+  namespace: ssf-overlaybd-test
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: agentenv-scheduler-discovery
+  namespace: ssf-overlaybd-test
+rules:
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: agentenv-scheduler-discovery
+  namespace: ssf-overlaybd-test
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: agentenv-scheduler-discovery
+subjects:
+- kind: ServiceAccount
+  name: agentenv-scheduler
+  namespace: ssf-overlaybd-test
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: agentenv-ssf-consumption
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ssf-consumption
+subjects:
+- kind: ServiceAccount
+  name: ssf-coordinator
+  namespace: agentenv-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: agentenv-ssf-node
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ssf-node
+subjects:
+- kind: ServiceAccount
+  name: agentenv-storage-node
+  namespace: agentenv-system
+---
+apiVersion: v1
+data:
+  agentenv.toml: |
+    # AgentENV node configuration. See docs/src/configuration/reference.md for the
+    # complete reference and docs/src/configuration/env-vars.md for environment
+    # variable overrides.
+    #
+    # Dependency versions and download URLs come from config/deps_manifest.toml.
+    # Set component overrides below only when using custom runtime artifacts.
+
+    # Base directory for persistent state, caches, logs, and generated files.
+    # AENV_HOME_PATH overrides this value.
+    home_path = "/var/lib/aenv"
+
+    # Transient sockets and network namespace state. AENV_RUNTIME_PATH overrides it.
+    # runtime_path = "/run/aenv"
+
+    # Downloaded runtime assets. AENV_DEPS_PATH overrides it.
+    # deps_path = "$AENV_HOME/deps"
+
+    # "$AENV_HOME" and "$AENV_RUNTIME" are config path placeholders. Other relative
+    # paths resolve against the directory containing this file.
+
+    # Node-wide virtualization backend: "kvm" or "pvm". Snapshots and paused
+    # sandboxes can only be restored in the mode in which they were created.
+    # AENV_VIRTUALIZATION_MODE overrides this value.
+    virtualization_mode = "kvm"
+
+    [firecracker]
+    # Use an existing Firecracker executable instead of downloading one. It must
+    # be a readable, non-empty, executable regular file.
+    # binary_path = "/opt/agentenv/bin/firecracker"
+
+    # Complete kernel command line passed to guest VMs. Editing it replaces the
+    # shipped boot and DAMON reclaim settings; it does not append to them.
+    boot_args = "console=ttyS0 reboot=k panic=1 pci=off mitigations=off init=/init page_reporting.page_reporting_order=6 damon_reclaim.enabled=Y damon_reclaim.min_age=100000 damon_reclaim.quota_ms=20 damon_reclaim.quota_sz=1073741824 damon_reclaim.quota_reset_interval_ms=500 damon_reclaim.wmarks_high=990 damon_reclaim.wmarks_mid=990 damon_reclaim.wmarks_low=200 damon_reclaim.skip_anon=Y damon_reclaim.wmarks_interval=1000000"
+
+    # Prefix allowlist for cold-start request extraBootArgs. Empty means none.
+    # allowed_extra_boot_args_prefixes = ["aenv-custom."]
+
+    # Maximum API-socket wait in seconds.
+    socket_timeout_secs = 3
+    # API-socket polling interval in milliseconds.
+    socket_poll_ms = 1
+
+    # Per-sandbox work directories contain sockets, local logs, and writable
+    # OverlayBD upper layers. When enabled, serial logs persist separately by sandbox ID.
+    # work_dir = "$AENV_HOME/firecracker-work"
+    # serial_dir = "$AENV_HOME/logs/serial"
+
+    # Enable stdout/stderr capture and firecracker.log. Supported levels are Error,
+    # Warning, Info, Debug, and Trace; unset or empty disables all Firecracker logs.
+    # Setting serial_dir alone does not enable logging.
+    # log_level = "Info"
+
+    [kernel]
+    # Use an existing uncompressed Linux kernel image instead of downloading one.
+    # The file must be a readable, non-empty regular file.
+    # image_path = "/opt/agentenv/vmlinux.bin"
+
+    [tools]
+    # Import an existing ext4 tools drive. This also requires an explicit version;
+    # the file is copied into the versioned dependency directory.
+    # version = "0.1.0-custom.1"
+    # drive_path = "../env/tools/tools.ext4"
+
+    # Port used by envd inside each guest.
+    control_plane_port = 49983
+
+    [image.resolver]
+    # Rootfs image used when a template build omits fromImage.
+    default_image = "ubuntu:24.04"
+
+    # Registries tried, in order, when resolving short image names.
+    search_registries = ["docker.io", "ghcr.io"]
+
+    # Convert standard OCI tar layers into local OverlayBD commits. Set false to
+    # require OverlayBD-native images or referrers and fail fast otherwise.
+    convert_standard_oci = true
+
+    # Optional registry allowlist. Omitting it allows all registries; an explicit
+    # empty list denies all. It applies to full and short-name references; rejected
+    # references return a client (4xx) error.
+    # allowed_registries = ["docker.io", "ghcr.io"]
+
+    # Image-reference prefixes eligible for OCI referrer discovery. Matching uses
+    # starts_with, so include a trailing slash. Lookup failures fall back to the
+    # source image.
+    try_referrers_overlaybd_prefixes = []
+
+    [image.cache]
+    # Root for converted commits, resolution indexes, configs, and remote blocks.
+    # root_dir = "$AENV_HOME/image-cache"
+
+    # Local commit budget in GiB. Capacity eviction runs only when GC is enabled.
+    capacity_gb = 100
+
+    [image.cache.remote_blocks]
+    # Maximum registry-backed remote block-cache size in GiB.
+    max_size_gb = 100
+
+    [image.cache.gc]
+    # Reconcile cache metadata and delete unreferenced hard commits in the
+    # background. Capacity eviction removes least-recently-used source configs.
+    enabled = true
+
+    # GC interval in seconds (1800 = 30 minutes).
+    interval_secs = 1800
+    # Minimum idle age in seconds before capacity eviction (600 = 10 minutes).
+    min_age_secs = 600
+    # Start capacity eviction at this fraction of capacity_gb (0.95 = 95%).
+    high_watermark_ratio = 0.95
+    # Evict down to this fraction of capacity_gb (0.70 = 70%).
+    low_watermark_ratio = 0.70
+
+    # EXPERIMENTAL: P2P has not been tested in production. Keep it disabled in
+    # production unless the deployment accepts that operational risk.
+    [p2p]
+    # Master switch for peer-to-peer artifact transport.
+    enabled = false
+    # Transport implementation: "iroh" or "disabled".
+    transport = "iroh"
+    # Local content store for the transport.
+    # store_dir = "$AENV_HOME/p2p/store"
+    # Local endpoint address; port 0 asks the OS to select a free port.
+    listen_addr = "0.0.0.0:0"
+    # Peer catalog lookup timeout in milliseconds (5000 = 5 seconds).
+    lookup_timeout_ms = 5000
+    # Peer artifact fetch timeout in milliseconds (30000 = 30 seconds).
+    fetch_timeout_ms = 30000
+    # Seconds between scheduler peer-list refreshes; values below 1 clamp to 1.
+    peer_discovery_refresh_interval_secs = 5
+
+    [custom_extension]
+    # HTTP base URL for sandbox lifecycle hooks. Leave unset to disable the
+    # integration; non-empty customExtensionParams are then rejected.
+    # url = "http://127.0.0.1:9090"
+    # Timeout in milliseconds for non-stop extension hook calls.
+    # timeout_ms = 5000
+
+    [cluster]
+    # Shared scheduler gRPC endpoint for node reporting and P2P peer discovery.
+    # scheduler_endpoint = "http://127.0.0.1:9090"
+
+    [sandbox_proxy]
+    # DNS suffixes accepted for host-based routes such as
+    # {port}-{sandboxID}.{domain}. The first entry is advertised to clients.
+    domains = []
+
+    [network.egress]
+    # Destinations denied before per-sandbox allowOut/denyOut rules are evaluated.
+    # Remove selected private ranges only when sandbox access to them is required.
+    always_denied_cidrs = [
+      "10.0.0.0/8",
+      "100.64.0.0/10",
+      "127.0.0.0/8",
+      "169.254.0.0/16",
+      "172.16.0.0/12",
+      "192.168.0.0/16",
+    ]
+
+    [network.internal]
+    # Internal address pools for sandbox network namespaces. Change them only when
+    # they overlap deployment networks. They must not overlap each other or the
+    # fixed VM tap link at 169.254.0.20/30.
+    # The host-interaction pool needs 32768 addresses.
+    host_interaction_cidr = "10.11.0.0/16"
+    # The veth pool needs 65536 addresses.
+    veth_cidr = "10.12.0.0/16"
+
+    [machine]
+    # Default guest memory in MiB (1024 = 1 GiB).
+    mem_size_mib = 1024
+    # Default number of guest vCPUs.
+    vcpu_count = 2
+
+    [machine.disk_rate_limit]
+    # Optional per-sandbox virtio-blk limits. Zero means unlimited. Each one-time
+    # burst requires its matching sustained limit to be nonzero.
+    # enabled = true
+    # bandwidth_bytes_per_sec = 104857600  # 100 MB/s sustained
+    # bandwidth_burst_bytes = 10485760     # 10 MB startup burst; not replenished
+    # iops = 3000                          # 3000 sustained IOPS
+    # iops_burst = 500                     # 500 startup IOPS; not replenished
+
+    [envd]
+    # Expected envd version baked into the tools drive.
+    version = "0.5.15"
+    # Maximum envd initialization wait in seconds (60 = 1 minute).
+    init_timeout_secs = 60
+    # envd readiness polling interval in milliseconds.
+    poll_ms = 3
+
+    [sandbox]
+    # Optional secret used to derive per-sandbox envd and traffic access tokens. When unset,
+    # AgentENV creates a node-local seed under $AENV_HOME/secrets. Configure the
+    # same explicit value on every node when cross-node sandbox recovery is required.
+    # access_token_hash_seed = "replace-with-a-secret"
+    [volume]
+    # Maximum persistent volume size in MiB (256 GiB by default).
+    max_size_mb = 262144
+    # Maximum number of persistent volumes a sandbox may mount.
+    max_volume_count = 4
+
+    [orchestrator]
+    # Guest metrics collection interval in seconds. Set to 0 to disable collection.
+    metrics_interval_secs = 15
+    # Guest metrics in-memory retention period in seconds.
+    metrics_retention_secs = 3600
+    # Expired-sandbox eviction interval in milliseconds (1000 = 1 second).
+    auto_evict_interval_ms = 1000
+    # Default sandbox lifetime in seconds when a request omits it.
+    default_sandbox_timeout_secs = 15
+    # Minimum auto-resumed lifetime in seconds (300 = 5 minutes).
+    auto_resume_min_sandbox_timeout_secs = 300
+    # Durable paused-sandbox metadata restored after a server restart.
+    # persisted_sandbox_store_path = "$AENV_HOME/persisted-sandboxes"
+
+    [snapshot]
+    # Node-local cache for snapshot artifacts.
+    # local_cache_path = "$AENV_HOME/snapshot-local-cache"
+
+    # Durable repository backend:
+    # - "posix_fs" stores snapshots on a local or shared filesystem.
+    # - "oss" stores snapshots in S3-compatible object storage.
+    repository_backend = "posix_fs"
+
+    # EXPERIMENTAL: publish snapshot artifacts to P2P and use P2P during OSS
+    # resolution. Effective only when [p2p].enabled is also true. POSIX fixed
+    # artifacts remain authoritative in their repository.
+    p2p_enabled = true
+
+    # OSS only: publish a compatible rootfs back to its source registry as
+    # agentenv-snapshot-{snapshot_id}. Existing remote layers are reused by digest;
+    # only new deltas are uploaded, and APIs return the tag as imageRef. Memory and
+    # VM state remain in the snapshot repository. Requires an OverlayBD-capable
+    # source registry and Docker push credentials. Locally converted images fall
+    # back to object storage; incompatible remote layouts fail publication.
+    # [snapshot.image_publish]
+    # enabled = true
+
+    # Compress memory layers and incremental read-write layers once, when they are
+    # uploaded to OSS/ACR. Local layers always stay raw, so local resume pays no
+    # decompression cost; enabled by default to cut network bytes for cross-node
+    # resume. Disable when upload CPU matters more than transfer bytes.
+    [snapshot.publish_compression]
+    enabled = true
+    # Supported algorithms are "lz4" and "zstd".
+    algorithm = "lz4"
+    # Workers compressing 4 KiB blocks. One is sequential; higher values run in
+    # parallel without changing the output layout.
+    workers = 1
+
+    # Optional for OSS and POSIX backends: record the guest's startup memory pages once per snapshot
+    # at publish time (a short local re-resume on the capture node, ~10s budget),
+    # store a tiny v4 page manifest, and prefetch the listed positions
+    # concurrently on cold resume. Pages not yet prefetched fall back to the
+    # normal on-demand path immediately. `consume_enabled` only gates resume-side
+    # consumption so A/B runs can compare the same snapshot with/without it;
+    # `consume_timeout_secs` bounds a manifest's queueing plus local or remote reads.
+    # [snapshot.memory_startup_pack]
+    # enabled = false
+    # record_min_window_ms = 200
+    # record_quiet_ms = 300
+    # record_max_window_ms = 2000
+    # record_budget_secs = 10
+    # max_pack_bytes = 1073741824
+    # consume_enabled = false
+    # consume_timeout_secs = 30
+
+    # POSIX storage defaults under AENV_HOME. Set this for a shared or independent
+    # snapshot filesystem.
+    # [backend.posix_fs]
+    # snapshot_store = "/mnt/aenv-snapshots"
+
+    # OSS requires an endpoint, bucket, region, and either credential_process or
+    # static credentials. credential_process takes precedence over static values.
+    # [backend.oss]
+    # endpoint = "https://<your-oss-endpoint>"
+    # bucket = "your-snapshot-bucket"
+    # region = "cn-beijing"
+    # Bucket addressing style: "virtual" or "path". Leave unset to use
+    # endpoint-based auto-detection.
+    # addressing_style = "virtual" # or "path"
+    # prefix = "snapshots/"
+    # credential_process = "/usr/local/bin/get-oss-credentials"
+    # access_key_id = "..."
+    # access_key_secret = "..."
+    # security_token = "..."
+    # cache_max_size_gb = 10              # 10 GiB node-local artifact cache
+
+    [ublk]
+    # Explicit daemon executable. The default is under $AENV_HOME/ublk.
+    # daemon_binary_path = "$AENV_HOME/ublk/uvm-ublk-daemon"
+    # Control socket and daemon log paths.
+    # daemon_socket_path = "$AENV_RUNTIME/ublk-daemon.sock"
+    # daemon_log_path = "$AENV_HOME/logs/ublk-daemon.log"
+    # Prometheus metrics listen address; an empty string disables the endpoint.
+    daemon_metrics_listen_addr = "0.0.0.0:9103"
+
+    [ublk.overlaybd]
+    # Generated OverlayBD runtime config. The server rewrites it at every startup;
+    # configure behavior here rather than editing the generated JSON.
+    # global_config_path = "$AENV_HOME/overlaybd/overlaybd-global.json"
+
+    # Mount rootfs devices without a writable upper layer.
+    read_only = false
+    # Writable upper format for new images: "logStructured",
+    # "hybridLogStructured", or "sparse". Existing uppers retain their format.
+    runtime_upper_mode = "hybridLogStructured"
+    # Permit cold-start shrink. Explicit sizes are MiB and must be divisible by
+    # 1024. Growth is always allowed; snapshot resume never resizes.
+    allow_shrink = false
+    # Cold-start resize timeout in seconds; must be positive (120 = 2 minutes).
+    resize_timeout_secs = 120
+    remote_io_workers = 4
+    # Enable layer-level background download for remote rootfs layers.
+    download_enable = false
+    # P2P descriptor lookup timeout in milliseconds; timeout is a cacheable miss.
+    p2p_lookup_timeout_ms = 300
+    # P2P range-fetch timeout in milliseconds before origin fallback (2000 = 2s).
+    p2p_fetch_range_timeout_ms = 2000
+
+    [pool]
+    # Shared idle-resource targets. Pools start low and grow their refill target
+    # toward the high watermark as acquisitions drain them. Low must not exceed high.
+    low_watermark = 2
+    high_watermark = 64
+
+    [pool.network]
+    # Refill the network-slot pool in the background.
+    maintenance_enabled = true
+
+    [pool.block]
+    # Enable the reusable OverlayBD ublk-device pool.
+    enabled = true
+    # Omit to prewarm only when the kernel supports UBLK_F_UPDATE_SIZE. Set an
+    # explicit boolean to override capability-based selection.
+    # startup_prewarm = true
+
+    [pool.firecracker]
+    # Enable pre-spawned Firecracker processes for snapshot resume.
+    enabled = true
+    # Populate the process pool during server startup.
+    startup_prewarm = true
+    # Maximum concurrent process creations in one refill batch.
+    fill_concurrency = 4
+
+    [memory_snapshot]
+    # Generated OverlayBD config dedicated to memory snapshot devices.
+    # overlaybd_global_config_path = "$AENV_HOME/overlaybd/mem-overlaybd-global.json"
+
+    # EXPERIMENTAL: use Firecracker KVM dirty-page tracking instead of mincore.
+    # It is automatically disabled for PVM. Memory snapshot packaging always uses the direct
+    # OverlayBD path. Disable with AGENTENV_MEMORY_SNAPSHOT_TRACK_DIRTY_PAGES=false.
+    track_dirty_pages = true
+
+    [memory_snapshot.background_download]
+    # Download missing blocks from remote memory layers; never start before envd
+    # becomes ready.
+    enable = true
+    # Base delay in seconds. A 20-second fallback applies if readiness is lost.
+    delay = 0
+    # Exclusive upper bound for random extra delay; 1 adds no jitter.
+    delay_extra = 1
+    # Retry count for each background download task.
+    try_cnt = 5
+    # Bytes per source request (16777216 = 16 MiB), aligned to cache blocks.
+    # Foreground reads retain the cache's smaller block size. Maximum is 64 MiB.
+    block_size = 16777216
+    # Source reads per layer (1-16). block_size * concurrency must not exceed
+    # 256 MiB. Layer tasks also obey maxConcurrentFiles (default 8).
+    concurrency = 4
+    # Backend-wide chunk cap (1-128), shared by all layers. The product with
+    # block_size must not exceed 2 GiB; defaults use 256 MiB. Per-image overrides
+    # cannot resize it.
+    max_inflight_blocks = 16
+
+    [template_build]
+    # Per-node cap, including preparation, publication, and cleanup. Excess starts return 429.
+    max_concurrent_builds = 4
+    # The first Dockerfile build prepares a reusable internal builder template.
+    # Each build mounts its own clone of the shared cache seed.
+    builder_image = "docker.io/moby/buildkit:v0.33.0"
+    builder_cpu_count = 16
+    builder_memory_mb = 32768
+    # Persistent /var/lib/buildkit disk in MiB (64 GiB). Applies to new caches.
+    cache_size_mb = 65536
+
+    [observability]
+    # Expose node identity, host metrics, and orchestrator runtime metrics.
+    enabled = true
+
+    [observability.scheduler_report]
+    # Send heartbeats and lifecycle events. Requires cluster.scheduler_endpoint.
+    enabled = false
+    # Scheduler report interval in seconds.
+    interval_secs = 5
+
+    [node_identity]
+    # Stable node identifier returned by node APIs and scheduler heartbeats.
+    node_id = "node-a"
+    # Logical cluster UUID.
+    cluster_id = "00000000-0000-0000-0000-000000000000"
+    # Identifier for this service instance.
+    service_instance_id = "service-instance-a"
+kind: ConfigMap
+metadata:
+  name: agentenv-k8s-config
+  namespace: ssf-overlaybd-test
+---
+apiVersion: v1
+data:
+  control.json: |
+    {
+      "namespace": "ssf-overlaybd-test",
+      "principal": {
+        "tenant": "agentenv",
+        "namespaces": [
+          "ssf-overlaybd-test"
+        ]
+      },
+      "recovery_seconds": 600,
+      "drivers": [
+        {
+          "Name": "overlaybd.csi.ssf.dev",
+          "ControllerEndpoint": "ssf-csi-gateway.ssf-system.svc:9443",
+          "Revision": "1"
+        }
+      ],
+      "signing_key": "/etc/agentenv-storage/plan.key",
+      "cert": "/etc/agentenv-storage-tls/tls.crt",
+      "key": "/etc/agentenv-storage-tls/tls.key",
+      "ca": "/etc/agentenv-storage-tls/ca.crt",
+      "agent_key_file": "/etc/agentenv-native-auth/AENV_API_KEY",
+      "gateway_key_file": "/etc/agentenv-storage/gateway-key",
+      "dispatch_key_file": "/etc/agentenv-storage/dispatch-key",
+      "node_key_file": "/etc/agentenv-storage/node-key",
+      "plugin_port": "9444",
+      "plugin_server_name": "agentenv-storage-node.ssf-overlaybd-test.svc",
+      "required_profile": "agentenv-capture-clone-v1",
+      "volume_profiles": [
+        {
+          "name": "agentenv-block-ext4-v1",
+          "runtime": "agentenv",
+          "version": "volume-preparation-v1",
+          "volumeMode": "Block",
+          "filesystem": "ext4",
+          "initializeBlank": true
+        },
+        {
+          "name": "agentenv-overlaybd-ext4-v1",
+          "runtime": "agentenv",
+          "version": "volume-preparation-v1",
+          "volumeMode": "Block",
+          "filesystem": "ext4",
+          "initializeBlank": false,
+          "controllerOfflineExpansion": true
+        }
+      ],
+      "preparation_node_port": "9443",
+      "preparation_server_name": "agentenv-ssf-node.ssf-overlaybd-test.svc"
+    }
+  coordinator.json: |
+    {
+      "listen": ":9446",
+      "health_listen": ":9096",
+      "tls": {
+        "endpoint": "",
+        "cert": "/etc/agentenv-storage-tls/tls.crt",
+        "key": "/etc/agentenv-storage-tls/tls.key",
+        "ca": "/etc/agentenv-storage-tls/ca.crt",
+        "peer": ""
+      },
+      "scheduler_peers": [
+        "spiffe://ssf/agentenv/scheduler"
+      ],
+      "node_peers": [
+        "spiffe://ssf/agentenv/node"
+      ],
+      "observer": {
+        "endpoint": "https://agentenv-scheduler.ssf-overlaybd-test.svc:9447",
+        "cert": "/etc/agentenv-storage-tls/tls.crt",
+        "key": "/etc/agentenv-storage-tls/tls.key",
+        "ca": "/etc/agentenv-storage-tls/ca.crt",
+        "peer": "spiffe://ssf/agentenv/scheduler"
+      },
+      "runtime_config": "/etc/agentenv-ssf/control.json",
+      "storage_peers": [
+        "spiffe://ssf/overlaybd-controller"
+      ]
+    }
+  node.json: |
+    {
+      "native_mode": true,
+      "listen": ":9444",
+      "health_listen": ":9094",
+      "hook_listen": "127.0.0.1:9445",
+      "hook_token_file": "/etc/agentenv-storage/hook-token",
+      "dispatch_key_file": "/etc/agentenv-storage/dispatch-key",
+      "node_control_key_file": "/etc/agentenv-storage/node-key",
+      "cert": "/etc/agentenv-storage-tls/tls.crt",
+      "key": "/etc/agentenv-storage-tls/tls.key",
+      "ca": "/etc/agentenv-storage-tls/ca.crt",
+      "plan_public_key": "/etc/agentenv-storage/plan.pub",
+      "control_peers": [
+        "spiffe://ssf/agentenv/coordinator"
+      ],
+      "evidence_peers": [
+        "spiffe://ssf/agentenv/coordinator",
+        "spiffe://ssf/agentenv/ssf-node",
+        "spiffe://ssf/overlaybd-node"
+      ],
+      "ssf_endpoint": "127.0.0.1:9443",
+      "agent_url": "http://127.0.0.1:8000",
+      "agent_key_file": "/etc/agentenv-native-auth/AENV_API_KEY",
+      "root": "/var/lib/agentenvadapter",
+      "runtime_root": "/var/lib/agentenv-external",
+      "device_root": "/var/lib/ssf",
+      "coordinator": {
+        "endpoint": "https://ssf-coordinator.ssf-overlaybd-test.svc:9446",
+        "cert": "/etc/agentenv-storage-tls/tls.crt",
+        "key": "/etc/agentenv-storage-tls/tls.key",
+        "ca": "/etc/agentenv-storage-tls/ca.crt",
+        "peer": "spiffe://ssf/agentenv/coordinator"
+      }
+    }
+  scheduler.json: |
+    {
+      "endpoint": "https://ssf-coordinator.ssf-overlaybd-test.svc:9446",
+      "cert": "/etc/agentenv-storage-tls/tls.crt",
+      "key": "/etc/agentenv-storage-tls/tls.key",
+      "ca": "/etc/agentenv-storage-tls/ca.crt",
+      "peer": "spiffe://ssf/agentenv/coordinator",
+      "observe_listen": ":9447"
+    }
+  ssf-node.json: |
+    {
+      "Listen": ":9443",
+      "HealthListen": ":9093",
+      "Root": "/var/lib/ssf",
+      "PlanPublicKey": "/etc/agentenv-storage/plan.pub",
+      "Cert": "/etc/ssf-node-tls/tls.crt",
+      "Key": "/etc/ssf-node-tls/tls.key",
+      "CA": "/etc/ssf-node-tls/ca.crt",
+      "AllowedPeers": [
+        "spiffe://ssf/agentenv/node",
+        "spiffe://ssf/agentenv/coordinator"
+      ],
+      "EvidenceEndpoint": "https://127.0.0.1:9444/v1/evidence",
+      "Drivers": [
+        {
+          "Name": "overlaybd.csi.ssf.dev",
+          "NodeEndpoint": "unix:///var/lib/kubelet/plugins/overlaybd.csi.ssf.dev/csi.sock",
+          "Revision": "1"
+        }
+      ],
+      "PreparationEndpoint": "http://127.0.0.1:9445/storage/volume-preparation",
+      "PreparationTokenFile": "/etc/agentenv-storage/hook-token"
+    }
+kind: ConfigMap
+metadata:
+  name: agentenv-ssf-config
+  namespace: ssf-overlaybd-test
+---
+apiVersion: v1
+data:
+  gateway.json: |
+    {
+      "log_level": "info",
+      "log_format": "json",
+      "gateway": {
+        "http_listen_addr": ":8080",
+        "scheduler_addr": "agentenv-scheduler:9090",
+        "request_timeout": "300s",
+        "forward_response_size": 4194304,
+        "sandbox_proxy_domains": []
+      }
+    }
+kind: ConfigMap
+metadata:
+  name: gateway-k8s-config
+  namespace: ssf-overlaybd-test
+---
+apiVersion: v1
+data:
+  SANDBOX_PROXY_DOMAINS: ""
+kind: ConfigMap
+metadata:
+  name: sandbox-proxy-config
+  namespace: ssf-overlaybd-test
+---
+apiVersion: v1
+data:
+  scheduler.json: |
+    {
+      "log_level": "info",
+      "log_format": "json",
+      "scheduler": {
+        "grpc_listen_addr": ":9090",
+        "strategy": "round_robin",
+        "discovery": {
+          "mode": "kubernetes",
+          "kubernetes": {
+            "namespace": "ssf-overlaybd-test",
+            "service_name": "agentenv-nodes",
+            "port": 8000,
+            "scheme": "http"
+          }
+        }
+      }
+    }
+kind: ConfigMap
+metadata:
+  name: scheduler-k8s-config
+  namespace: ssf-overlaybd-test
+---
+apiVersion: v1
+data:
+  daemon.toml: |
+    deps_path = "/opt/aenv-deps"
+  inventory.json: |-
+    {
+      "nodes": {
+        "node-a": {
+          "native": {
+            "repository_id": "agentenv-overlaybd-node-a",
+            "repository_backend": "posix_fs",
+            "state_root": "/var/lib/ssf/overlaybd/host",
+            "socket": "/run/ssf-overlaybd/private/backend.sock",
+            "node_id": "node-a",
+            "daemon_socket": "/run/ssf-overlaybd/private/daemon.sock",
+            "overlaybd_config": "/etc/ssf-overlaybd/overlaybd.json",
+            "accessible_nodes": [
+              "node-a"
+            ],
+            "max_size_mb": 1048576,
+            "max_mounts": 24,
+            "request_timeout_seconds": 300,
+            "repository_root": "/var/lib/ssf-overlaybd-repository"
+          },
+          "node": {
+            "role": "node",
+            "socket": "/var/lib/kubelet/plugins/overlaybd.csi.ssf.dev/csi.sock",
+            "backendSocket": "/run/ssf-overlaybd/private/backend.sock",
+            "wal": "/var/lib/ssf/overlaybd/node/sessions.db",
+            "node": "node-a",
+            "csiNode": "node-a",
+            "root": "/var/lib/ssf",
+            "planPublicKey": "/etc/agentenv-storage/plan.pub",
+            "evidenceURL": "https://127.0.0.1:9444/v1/evidence",
+            "captureEvidenceURL": "https://127.0.0.1:9444/v1/capture/evidence",
+            "certificate": "/etc/ssf-overlaybd-tls/tls.crt",
+            "key": "/etc/ssf-overlaybd-tls/tls.key",
+            "ca": "/etc/ssf-overlaybd-tls/ca.crt"
+          },
+          "worker": {
+            "role": "worker",
+            "listen": "0.0.0.0:9455",
+            "workerRepository": "agentenv-overlaybd-node-a",
+            "backendSocket": "/run/ssf-overlaybd/private/backend.sock",
+            "peers": [
+              "spiffe://ssf/overlaybd-controller"
+            ],
+            "certificate": "/etc/ssf-overlaybd-tls/tls.crt",
+            "key": "/etc/ssf-overlaybd-tls/tls.key",
+            "ca": "/etc/ssf-overlaybd-tls/ca.crt"
+          }
+        }
+      }
+    }
+  overlaybd.json: |-
+    {
+      "registryCacheDir": "/var/lib/ssf/overlaybd/cache",
+      "logPath": "/var/lib/ssf/overlaybd/overlaybd.log",
+      "auditPath": "/var/lib/ssf/overlaybd/audit.log"
+    }
+  resize.json: |-
+    {
+      "registryCacheDir": "/var/lib/ssf/overlaybd/resize-cache"
+    }
+kind: ConfigMap
+metadata:
+  name: ssf-overlaybd-node-config
+  namespace: ssf-overlaybd-test
+---
+apiVersion: v1
+data:
+  AENV_API_KEY: |
+    cmVuZGVyLW9ubHkteHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eA
+    ==
+kind: Secret
+metadata:
+  name: agentenv-auth
+  namespace: ssf-overlaybd-test
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: agentenv-gateway
+  name: agentenv-gateway
+  namespace: ssf-overlaybd-test
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: agentenv-gateway
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: agentenv-node
+  name: agentenv-nodes
+  namespace: ssf-overlaybd-test
+spec:
+  clusterIP: None
+  ports:
+  - name: http
+    port: 8000
+    targetPort: http
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: agentenv-node
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: agentenv-scheduler
+  name: agentenv-scheduler
+  namespace: ssf-overlaybd-test
+spec:
+  ports:
+  - name: storage-observe
+    port: 9447
+    targetPort: storage-observe
+  - name: grpc
+    port: 9090
+    targetPort: grpc
+  selector:
+    app.kubernetes.io/name: agentenv-scheduler
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "9103"
+    prometheus.io/scrape: "true"
+  labels:
+    app.kubernetes.io/component: ublk-daemon-metrics
+    app.kubernetes.io/name: agentenv-node
+  name: agentenv-ublk-daemon-metrics
+  namespace: ssf-overlaybd-test
+spec:
+  clusterIP: None
+  ports:
+  - name: ublk-metrics
+    port: 9103
+    targetPort: ublk-metrics
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: agentenv-node
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ssf-coordinator
+  namespace: ssf-overlaybd-test
+spec:
+  ports:
+  - name: control
+    port: 9446
+    targetPort: control
+  selector:
+    app.kubernetes.io/name: ssf-coordinator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: agentenv-gateway
+  name: agentenv-gateway
+  namespace: ssf-overlaybd-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: agentenv-gateway
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: agentenv-gateway
+    spec:
+      containers:
+      - args:
+        - -config
+        - /config/gateway.json
+        env:
+        - name: AENV_STORAGE_KEY_FILE
+          value: /etc/agentenv-storage/gateway-key
+        - name: AENV_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AENV_API_KEY
+              name: agentenv-auth
+        - name: GATEWAY_SANDBOX_PROXY_DOMAINS
+          valueFrom:
+            configMapKeyRef:
+              key: SANDBOX_PROXY_DOMAINS
+              name: sandbox-proxy-config
+              optional: true
+        image: agentenv-gateway:latest
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        name: gateway
+        ports:
+        - containerPort: 8080
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /etc/agentenv-storage
+          name: storage-gateway-key
+          readOnly: true
+        - mountPath: /config/gateway.json
+          name: gateway-config
+          readOnly: true
+          subPath: gateway.json
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+      - name: storage-gateway-key
+        secret:
+          defaultMode: 256
+          secretName: agentenv-storage-gateway
+      - configMap:
+          name: gateway-k8s-config
+        name: gateway-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: agentenv-scheduler
+  name: agentenv-scheduler
+  namespace: ssf-overlaybd-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: agentenv-scheduler
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: agentenv-scheduler
+    spec:
+      containers:
+      - args:
+        - -config
+        - /config/scheduler.json
+        env:
+        - name: AENV_SSF_CONFIG
+          value: /etc/agentenv-ssf/scheduler.json
+        image: agentenv-scheduler:latest
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - /grpc_health_probe
+            - -addr=127.0.0.1:9090
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        name: scheduler
+        ports:
+        - containerPort: 9447
+          name: storage-observe
+        - containerPort: 9090
+          name: grpc
+        readinessProbe:
+          exec:
+            command:
+            - /grpc_health_probe
+            - -addr=127.0.0.1:9090
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /etc/agentenv-ssf
+          name: storage-config
+          readOnly: true
+        - mountPath: /etc/agentenv-storage-tls
+          name: storage-control-tls
+          readOnly: true
+        - mountPath: /config/scheduler.json
+          name: scheduler-config
+          readOnly: true
+          subPath: scheduler.json
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: agentenv-scheduler
+      volumes:
+      - configMap:
+          items:
+          - key: scheduler.json
+            path: scheduler.json
+          name: agentenv-ssf-config
+        name: storage-config
+      - name: storage-control-tls
+        secret:
+          defaultMode: 256
+          secretName: agentenv-storage-control-tls
+      - configMap:
+          name: scheduler-k8s-config
+        name: scheduler-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ssf-coordinator
+  namespace: ssf-overlaybd-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ssf-coordinator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ssf-coordinator
+    spec:
+      containers:
+      - args:
+        - -config
+        - /etc/agentenv-ssf/coordinator.json
+        command:
+        - ssf-coordinator
+        env:
+        - name: SSF_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              key: url
+              name: agentenv-storage-ledger
+        image: ssf:latest
+        livenessProbe:
+          httpGet:
+            path: /livez
+            port: health
+        name: coordinator
+        ports:
+        - containerPort: 9446
+          name: control
+        - containerPort: 9096
+          name: health
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: health
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /etc/agentenv-ssf
+          name: config
+          readOnly: true
+        - mountPath: /etc/agentenv-storage
+          name: keys
+          readOnly: true
+        - mountPath: /etc/agentenv-storage-tls
+          name: tls
+          readOnly: true
+        - mountPath: /etc/agentenv-native-auth
+          name: auth
+          readOnly: true
+      serviceAccountName: ssf-coordinator
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - configMap:
+          name: agentenv-ssf-config
+        name: config
+      - name: keys
+        secret:
+          defaultMode: 292
+          secretName: agentenv-storage-control
+      - name: tls
+        secret:
+          defaultMode: 292
+          secretName: agentenv-storage-coordinator-tls
+      - name: auth
+        secret:
+          defaultMode: 292
+          secretName: agentenv-auth
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app.kubernetes.io/name: agentenv-node
+  name: agentenv-node
+  namespace: ssf-overlaybd-test
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: agentenv-node
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: agentenv-node
+    spec:
+      containers:
+      - env:
+        - name: AENV_STORAGE_PROVIDER_ENABLED
+          value: "true"
+        - name: AENV_STORAGE_PROVIDER_READONLY_SLOTS
+          value: "1"
+        - name: AENV_STORAGE_PROVIDER_URL
+          value: http://127.0.0.1:9445
+        - name: AENV_STORAGE_PROVIDER_TOKEN_FILE
+          value: /etc/agentenv-storage/hook-token
+        - name: AENV_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AENV_API_KEY
+              name: agentenv-auth
+        - name: AENV_CONFIG_PATH
+          value: /workspace/config/agentenv.toml
+        - name: AENV_SANDBOX_ACCESS_TOKEN_HASH_SEED
+          valueFrom:
+            secretKeyRef:
+              key: sandbox-access-token-hash-seed
+              name: agentenv-runtime-secrets
+              optional: true
+        - name: AENV_VIRTUALIZATION_MODE
+          value: kvm
+        - name: API_ADDR
+          value: 0.0.0.0:8000
+        - name: AENV_UBLK_DAEMON_BINARY_PATH
+          value: /usr/local/bin/uvm-ublk-daemon
+        - name: AENV_UBLK_DAEMON_METRICS_LISTEN_ADDR
+          value: 0.0.0.0:9103
+        - name: AENV_NODE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: AENV_OBSERVABILITY_SCHEDULER_REPORT_ENABLED
+          value: "true"
+        - name: AENV_OBSERVABILITY_SCHEDULER_ENDPOINT
+          value: http://agentenv-scheduler:9090
+        - name: AENV_SANDBOX_PROXY_DOMAINS
+          valueFrom:
+            configMapKeyRef:
+              key: SANDBOX_PROXY_DOMAINS
+              name: sandbox-proxy-config
+              optional: true
+        image: agentenv-runtime:latest
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - |
+                # cgroup v2: disable group OOM kill for this container's cgroup.
+                # By default Kubernetes sets memory.oom.group=1, which means
+                # the entire cgroup (including the agentenv server) is killed
+                # whenever any process inside it is OOM-killed. Setting it to 0
+                # makes the OOM killer target individual processes, so a
+                # firecracker child being killed does not take down the server.
+                CGROUP="$(awk -F: '/^0::/{print $3}' /proc/self/cgroup)"
+                echo 0 > /sys/fs/cgroup/$CGROUP/memory.oom.group
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - |
+                echo "preStop: waiting for sandboxes to drain..."
+                while true; do
+                  count=$(curl -sf -H "X-API-Key: ${AENV_API_KEY}" http://localhost:8000/sandboxes | jq 'length') || count=""
+                  if [ -z "$count" ]; then
+                    echo "preStop: failed to query sandbox count, retrying..."
+                    sleep 3
+                    continue
+                  fi
+                  echo "preStop: $count sandbox(es) remaining"
+                  if [ "$count" = "0" ]; then
+                    echo "preStop: all sandboxes drained, exiting"
+                    break
+                  fi
+                  sleep 3
+                done
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 20
+          timeoutSeconds: 5
+        name: agentenv
+        ports:
+        - containerPort: 8000
+          name: http
+        - containerPort: 9103
+          name: ublk-metrics
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 5
+          timeoutSeconds: 3
+        resources:
+          requests:
+            memory: 8Gi
+        securityContext:
+          privileged: true
+        startupProbe:
+          failureThreshold: 48
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 5
+          timeoutSeconds: 5
+        volumeMounts:
+        - mountPath: /etc/agentenv-storage
+          name: storage-hook-token
+          readOnly: true
+        - mountPath: /var/lib/agentenv-external
+          name: storage-runtime
+        - mountPath: /var/lib/ssf
+          mountPropagation: HostToContainer
+          name: ssf-state
+        - mountPath: /workspace
+          name: workspace
+        - mountPath: /workspace/config/agentenv.toml
+          name: agentenv-config
+          readOnly: true
+          subPath: agentenv.toml
+        - mountPath: /dev
+          name: host-dev
+      initContainers:
+      - args:
+        - -inventory
+        - /etc/ssf-overlaybd/inventory.json
+        command:
+        - overlaybd-config
+        env:
+        - name: SSF_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        image: ssf-overlaybd:latest
+        name: overlaybd-config
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /etc/ssf-overlaybd
+          name: overlaybd-config
+          readOnly: true
+        - mountPath: /run/ssf-overlaybd-config
+          name: overlaybd-generated
+      - args:
+        - --socket-path
+        - /run/ssf-overlaybd/private/daemon.sock
+        - --global-config
+        - /etc/ssf-overlaybd/overlaybd.json
+        - --resize-global-config
+        - /etc/ssf-overlaybd/resize.json
+        - --managed-state-dir
+        - /var/lib/ssf/overlaybd/daemon
+        - --metrics-listen-addr
+        - 0.0.0.0:9106
+        - --config
+        - /etc/ssf-overlaybd/daemon.toml
+        command:
+        - uvm-ublk-daemon
+        image: ssf-overlaybd:latest
+        name: overlaybd-daemon
+        restartPolicy: Always
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        startupProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - test -S /run/ssf-overlaybd/private/daemon.sock && test -x /opt/aenv-deps/overlaybd/bin/overlaybd-resize
+              && command -v e2fsck >/dev/null && command -v resize2fs >/dev/null
+          failureThreshold: 90
+          periodSeconds: 2
+        volumeMounts:
+        - mountPath: /etc/ssf-overlaybd
+          name: overlaybd-config
+          readOnly: true
+        - mountPath: /run/ssf-overlaybd-config
+          name: overlaybd-generated
+          readOnly: true
+        - mountPath: /run/ssf-overlaybd
+          name: overlaybd-sockets
+        - mountPath: /var/lib/ssf
+          mountPropagation: Bidirectional
+          name: ssf-state
+        - mountPath: /dev
+          name: host-dev
+        - mountPath: /var/lib/ssf-overlaybd-repository
+          name: overlaybd-repository
+        - mountPath: /opt/aenv-deps/overlaybd
+          name: overlaybd-tools
+          readOnly: true
+      - args:
+        - /run/ssf-overlaybd-config/private/native.json
+        command:
+        - ssf-overlaybd-native
+        image: ssf-overlaybd:latest
+        name: overlaybd-native
+        restartPolicy: Always
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        startupProbe:
+          exec:
+            command:
+            - overlaybd-csi
+            - -config
+            - /run/ssf-overlaybd-config/private/node.json
+            - -probe-backend
+          failureThreshold: 90
+          periodSeconds: 2
+          timeoutSeconds: 6
+        volumeMounts:
+        - mountPath: /etc/ssf-overlaybd
+          name: overlaybd-config
+          readOnly: true
+        - mountPath: /run/ssf-overlaybd-config
+          name: overlaybd-generated
+          readOnly: true
+        - mountPath: /run/ssf-overlaybd
+          name: overlaybd-sockets
+        - mountPath: /var/lib/ssf
+          mountPropagation: Bidirectional
+          name: ssf-state
+        - mountPath: /dev
+          name: host-dev
+        - mountPath: /var/lib/ssf-overlaybd-repository
+          name: overlaybd-repository
+      - args:
+        - -config
+        - /run/ssf-overlaybd-config/private/worker.json
+        command:
+        - overlaybd-csi
+        image: ssf-overlaybd:latest
+        name: overlaybd-worker
+        ports:
+        - containerPort: 9455
+          hostPort: 9455
+          name: overlaybd-worker
+        readinessProbe:
+          periodSeconds: 10
+          tcpSocket:
+            port: 9455
+        restartPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+        startupProbe:
+          failureThreshold: 90
+          periodSeconds: 2
+          tcpSocket:
+            port: 9455
+        volumeMounts:
+        - mountPath: /etc/ssf-overlaybd
+          name: overlaybd-config
+          readOnly: true
+        - mountPath: /run/ssf-overlaybd-config
+          name: overlaybd-generated
+          readOnly: true
+        - mountPath: /run/ssf-overlaybd
+          name: overlaybd-sockets
+        - mountPath: /etc/ssf-overlaybd-tls
+          name: overlaybd-tls
+          readOnly: true
+      - args:
+        - -config
+        - /run/ssf-overlaybd-config/private/node.json
+        command:
+        - overlaybd-csi
+        image: ssf-overlaybd:latest
+        name: overlaybd-csi
+        readinessProbe:
+          exec:
+            command:
+            - overlaybd-csi
+            - -config
+            - /run/ssf-overlaybd-config/private/node.json
+            - -probe
+          failureThreshold: 36
+          periodSeconds: 5
+          timeoutSeconds: 6
+        restartPolicy: Always
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        startupProbe:
+          exec:
+            command:
+            - overlaybd-csi
+            - -config
+            - /run/ssf-overlaybd-config/private/node.json
+            - -probe
+          failureThreshold: 36
+          periodSeconds: 5
+          timeoutSeconds: 6
+        volumeMounts:
+        - mountPath: /etc/ssf-overlaybd
+          name: overlaybd-config
+          readOnly: true
+        - mountPath: /run/ssf-overlaybd-config
+          name: overlaybd-generated
+          readOnly: true
+        - mountPath: /run/ssf-overlaybd
+          name: overlaybd-sockets
+        - mountPath: /var/lib/ssf
+          mountPropagation: Bidirectional
+          name: ssf-state
+        - mountPath: /dev
+          name: host-dev
+        - mountPath: /etc/ssf-overlaybd-tls
+          name: overlaybd-tls
+          readOnly: true
+        - mountPath: /etc/agentenv-storage
+          name: overlaybd-plan-public
+          readOnly: true
+        - mountPath: /var/lib/kubelet/plugins
+          name: csi-plugins
+      - args:
+        - --csi-address=/var/lib/kubelet/plugins/overlaybd.csi.ssf.dev/csi.sock
+        - --kubelet-registration-path=/var/lib/kubelet/plugins/overlaybd.csi.ssf.dev/csi.sock
+        image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.13.0
+        name: overlaybd-registrar
+        restartPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /var/lib/kubelet/plugins
+          name: csi-plugins
+        - mountPath: /registration
+          name: overlaybd-registration
+      - args:
+        - -config
+        - /etc/agentenv-ssf/ssf-node.json
+        command:
+        - ssf-node
+        env:
+        - name: SSF_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        image: ssf:latest
+        imagePullPolicy: Always
+        name: ssf-node
+        ports:
+        - containerPort: 9443
+          name: ssf-grpc
+        - containerPort: 9093
+          name: ssf-health
+        readinessProbe:
+          httpGet:
+            path: /livez
+            port: ssf-health
+        restartPolicy: Always
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        startupProbe:
+          failureThreshold: 60
+          httpGet:
+            path: /livez
+            port: ssf-health
+          periodSeconds: 2
+        volumeMounts:
+        - mountPath: /etc/agentenv-ssf
+          name: storage-config
+          readOnly: true
+        - mountPath: /etc/agentenv-storage
+          name: storage-node-keys
+          readOnly: true
+        - mountPath: /etc/ssf-node-tls
+          name: ssf-node-tls
+          readOnly: true
+        - mountPath: /var/lib/ssf
+          mountPropagation: Bidirectional
+          name: ssf-state
+        - mountPath: /var/lib/kubelet/plugins
+          name: csi-plugins
+        - mountPath: /dev
+          name: host-dev
+      - args:
+        - node
+        - -config
+        - /etc/agentenv-ssf/node.json
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: AENV_NODE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        image: agentenvadapter:latest
+        imagePullPolicy: Always
+        name: agentenv-storage
+        ports:
+        - containerPort: 9444
+          name: storage-rpc
+        - containerPort: 9094
+          name: storage-health
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: storage-health
+        restartPolicy: Always
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        startupProbe:
+          failureThreshold: 60
+          httpGet:
+            path: /livez
+            port: storage-health
+          periodSeconds: 2
+        volumeMounts:
+        - mountPath: /etc/agentenv-ssf
+          name: storage-config
+          readOnly: true
+        - mountPath: /etc/agentenv-storage
+          name: storage-node-keys
+          readOnly: true
+        - mountPath: /etc/agentenv-storage-tls
+          name: storage-node-tls
+          readOnly: true
+        - mountPath: /etc/agentenv-native-auth
+          name: native-auth
+          readOnly: true
+        - mountPath: /var/lib/agentenvadapter
+          name: storage-wal
+        - mountPath: /var/lib/agentenv-external
+          name: storage-runtime
+        - mountPath: /var/lib/ssf
+          mountPropagation: HostToContainer
+          name: ssf-state
+        - mountPath: /dev
+          name: host-dev
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: agentenv-storage-node
+      shareProcessNamespace: true
+      terminationGracePeriodSeconds: 3600
+      volumes:
+      - configMap:
+          name: agentenv-ssf-config
+        name: storage-config
+      - name: storage-node-keys
+        secret:
+          defaultMode: 256
+          secretName: agentenv-storage-node
+      - name: storage-hook-token
+        secret:
+          defaultMode: 256
+          items:
+          - key: hook-token
+            path: hook-token
+          secretName: agentenv-storage-node
+      - name: storage-node-tls
+        secret:
+          defaultMode: 256
+          secretName: agentenv-storage-node-tls
+      - name: ssf-node-tls
+        secret:
+          defaultMode: 256
+          secretName: agentenv-ssf-node-tls
+      - name: native-auth
+        secret:
+          defaultMode: 256
+          secretName: agentenv-auth
+      - hostPath:
+          path: /var/lib/agentenvadapter
+          type: DirectoryOrCreate
+        name: storage-wal
+      - hostPath:
+          path: /var/lib/agentenv-external
+          type: DirectoryOrCreate
+        name: storage-runtime
+      - hostPath:
+          path: /var/lib/ssf
+          type: DirectoryOrCreate
+        name: ssf-state
+      - hostPath:
+          path: /var/lib/kubelet/plugins
+          type: Directory
+        name: csi-plugins
+      - hostPath:
+          path: /var/lib/aenv
+          type: DirectoryOrCreate
+        name: workspace
+      - configMap:
+          name: agentenv-k8s-config
+        name: agentenv-config
+      - hostPath:
+          path: /dev
+          type: Directory
+        name: host-dev
+      - configMap:
+          name: ssf-overlaybd-node-config
+        name: overlaybd-config
+      - emptyDir: {}
+        name: overlaybd-generated
+      - emptyDir: {}
+        name: overlaybd-sockets
+      - name: overlaybd-tls
+        secret:
+          defaultMode: 256
+          secretName: ssf-overlaybd-node-tls
+      - name: overlaybd-plan-public
+        secret:
+          defaultMode: 256
+          items:
+          - key: plan.pub
+            path: plan.pub
+          secretName: agentenv-storage-node
+      - hostPath:
+          path: /var/lib/kubelet/plugins_registry
+          type: Directory
+        name: overlaybd-registration
+      - hostPath:
+          path: /var/lib/aenv/env/overlaybd
+          type: Directory
+        name: overlaybd-tools
+      - hostPath:
+          path: /var/lib/ssf-overlaybd-repository
+          type: DirectoryOrCreate
+        name: overlaybd-repository
+---
+apiVersion: storage.k8s.io/v1
+kind: CSIDriver
+metadata:
+  name: overlaybd.csi.ssf.dev
+spec:
+  attachRequired: true
+  fsGroupPolicy: None
+  podInfoOnMount: false
+  volumeLifecycleModes:
+  - Persistent

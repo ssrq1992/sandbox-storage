@@ -15,9 +15,9 @@
     }
   ],
   "signing_key": "/etc/agentenv-storage/plan.key",
-  "cert": "/etc/agentenv-storage-control-tls/tls.crt",
-  "key": "/etc/agentenv-storage-control-tls/tls.key",
-  "ca": "/etc/agentenv-storage-control-tls/ca.crt",
+  "cert": "/etc/agentenv-storage-coordinator-tls/tls.crt",
+  "key": "/etc/agentenv-storage-coordinator-tls/tls.key",
+  "ca": "/etc/agentenv-storage-coordinator-tls/ca.crt",
   "agent_key_file": "/etc/agentenv-native-auth/AENV_API_KEY",
   "dispatch_key_file": "/etc/agentenv-storage/dispatch-key",
   "plugin_port": "9444",
@@ -41,5 +41,6 @@
     }
   ],
   "preparation_node_port": "9443",
-  "preparation_server_name": "localhost"
+  "preparation_server_name": "localhost",
+  "node_key_file": "/etc/agentenv-storage/node-key"
 }

@@ -1,0 +1,13 @@
+{
+  "repository_id": "agentenv-overlaybd",
+  "repository_root": "/var/lib/ssf/overlaybd/repository",
+  "state_root": "/var/lib/ssf/overlaybd/host",
+  "socket": "/run/ssf-overlaybd/backend.sock",
+  "node_id": "node-a",
+  "daemon_socket": "/run/ssf-overlaybd/daemon.sock",
+  "overlaybd_config": "/etc/ssf-overlaybd/overlaybd.json",
+  "accessible_nodes": ["node-a"],
+  "max_size_mb": 1048576,
+  "max_mounts": 24,
+  "request_timeout_seconds": 300
+}

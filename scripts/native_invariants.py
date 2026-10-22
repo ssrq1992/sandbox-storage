@@ -34,6 +34,15 @@ QUERIES = {
       EXISTS(SELECT 1 FROM ssf_bindings b WHERE b.volume_key=m.volume_key AND b.state<>'Released') OR
       EXISTS(SELECT 1 FROM ssf_use_holds h WHERE h.volume_key=m.volume_key) OR
       EXISTS(SELECT 1 FROM ssf_attachments a WHERE a.volume_key=m.volume_key AND a.state<>'Detached'))""",
+    'idle-capture-use-conflict': """SELECT count(*) FROM ssf_idle_captures c WHERE c.state='Capturing' AND (
+      EXISTS(SELECT 1 FROM ssf_bindings b WHERE b.volume_key=c.volume_key AND b.state<>'Released') OR
+      EXISTS(SELECT 1 FROM ssf_use_holds h WHERE h.volume_key=c.volume_key) OR
+      EXISTS(SELECT 1 FROM ssf_attachments a WHERE a.volume_key=c.volume_key AND a.state<>'Detached') OR
+      EXISTS(SELECT 1 FROM ssf_volume_maintenance m WHERE m.volume_key=c.volume_key AND m.state='Active') OR
+      EXISTS(SELECT 1 FROM ssf_volume_preparations p WHERE p.pvc_uid=c.pvc_uid AND p.state IN ('Preparing','ContentReady','NeedsRecovery')))""",
+    'idle-capture-missing-receipt': "SELECT count(*) FROM ssf_idle_captures WHERE state='Ready' AND (receipt IS NULL OR receipt='null'::jsonb)",
+    'reclaim-idle-capture-reference': """SELECT count(*) FROM ssf_backend_tombstones t JOIN ssf_idle_captures c
+      ON c.volume_key=t.volume_key WHERE c.state<>'Released'""",
     'reclaim-live-reference': """SELECT count(*) FROM ssf_checkpoint_resources r
       JOIN ssf_checkpoint_pins p ON p.resource_uid=r.uid
       JOIN ssf_checkpoint_sets c ON c.id=p.checkpoint_id WHERE r.state='Deleting' AND c.state<>'Released'""",

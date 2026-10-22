@@ -1,1 +1,10 @@
-{"Listen": ":9443", "Cert": "/etc/ssf-tls/tls.crt", "Key": "/etc/ssf-tls/tls.key", "CA": "/etc/ssf-tls/ca.crt"}
+{
+  "Listen": ":9443",
+  "Cert": "/etc/ssf-tls/tls.crt",
+  "Key": "/etc/ssf-tls/tls.key",
+  "CA": "/etc/ssf-tls/ca.crt",
+  "SnapshotControllerUsers": [
+    "system:serviceaccount:kube-system:snapshot-controller",
+    "system:serviceaccount:agentenv-system:ssf-overlaybd-controller"
+  ]
+}

@@ -5,17 +5,20 @@ import (
 	"errors"
 	"net/url"
 	"os"
+	control "ssf.dev/control"
 )
 
 type Config struct {
-	StandaloneConfig    string `json:"standalone_config,omitempty"`
-	DrainTimeoutSeconds int64  `json:"drain_timeout_seconds,omitempty"`
-	NativeMode          bool   `json:"native_mode"`
-	HookTokenFile       string `json:"hook_token_file"`
-	DispatchKeyFile     string `json:"dispatch_key_file"`
-	SchedulerEndpoint   string `json:"scheduler_endpoint"`
-	NodeControlKeyFile  string `json:"node_control_key_file"`
-	NativeNodeID        string `json:"native_node_id"`
+	Coordinator         control.Config `json:"coordinator"`
+	Standalone          bool           `json:"standalone,omitempty"`
+	StandaloneConfig    string         `json:"standalone_config,omitempty"`
+	DrainTimeoutSeconds int64          `json:"drain_timeout_seconds,omitempty"`
+	NativeMode          bool           `json:"native_mode"`
+	HookTokenFile       string         `json:"hook_token_file"`
+	DispatchKeyFile     string         `json:"dispatch_key_file"`
+	SchedulerEndpoint   string         `json:"scheduler_endpoint"`
+	NodeControlKeyFile  string         `json:"node_control_key_file"`
+	NativeNodeID        string         `json:"native_node_id"`
 
 	Listen        string   `json:"listen"`
 	HealthListen  string   `json:"health_listen"`
@@ -67,6 +70,9 @@ func Load(path string) (Config, error) {
 func (c Config) Validate(role string) error {
 	if c.Cert == "" || c.Key == "" || c.CA == "" {
 		return errors.New("TLS certificate, key and CA required")
+	}
+	if c.StandaloneConfig != "" || c.SchedulerEndpoint != "" {
+		return errors.New("embedded control configuration removed; configure independent coordinator")
 	}
 	if role != "node" || !c.NativeMode {
 		return errors.New("only native_mode node plugin is supported")

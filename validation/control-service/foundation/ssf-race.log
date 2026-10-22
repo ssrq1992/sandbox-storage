@@ -1,0 +1,707 @@
+{"Time":"2026-10-21T23:48:28.817492+08:00","Action":"start","Package":"ssf.dev/ssf/adapter/agentenvadapter"}
+{"Time":"2026-10-21T23:48:28.817773+08:00","Action":"start","Package":"ssf.dev/ssf/adapter/agentenvadapter/cmd/agentenvadapter"}
+{"Time":"2026-10-21T23:48:28.817857+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter/cmd/agentenvadapter","Output":"?   \tssf.dev/ssf/adapter/agentenvadapter/cmd/agentenvadapter\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.817876+08:00","Action":"start","Package":"ssf.dev/ssf/api/ssf/v1"}
+{"Time":"2026-10-21T23:48:28.817884+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter/cmd/agentenvadapter","Elapsed":0}
+{"Time":"2026-10-21T23:48:28.817929+08:00","Action":"start","Package":"ssf.dev/ssf/auth"}
+{"Time":"2026-10-21T23:48:28.817912+08:00","Action":"output","Package":"ssf.dev/ssf/api/ssf/v1","Output":"?   \tssf.dev/ssf/api/ssf/v1\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.817975+08:00","Action":"skip","Package":"ssf.dev/ssf/api/ssf/v1","Elapsed":0}
+{"Time":"2026-10-21T23:48:28.818002+08:00","Action":"start","Package":"ssf.dev/ssf/cmd/ssf-coordinator"}
+{"Time":"2026-10-21T23:48:28.818044+08:00","Action":"output","Package":"ssf.dev/ssf/cmd/ssf-coordinator","Output":"?   \tssf.dev/ssf/cmd/ssf-coordinator\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.81807+08:00","Action":"skip","Package":"ssf.dev/ssf/cmd/ssf-coordinator","Elapsed":0}
+{"Time":"2026-10-21T23:48:28.818072+08:00","Action":"start","Package":"ssf.dev/ssf/cmd/ssf-csi-gateway"}
+{"Time":"2026-10-21T23:48:28.818104+08:00","Action":"output","Package":"ssf.dev/ssf/cmd/ssf-csi-gateway","Output":"?   \tssf.dev/ssf/cmd/ssf-csi-gateway\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.818116+08:00","Action":"skip","Package":"ssf.dev/ssf/cmd/ssf-csi-gateway","Elapsed":0}
+{"Time":"2026-10-21T23:48:28.818828+08:00","Action":"start","Package":"ssf.dev/ssf/cmd/ssf-guard"}
+{"Time":"2026-10-21T23:48:28.819013+08:00","Action":"output","Package":"ssf.dev/ssf/cmd/ssf-guard","Output":"?   \tssf.dev/ssf/cmd/ssf-guard\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.819064+08:00","Action":"skip","Package":"ssf.dev/ssf/cmd/ssf-guard","Elapsed":0.001}
+{"Time":"2026-10-21T23:48:28.8195+08:00","Action":"start","Package":"ssf.dev/ssf/cmd/ssf-node"}
+{"Time":"2026-10-21T23:48:28.819679+08:00","Action":"output","Package":"ssf.dev/ssf/cmd/ssf-node","Output":"?   \tssf.dev/ssf/cmd/ssf-node\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.819772+08:00","Action":"skip","Package":"ssf.dev/ssf/cmd/ssf-node","Elapsed":0}
+{"Time":"2026-10-21T23:48:28.819801+08:00","Action":"start","Package":"ssf.dev/ssf/cmd/ssf-test-driver"}
+{"Time":"2026-10-21T23:48:28.819883+08:00","Action":"output","Package":"ssf.dev/ssf/cmd/ssf-test-driver","Output":"?   \tssf.dev/ssf/cmd/ssf-test-driver\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.81993+08:00","Action":"skip","Package":"ssf.dev/ssf/cmd/ssf-test-driver","Elapsed":0}
+{"Time":"2026-10-21T23:48:28.819936+08:00","Action":"start","Package":"ssf.dev/ssf/cmd/ssfctl"}
+{"Time":"2026-10-21T23:48:28.819965+08:00","Action":"output","Package":"ssf.dev/ssf/cmd/ssfctl","Output":"?   \tssf.dev/ssf/cmd/ssfctl\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.819989+08:00","Action":"skip","Package":"ssf.dev/ssf/cmd/ssfctl","Elapsed":0}
+{"Time":"2026-10-21T23:48:28.820015+08:00","Action":"start","Package":"ssf.dev/ssf/config"}
+{"Time":"2026-10-21T23:48:28.820092+08:00","Action":"output","Package":"ssf.dev/ssf/config","Output":"?   \tssf.dev/ssf/config\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.820128+08:00","Action":"skip","Package":"ssf.dev/ssf/config","Elapsed":0}
+{"Time":"2026-10-21T23:48:28.820135+08:00","Action":"start","Package":"ssf.dev/ssf/consume"}
+{"Time":"2026-10-21T23:48:28.820225+08:00","Action":"start","Package":"ssf.dev/ssf/coordinator"}
+{"Time":"2026-10-21T23:48:28.820412+08:00","Action":"start","Package":"ssf.dev/ssf/core"}
+{"Time":"2026-10-21T23:48:28.820692+08:00","Action":"start","Package":"ssf.dev/ssf/drivers/csi"}
+{"Time":"2026-10-21T23:48:28.820832+08:00","Action":"output","Package":"ssf.dev/ssf/drivers/csi","Output":"?   \tssf.dev/ssf/drivers/csi\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.820855+08:00","Action":"start","Package":"ssf.dev/ssf/examples/integration"}
+{"Time":"2026-10-21T23:48:28.821673+08:00","Action":"output","Package":"ssf.dev/ssf/examples/integration","Output":"?   \tssf.dev/ssf/examples/integration\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.821671+08:00","Action":"skip","Package":"ssf.dev/ssf/drivers/csi","Elapsed":0.001}
+{"Time":"2026-10-21T23:48:28.821809+08:00","Action":"skip","Package":"ssf.dev/ssf/examples/integration","Elapsed":0.001}
+{"Time":"2026-10-21T23:48:28.822711+08:00","Action":"start","Package":"ssf.dev/ssf/gateway"}
+{"Time":"2026-10-21T23:48:28.823831+08:00","Action":"start","Package":"ssf.dev/ssf/guard"}
+{"Time":"2026-10-21T23:48:28.825943+08:00","Action":"start","Package":"ssf.dev/ssf/internal/server"}
+{"Time":"2026-10-21T23:48:28.826631+08:00","Action":"output","Package":"ssf.dev/ssf/internal/server","Output":"?   \tssf.dev/ssf/internal/server\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:28.826918+08:00","Action":"skip","Package":"ssf.dev/ssf/internal/server","Elapsed":0.001}
+{"Time":"2026-10-21T23:48:28.827069+08:00","Action":"start","Package":"ssf.dev/ssf/kubernetes"}
+{"Time":"2026-10-21T23:48:29.59914+08:00","Action":"run","Package":"ssf.dev/ssf/auth","Test":"TestPlanScope"}
+{"Time":"2026-10-21T23:48:29.599488+08:00","Action":"output","Package":"ssf.dev/ssf/auth","Test":"TestPlanScope","Output":"=== RUN   TestPlanScope\n"}
+{"Time":"2026-10-21T23:48:29.60705+08:00","Action":"output","Package":"ssf.dev/ssf/auth","Test":"TestPlanScope","Output":"--- PASS: TestPlanScope (0.01s)\n"}
+{"Time":"2026-10-21T23:48:29.607118+08:00","Action":"pass","Package":"ssf.dev/ssf/auth","Test":"TestPlanScope","Elapsed":0.01}
+{"Time":"2026-10-21T23:48:29.60715+08:00","Action":"output","Package":"ssf.dev/ssf/auth","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:30.201847+08:00","Action":"run","Package":"ssf.dev/ssf/coordinator","Test":"TestRoleSeparationProtocolAndDrain"}
+{"Time":"2026-10-21T23:48:30.201898+08:00","Action":"output","Package":"ssf.dev/ssf/coordinator","Test":"TestRoleSeparationProtocolAndDrain","Output":"=== RUN   TestRoleSeparationProtocolAndDrain\n"}
+{"Time":"2026-10-21T23:48:30.203096+08:00","Action":"output","Package":"ssf.dev/ssf/coordinator","Test":"TestRoleSeparationProtocolAndDrain","Output":"--- PASS: TestRoleSeparationProtocolAndDrain (0.00s)\n"}
+{"Time":"2026-10-21T23:48:30.203127+08:00","Action":"pass","Package":"ssf.dev/ssf/coordinator","Test":"TestRoleSeparationProtocolAndDrain","Elapsed":0}
+{"Time":"2026-10-21T23:48:30.203148+08:00","Action":"output","Package":"ssf.dev/ssf/coordinator","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:30.613058+08:00","Action":"output","Package":"ssf.dev/ssf/auth","Output":"ok  \tssf.dev/ssf/auth\t1.795s\n"}
+{"Time":"2026-10-21T23:48:30.613116+08:00","Action":"pass","Package":"ssf.dev/ssf/auth","Elapsed":1.795}
+{"Time":"2026-10-21T23:48:30.615999+08:00","Action":"start","Package":"ssf.dev/ssf/ledger"}
+{"Time":"2026-10-21T23:48:31.081033+08:00","Action":"run","Package":"ssf.dev/ssf/core","Test":"TestCapabilityPersistence"}
+{"Time":"2026-10-21T23:48:31.081111+08:00","Action":"output","Package":"ssf.dev/ssf/core","Test":"TestCapabilityPersistence","Output":"=== RUN   TestCapabilityPersistence\n"}
+{"Time":"2026-10-21T23:48:31.088259+08:00","Action":"output","Package":"ssf.dev/ssf/core","Test":"TestCapabilityPersistence","Output":"--- PASS: TestCapabilityPersistence (0.01s)\n"}
+{"Time":"2026-10-21T23:48:31.088327+08:00","Action":"pass","Package":"ssf.dev/ssf/core","Test":"TestCapabilityPersistence","Elapsed":0.01}
+{"Time":"2026-10-21T23:48:31.088353+08:00","Action":"run","Package":"ssf.dev/ssf/core","Test":"TestMountValidation"}
+{"Time":"2026-10-21T23:48:31.088367+08:00","Action":"output","Package":"ssf.dev/ssf/core","Test":"TestMountValidation","Output":"=== RUN   TestMountValidation\n"}
+{"Time":"2026-10-21T23:48:31.088387+08:00","Action":"output","Package":"ssf.dev/ssf/core","Test":"TestMountValidation","Output":"--- PASS: TestMountValidation (0.00s)\n"}
+{"Time":"2026-10-21T23:48:31.08843+08:00","Action":"pass","Package":"ssf.dev/ssf/core","Test":"TestMountValidation","Elapsed":0}
+{"Time":"2026-10-21T23:48:31.088446+08:00","Action":"output","Package":"ssf.dev/ssf/core","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:31.20593+08:00","Action":"output","Package":"ssf.dev/ssf/coordinator","Output":"ok  \tssf.dev/ssf/coordinator\t2.386s\n"}
+{"Time":"2026-10-21T23:48:31.206003+08:00","Action":"pass","Package":"ssf.dev/ssf/coordinator","Elapsed":2.386}
+{"Time":"2026-10-21T23:48:31.208355+08:00","Action":"start","Package":"ssf.dev/ssf/node"}
+{"Time":"2026-10-21T23:48:32.091853+08:00","Action":"output","Package":"ssf.dev/ssf/core","Output":"ok  \tssf.dev/ssf/core\t3.271s\n"}
+{"Time":"2026-10-21T23:48:32.091943+08:00","Action":"pass","Package":"ssf.dev/ssf/core","Elapsed":3.2720000000000002}
+{"Time":"2026-10-21T23:48:32.094277+08:00","Action":"start","Package":"ssf.dev/ssf/observe"}
+{"Time":"2026-10-21T23:48:32.094307+08:00","Action":"output","Package":"ssf.dev/ssf/observe","Output":"?   \tssf.dev/ssf/observe\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:32.094324+08:00","Action":"skip","Package":"ssf.dev/ssf/observe","Elapsed":0}
+{"Time":"2026-10-21T23:48:32.094345+08:00","Action":"start","Package":"ssf.dev/ssf/preparation"}
+{"Time":"2026-10-21T23:48:33.572509+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestDurableCancelPreventsLateLaunch"}
+{"Time":"2026-10-21T23:48:33.57257+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestDurableCancelPreventsLateLaunch","Output":"=== RUN   TestDurableCancelPreventsLateLaunch\n"}
+{"Time":"2026-10-21T23:48:33.869635+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestDurableCancelPreventsLateLaunch","Output":"--- PASS: TestDurableCancelPreventsLateLaunch (0.30s)\n"}
+{"Time":"2026-10-21T23:48:33.869722+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestDurableCancelPreventsLateLaunch","Elapsed":0.3}
+{"Time":"2026-10-21T23:48:33.869743+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestUnknownNativeCreateRetainsResources"}
+{"Time":"2026-10-21T23:48:33.869753+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestUnknownNativeCreateRetainsResources","Output":"=== RUN   TestUnknownNativeCreateRetainsResources\n"}
+{"Time":"2026-10-21T23:48:33.99133+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestUnknownNativeCreateRetainsResources","Output":"--- PASS: TestUnknownNativeCreateRetainsResources (0.12s)\n"}
+{"Time":"2026-10-21T23:48:33.991383+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestUnknownNativeCreateRetainsResources","Elapsed":0.12}
+{"Time":"2026-10-21T23:48:33.991399+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeInstanceBindingAndEventOrdering"}
+{"Time":"2026-10-21T23:48:33.991409+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeInstanceBindingAndEventOrdering","Output":"=== RUN   TestNativeInstanceBindingAndEventOrdering\n"}
+{"Time":"2026-10-21T23:48:34.152084+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeInstanceBindingAndEventOrdering","Output":"--- PASS: TestNativeInstanceBindingAndEventOrdering (0.16s)\n"}
+{"Time":"2026-10-21T23:48:34.152126+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeInstanceBindingAndEventOrdering","Elapsed":0.16}
+{"Time":"2026-10-21T23:48:34.152139+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestJournalConcurrentUpdatesAndRestart"}
+{"Time":"2026-10-21T23:48:34.152149+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestJournalConcurrentUpdatesAndRestart","Output":"=== RUN   TestJournalConcurrentUpdatesAndRestart\n"}
+{"Time":"2026-10-21T23:48:34.980276+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestJournalConcurrentUpdatesAndRestart","Output":"--- PASS: TestJournalConcurrentUpdatesAndRestart (0.83s)\n"}
+{"Time":"2026-10-21T23:48:34.98033+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestJournalConcurrentUpdatesAndRestart","Elapsed":0.83}
+{"Time":"2026-10-21T23:48:34.980344+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRebootAndPodReplacementEvidence"}
+{"Time":"2026-10-21T23:48:34.980351+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRebootAndPodReplacementEvidence","Output":"=== RUN   TestRebootAndPodReplacementEvidence\n"}
+{"Time":"2026-10-21T23:48:35.107857+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRebootAndPodReplacementEvidence","Output":"--- PASS: TestRebootAndPodReplacementEvidence (0.13s)\n"}
+{"Time":"2026-10-21T23:48:35.107907+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRebootAndPodReplacementEvidence","Elapsed":0.13}
+{"Time":"2026-10-21T23:48:35.107928+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestLostInitialCallbackRecoveredFromNativeJournal"}
+{"Time":"2026-10-21T23:48:35.107935+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestLostInitialCallbackRecoveredFromNativeJournal","Output":"=== RUN   TestLostInitialCallbackRecoveredFromNativeJournal\n"}
+{"Time":"2026-10-21T23:48:35.268356+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestLostInitialCallbackRecoveredFromNativeJournal","Output":"--- PASS: TestLostInitialCallbackRecoveredFromNativeJournal (0.16s)\n"}
+{"Time":"2026-10-21T23:48:35.268414+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestLostInitialCallbackRecoveredFromNativeJournal","Elapsed":0.16}
+{"Time":"2026-10-21T23:48:35.268442+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRevocationBeforeDelayedPlan"}
+{"Time":"2026-10-21T23:48:35.268453+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRevocationBeforeDelayedPlan","Output":"=== RUN   TestRevocationBeforeDelayedPlan\n"}
+{"Time":"2026-10-21T23:48:35.41582+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRevocationBeforeDelayedPlan","Output":"--- PASS: TestRevocationBeforeDelayedPlan (0.15s)\n"}
+{"Time":"2026-10-21T23:48:35.415858+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRevocationBeforeDelayedPlan","Elapsed":0.15}
+{"Time":"2026-10-21T23:48:35.415891+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPlanRefreshCannotChangeBindings"}
+{"Time":"2026-10-21T23:48:35.415899+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPlanRefreshCannotChangeBindings","Output":"=== RUN   TestPlanRefreshCannotChangeBindings\n"}
+{"Time":"2026-10-21T23:48:35.535826+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPlanRefreshCannotChangeBindings","Output":"--- PASS: TestPlanRefreshCannotChangeBindings (0.12s)\n"}
+{"Time":"2026-10-21T23:48:35.535875+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPlanRefreshCannotChangeBindings","Elapsed":0.12}
+{"Time":"2026-10-21T23:48:35.535929+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestInitializeRequiresEntireDeviceEmpty"}
+{"Time":"2026-10-21T23:48:35.535942+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestInitializeRequiresEntireDeviceEmpty","Output":"=== RUN   TestInitializeRequiresEntireDeviceEmpty\n"}
+{"Time":"2026-10-21T23:48:35.600494+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestInitializeRequiresEntireDeviceEmpty","Output":"--- PASS: TestInitializeRequiresEntireDeviceEmpty (0.06s)\n"}
+{"Time":"2026-10-21T23:48:35.600599+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestInitializeRequiresEntireDeviceEmpty","Elapsed":0.06}
+{"Time":"2026-10-21T23:48:35.600655+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPeerIdentityRequiresVerifiedSingleURI"}
+{"Time":"2026-10-21T23:48:35.60067+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPeerIdentityRequiresVerifiedSingleURI","Output":"=== RUN   TestPeerIdentityRequiresVerifiedSingleURI\n"}
+{"Time":"2026-10-21T23:48:35.662304+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPeerIdentityRequiresVerifiedSingleURI","Output":"2026/10/21 23:48:35 WARN storage control request failed status=403 error=\"control peer forbidden\"\n"}
+{"Time":"2026-10-21T23:48:35.663216+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPeerIdentityRequiresVerifiedSingleURI","Output":"--- PASS: TestPeerIdentityRequiresVerifiedSingleURI (0.06s)\n"}
+{"Time":"2026-10-21T23:48:35.663257+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPeerIdentityRequiresVerifiedSingleURI","Elapsed":0.06}
+{"Time":"2026-10-21T23:48:35.663275+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestImmediatePendingDoesNotGuessTopology"}
+{"Time":"2026-10-21T23:48:35.663287+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestImmediatePendingDoesNotGuessTopology","Output":"=== RUN   TestImmediatePendingDoesNotGuessTopology\n"}
+{"Time":"2026-10-21T23:48:35.753519+08:00","Action":"run","Package":"ssf.dev/ssf/consume","Test":"TestAbortRequiresExplicitNoDispatchProof"}
+{"Time":"2026-10-21T23:48:35.753571+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestAbortRequiresExplicitNoDispatchProof","Output":"=== RUN   TestAbortRequiresExplicitNoDispatchProof\n"}
+{"Time":"2026-10-21T23:48:35.753726+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestAbortRequiresExplicitNoDispatchProof","Output":"--- PASS: TestAbortRequiresExplicitNoDispatchProof (0.00s)\n"}
+{"Time":"2026-10-21T23:48:35.753759+08:00","Action":"pass","Package":"ssf.dev/ssf/consume","Test":"TestAbortRequiresExplicitNoDispatchProof","Elapsed":0}
+{"Time":"2026-10-21T23:48:35.753777+08:00","Action":"run","Package":"ssf.dev/ssf/consume","Test":"TestPostgresAbortUnattachedPartialAcquire"}
+{"Time":"2026-10-21T23:48:35.753789+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestPostgresAbortUnattachedPartialAcquire","Output":"=== RUN   TestPostgresAbortUnattachedPartialAcquire\n"}
+{"Time":"2026-10-21T23:48:35.753981+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestPostgresAbortUnattachedPartialAcquire","Output":"    abort_test.go:22: requires dedicated PostgreSQL\n"}
+{"Time":"2026-10-21T23:48:35.754022+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestPostgresAbortUnattachedPartialAcquire","Output":"--- SKIP: TestPostgresAbortUnattachedPartialAcquire (0.00s)\n"}
+{"Time":"2026-10-21T23:48:35.754059+08:00","Action":"skip","Package":"ssf.dev/ssf/consume","Test":"TestPostgresAbortUnattachedPartialAcquire","Elapsed":0}
+{"Time":"2026-10-21T23:48:35.754094+08:00","Action":"run","Package":"ssf.dev/ssf/consume","Test":"TestCaptureRejectsIncompleteIdentity"}
+{"Time":"2026-10-21T23:48:35.754107+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestCaptureRejectsIncompleteIdentity","Output":"=== RUN   TestCaptureRejectsIncompleteIdentity\n"}
+{"Time":"2026-10-21T23:48:35.754217+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestCaptureRejectsIncompleteIdentity","Output":"--- PASS: TestCaptureRejectsIncompleteIdentity (0.00s)\n"}
+{"Time":"2026-10-21T23:48:35.754279+08:00","Action":"pass","Package":"ssf.dev/ssf/consume","Test":"TestCaptureRejectsIncompleteIdentity","Elapsed":0}
+{"Time":"2026-10-21T23:48:35.754313+08:00","Action":"run","Package":"ssf.dev/ssf/consume","Test":"TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier"}
+{"Time":"2026-10-21T23:48:35.754326+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier","Output":"=== RUN   TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier\n"}
+{"Time":"2026-10-21T23:48:35.754401+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier","Output":"    checkpoint_test.go:58: requires dedicated PostgreSQL\n"}
+{"Time":"2026-10-21T23:48:35.754454+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier","Output":"--- SKIP: TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier (0.00s)\n"}
+{"Time":"2026-10-21T23:48:35.754474+08:00","Action":"skip","Package":"ssf.dev/ssf/consume","Test":"TestPostgresJointCapturePinsPartialResultsAndRequiresLiveBarrier","Elapsed":0}
+{"Time":"2026-10-21T23:48:35.754489+08:00","Action":"run","Package":"ssf.dev/ssf/consume","Test":"TestPostgresConsumptionLifecycle"}
+{"Time":"2026-10-21T23:48:35.754499+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestPostgresConsumptionLifecycle","Output":"=== RUN   TestPostgresConsumptionLifecycle\n"}
+{"Time":"2026-10-21T23:48:35.754568+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestPostgresConsumptionLifecycle","Output":"    coordinator_test.go:77: requires dedicated PostgreSQL\n"}
+{"Time":"2026-10-21T23:48:35.754597+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Test":"TestPostgresConsumptionLifecycle","Output":"--- SKIP: TestPostgresConsumptionLifecycle (0.00s)\n"}
+{"Time":"2026-10-21T23:48:35.75465+08:00","Action":"skip","Package":"ssf.dev/ssf/consume","Test":"TestPostgresConsumptionLifecycle","Elapsed":0}
+{"Time":"2026-10-21T23:48:35.754706+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:36.381824+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestImmediatePendingDoesNotGuessTopology","Output":"--- PASS: TestImmediatePendingDoesNotGuessTopology (0.72s)\n"}
+{"Time":"2026-10-21T23:48:36.381887+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestImmediatePendingDoesNotGuessTopology","Elapsed":0.72}
+{"Time":"2026-10-21T23:48:36.381902+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice"}
+{"Time":"2026-10-21T23:48:36.38191+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice","Output":"=== RUN   TestCheckZeroSizeRequiresWholeDevice\n"}
+{"Time":"2026-10-21T23:48:36.381938+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/empty-capacity"}
+{"Time":"2026-10-21T23:48:36.381947+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/empty-capacity","Output":"=== RUN   TestCheckZeroSizeRequiresWholeDevice/empty-capacity\n"}
+{"Time":"2026-10-21T23:48:36.381987+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/empty-capacity","Output":"--- PASS: TestCheckZeroSizeRequiresWholeDevice/empty-capacity (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.382005+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/empty-capacity","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.382026+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/blank"}
+{"Time":"2026-10-21T23:48:36.382047+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/blank","Output":"=== RUN   TestCheckZeroSizeRequiresWholeDevice/blank\n"}
+{"Time":"2026-10-21T23:48:36.3822+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/blank","Output":"--- PASS: TestCheckZeroSizeRequiresWholeDevice/blank (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.38225+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/blank","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.382262+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/short"}
+{"Time":"2026-10-21T23:48:36.382269+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/short","Output":"=== RUN   TestCheckZeroSizeRequiresWholeDevice/short\n"}
+{"Time":"2026-10-21T23:48:36.382349+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/short","Output":"--- PASS: TestCheckZeroSizeRequiresWholeDevice/short (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.382374+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/short","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.382386+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/grown"}
+{"Time":"2026-10-21T23:48:36.382405+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/grown","Output":"=== RUN   TestCheckZeroSizeRequiresWholeDevice/grown\n"}
+{"Time":"2026-10-21T23:48:36.38249+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/grown","Output":"--- PASS: TestCheckZeroSizeRequiresWholeDevice/grown (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.382517+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/grown","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.382529+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/unknown-data"}
+{"Time":"2026-10-21T23:48:36.382537+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/unknown-data","Output":"=== RUN   TestCheckZeroSizeRequiresWholeDevice/unknown-data\n"}
+{"Time":"2026-10-21T23:48:36.382767+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/unknown-data","Output":"--- PASS: TestCheckZeroSizeRequiresWholeDevice/unknown-data (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.382788+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice/unknown-data","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.385853+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice","Output":"--- PASS: TestCheckZeroSizeRequiresWholeDevice (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.385904+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCheckZeroSizeRequiresWholeDevice","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.385932+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRemoteResolvePinsTemplateAndPreservesOriginalSelection"}
+{"Time":"2026-10-21T23:48:36.38594+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRemoteResolvePinsTemplateAndPreservesOriginalSelection","Output":"=== RUN   TestRemoteResolvePinsTemplateAndPreservesOriginalSelection\n"}
+{"Time":"2026-10-21T23:48:36.386076+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRemoteResolvePinsTemplateAndPreservesOriginalSelection","Output":"    control_service_test.go:16: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:36.386109+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRemoteResolvePinsTemplateAndPreservesOriginalSelection","Output":"--- SKIP: TestRemoteResolvePinsTemplateAndPreservesOriginalSelection (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.386154+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestRemoteResolvePinsTemplateAndPreservesOriginalSelection","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.38619+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestInspectRetainsUncertainReservationAndRejectsReselection"}
+{"Time":"2026-10-21T23:48:36.386198+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestInspectRetainsUncertainReservationAndRejectsReselection","Output":"=== RUN   TestInspectRetainsUncertainReservationAndRejectsReselection\n"}
+{"Time":"2026-10-21T23:48:36.386245+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestInspectRetainsUncertainReservationAndRejectsReselection","Output":"    control_service_test.go:107: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:36.38628+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestInspectRetainsUncertainReservationAndRejectsReselection","Output":"--- SKIP: TestInspectRetainsUncertainReservationAndRejectsReselection (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.386297+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestInspectRetainsUncertainReservationAndRejectsReselection","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.38633+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCoordinatorDrainRejectsNewLifecycleWritersBeforeSideEffects"}
+{"Time":"2026-10-21T23:48:36.386351+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCoordinatorDrainRejectsNewLifecycleWritersBeforeSideEffects","Output":"=== RUN   TestCoordinatorDrainRejectsNewLifecycleWritersBeforeSideEffects\n"}
+{"Time":"2026-10-21T23:48:36.387062+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCoordinatorDrainRejectsNewLifecycleWritersBeforeSideEffects","Output":"--- PASS: TestCoordinatorDrainRejectsNewLifecycleWritersBeforeSideEffects (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.387094+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCoordinatorDrainRejectsNewLifecycleWritersBeforeSideEffects","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.387146+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDefaultsComeFromChosenNode"}
+{"Time":"2026-10-21T23:48:36.387157+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDefaultsComeFromChosenNode","Output":"=== RUN   TestNativeDefaultsComeFromChosenNode\n"}
+{"Time":"2026-10-21T23:48:36.387207+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDefaultsComeFromChosenNode","Output":"--- PASS: TestNativeDefaultsComeFromChosenNode (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.387225+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDefaultsComeFromChosenNode","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.387262+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCapacityIncludesReservationsWithoutOverflow"}
+{"Time":"2026-10-21T23:48:36.387286+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCapacityIncludesReservationsWithoutOverflow","Output":"=== RUN   TestNativeCapacityIncludesReservationsWithoutOverflow\n"}
+{"Time":"2026-10-21T23:48:36.38733+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCapacityIncludesReservationsWithoutOverflow","Output":"--- PASS: TestNativeCapacityIncludesReservationsWithoutOverflow (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.387343+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCapacityIncludesReservationsWithoutOverflow","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.387379+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeArtifactRetirementRequiresTerminalOwnerAndAllNativePins"}
+{"Time":"2026-10-21T23:48:36.387389+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeArtifactRetirementRequiresTerminalOwnerAndAllNativePins","Output":"=== RUN   TestNativeArtifactRetirementRequiresTerminalOwnerAndAllNativePins\n"}
+{"Time":"2026-10-21T23:48:36.387434+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeArtifactRetirementRequiresTerminalOwnerAndAllNativePins","Output":"    native_artifact_gc_test.go:12: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:36.387467+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeArtifactRetirementRequiresTerminalOwnerAndAllNativePins","Output":"--- SKIP: TestNativeArtifactRetirementRequiresTerminalOwnerAndAllNativePins (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.387479+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeArtifactRetirementRequiresTerminalOwnerAndAllNativePins","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.387509+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCapacityDoesNotMixRoutingIDsWithNewResourceTotals"}
+{"Time":"2026-10-21T23:48:36.387522+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCapacityDoesNotMixRoutingIDsWithNewResourceTotals","Output":"=== RUN   TestNativeCapacityDoesNotMixRoutingIDsWithNewResourceTotals\n"}
+{"Time":"2026-10-21T23:48:36.387604+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCapacityDoesNotMixRoutingIDsWithNewResourceTotals","Output":"--- PASS: TestNativeCapacityDoesNotMixRoutingIDsWithNewResourceTotals (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.387622+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCapacityDoesNotMixRoutingIDsWithNewResourceTotals","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.387636+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCheckpointReferencesAndIndependentClonePVCs"}
+{"Time":"2026-10-21T23:48:36.387646+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCheckpointReferencesAndIndependentClonePVCs","Output":"=== RUN   TestNativeCheckpointReferencesAndIndependentClonePVCs\n"}
+{"Time":"2026-10-21T23:48:36.387689+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCheckpointReferencesAndIndependentClonePVCs","Output":"    native_checkpoint_refs_test.go:27: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:36.387712+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCheckpointReferencesAndIndependentClonePVCs","Output":"--- SKIP: TestNativeCheckpointReferencesAndIndependentClonePVCs (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.38773+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCheckpointReferencesAndIndependentClonePVCs","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.387757+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCaptureEvidenceCannotSurviveThawOrChangeIdentity"}
+{"Time":"2026-10-21T23:48:36.387769+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCaptureEvidenceCannotSurviveThawOrChangeIdentity","Output":"=== RUN   TestCaptureEvidenceCannotSurviveThawOrChangeIdentity\n"}
+{"Time":"2026-10-21T23:48:36.389377+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCaptureEvidenceCannotSurviveThawOrChangeIdentity","Output":"--- PASS: TestCaptureEvidenceCannotSurviveThawOrChangeIdentity (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.38941+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestCaptureEvidenceCannotSurviveThawOrChangeIdentity","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.389419+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCleanupOutboxSurvivesProviderRestart"}
+{"Time":"2026-10-21T23:48:36.389425+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCleanupOutboxSurvivesProviderRestart","Output":"=== RUN   TestNativeCleanupOutboxSurvivesProviderRestart\n"}
+{"Time":"2026-10-21T23:48:36.480811+08:00","Action":"run","Package":"ssf.dev/ssf/gateway","Test":"TestManagementRPCsDenied"}
+{"Time":"2026-10-21T23:48:36.482494+08:00","Action":"output","Package":"ssf.dev/ssf/gateway","Test":"TestManagementRPCsDenied","Output":"=== RUN   TestManagementRPCsDenied\n"}
+{"Time":"2026-10-21T23:48:36.482576+08:00","Action":"output","Package":"ssf.dev/ssf/gateway","Test":"TestManagementRPCsDenied","Output":"--- PASS: TestManagementRPCsDenied (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.482593+08:00","Action":"pass","Package":"ssf.dev/ssf/gateway","Test":"TestManagementRPCsDenied","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.482605+08:00","Action":"output","Package":"ssf.dev/ssf/gateway","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:36.573104+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCleanupOutboxSurvivesProviderRestart","Output":"--- PASS: TestNativeCleanupOutboxSurvivesProviderRestart (0.18s)\n"}
+{"Time":"2026-10-21T23:48:36.573154+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCleanupOutboxSurvivesProviderRestart","Elapsed":0.18}
+{"Time":"2026-10-21T23:48:36.573169+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestFailedInternalCloneGCNeverDeletesExposedOrSharedVolumes"}
+{"Time":"2026-10-21T23:48:36.57318+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestFailedInternalCloneGCNeverDeletesExposedOrSharedVolumes","Output":"=== RUN   TestFailedInternalCloneGCNeverDeletesExposedOrSharedVolumes\n"}
+{"Time":"2026-10-21T23:48:36.573241+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestFailedInternalCloneGCNeverDeletesExposedOrSharedVolumes","Output":"    native_clone_gc_test.go:17: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:36.573277+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestFailedInternalCloneGCNeverDeletesExposedOrSharedVolumes","Output":"--- SKIP: TestFailedInternalCloneGCNeverDeletesExposedOrSharedVolumes (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.573311+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestFailedInternalCloneGCNeverDeletesExposedOrSharedVolumes","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.57333+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCommandRejectsWrongRunBeforeLifecycleMutation"}
+{"Time":"2026-10-21T23:48:36.57334+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCommandRejectsWrongRunBeforeLifecycleMutation","Output":"=== RUN   TestNativeCommandRejectsWrongRunBeforeLifecycleMutation\n"}
+{"Time":"2026-10-21T23:48:36.573429+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCommandRejectsWrongRunBeforeLifecycleMutation","Output":"    native_commands_test.go:13: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:36.573452+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCommandRejectsWrongRunBeforeLifecycleMutation","Output":"--- SKIP: TestNativeCommandRejectsWrongRunBeforeLifecycleMutation (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.573484+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCommandRejectsWrongRunBeforeLifecycleMutation","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.573498+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCleanupStatusProtectsReadinessRacingDelete"}
+{"Time":"2026-10-21T23:48:36.573509+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCleanupStatusProtectsReadinessRacingDelete","Output":"=== RUN   TestNativeCleanupStatusProtectsReadinessRacingDelete\n"}
+{"Time":"2026-10-21T23:48:36.573613+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCleanupStatusProtectsReadinessRacingDelete","Output":"    native_commands_test.go:37: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:36.57366+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCleanupStatusProtectsReadinessRacingDelete","Output":"--- SKIP: TestNativeCleanupStatusProtectsReadinessRacingDelete (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.573674+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCleanupStatusProtectsReadinessRacingDelete","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.573686+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeBackgroundComputeUsesSharedReservationAndFixedIdentity"}
+{"Time":"2026-10-21T23:48:36.573704+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeBackgroundComputeUsesSharedReservationAndFixedIdentity","Output":"=== RUN   TestNativeBackgroundComputeUsesSharedReservationAndFixedIdentity\n"}
+{"Time":"2026-10-21T23:48:36.573778+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeBackgroundComputeUsesSharedReservationAndFixedIdentity","Output":"    native_compute_test.go:12: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:36.573811+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeBackgroundComputeUsesSharedReservationAndFixedIdentity","Output":"--- SKIP: TestNativeBackgroundComputeUsesSharedReservationAndFixedIdentity (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.573825+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeBackgroundComputeUsesSharedReservationAndFixedIdentity","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.573863+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeDeleteRespectsPauseHoldAndUID"}
+{"Time":"2026-10-21T23:48:36.573892+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeDeleteRespectsPauseHoldAndUID","Output":"=== RUN   TestNativeVolumeDeleteRespectsPauseHoldAndUID\n"}
+{"Time":"2026-10-21T23:48:36.573925+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeDeleteRespectsPauseHoldAndUID","Output":"    native_delete_test.go:16: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:36.57395+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeDeleteRespectsPauseHoldAndUID","Output":"--- SKIP: TestNativeVolumeDeleteRespectsPauseHoldAndUID (0.00s)\n"}
+{"Time":"2026-10-21T23:48:36.573976+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeDeleteRespectsPauseHoldAndUID","Elapsed":0}
+{"Time":"2026-10-21T23:48:36.57399+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDrainRevokesUnassociatedDispatch"}
+{"Time":"2026-10-21T23:48:36.574006+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDrainRevokesUnassociatedDispatch","Output":"=== RUN   TestNativeDrainRevokesUnassociatedDispatch\n"}
+{"Time":"2026-10-21T23:48:36.76316+08:00","Action":"output","Package":"ssf.dev/ssf/consume","Output":"ok  \tssf.dev/ssf/consume\t7.943s\n"}
+{"Time":"2026-10-21T23:48:36.773347+08:00","Action":"pass","Package":"ssf.dev/ssf/consume","Elapsed":7.953}
+{"Time":"2026-10-21T23:48:36.809233+08:00","Action":"start","Package":"ssf.dev/ssf/runtime"}
+{"Time":"2026-10-21T23:48:36.955395+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDrainRevokesUnassociatedDispatch","Output":"--- PASS: TestNativeDrainRevokesUnassociatedDispatch (0.38s)\n"}
+{"Time":"2026-10-21T23:48:36.955466+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDrainRevokesUnassociatedDispatch","Elapsed":0.38}
+{"Time":"2026-10-21T23:48:36.955493+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDrainTimeoutDoesNotInventStopEvidence"}
+{"Time":"2026-10-21T23:48:36.955526+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDrainTimeoutDoesNotInventStopEvidence","Output":"=== RUN   TestNativeDrainTimeoutDoesNotInventStopEvidence\n"}
+{"Time":"2026-10-21T23:48:37.193612+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDrainTimeoutDoesNotInventStopEvidence","Output":"--- PASS: TestNativeDrainTimeoutDoesNotInventStopEvidence (0.24s)\n"}
+{"Time":"2026-10-21T23:48:37.193663+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDrainTimeoutDoesNotInventStopEvidence","Elapsed":0.24}
+{"Time":"2026-10-21T23:48:37.193713+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeOfflineExpansionRetainsFenceAndResumesAfterController"}
+{"Time":"2026-10-21T23:48:37.193727+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeOfflineExpansionRetainsFenceAndResumesAfterController","Output":"=== RUN   TestNativeOfflineExpansionRetainsFenceAndResumesAfterController\n"}
+{"Time":"2026-10-21T23:48:37.193792+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeOfflineExpansionRetainsFenceAndResumesAfterController","Output":"    native_expansion_test.go:17: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.193814+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeOfflineExpansionRetainsFenceAndResumesAfterController","Output":"--- SKIP: TestNativeOfflineExpansionRetainsFenceAndResumesAfterController (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.193829+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeOfflineExpansionRetainsFenceAndResumesAfterController","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.19386+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeForkUsesIndependentAdmissionAndOriginalChildID"}
+{"Time":"2026-10-21T23:48:37.193919+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeForkUsesIndependentAdmissionAndOriginalChildID","Output":"=== RUN   TestNativeForkUsesIndependentAdmissionAndOriginalChildID\n"}
+{"Time":"2026-10-21T23:48:37.193937+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeForkUsesIndependentAdmissionAndOriginalChildID","Output":"    native_fork_test.go:13: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.194012+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeForkUsesIndependentAdmissionAndOriginalChildID","Output":"--- SKIP: TestNativeForkUsesIndependentAdmissionAndOriginalChildID (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.194041+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeForkUsesIndependentAdmissionAndOriginalChildID","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.194075+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeIdentityRejectsOldRuntimeAndNegotiatesFullLifecycle"}
+{"Time":"2026-10-21T23:48:37.194088+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeIdentityRejectsOldRuntimeAndNegotiatesFullLifecycle","Output":"=== RUN   TestNativeIdentityRejectsOldRuntimeAndNegotiatesFullLifecycle\n"}
+{"Time":"2026-10-21T23:48:37.194176+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeIdentityRejectsOldRuntimeAndNegotiatesFullLifecycle","Output":"--- PASS: TestNativeIdentityRejectsOldRuntimeAndNegotiatesFullLifecycle (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.194213+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeIdentityRejectsOldRuntimeAndNegotiatesFullLifecycle","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.194246+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePauseStateTransitions"}
+{"Time":"2026-10-21T23:48:37.194291+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePauseStateTransitions","Output":"=== RUN   TestNativePauseStateTransitions\n"}
+{"Time":"2026-10-21T23:48:37.194313+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePauseStateTransitions","Output":"    native_lifecycle_test.go:57: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.194345+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePauseStateTransitions","Output":"--- SKIP: TestNativePauseStateTransitions (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.194373+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePauseStateTransitions","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.194393+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeUnplacedResumeRecoveryPreservesHold"}
+{"Time":"2026-10-21T23:48:37.194403+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeUnplacedResumeRecoveryPreservesHold","Output":"=== RUN   TestNativeUnplacedResumeRecoveryPreservesHold\n"}
+{"Time":"2026-10-21T23:48:37.194449+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeUnplacedResumeRecoveryPreservesHold","Output":"    native_lifecycle_test.go:104: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.194466+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeUnplacedResumeRecoveryPreservesHold","Output":"--- SKIP: TestNativeUnplacedResumeRecoveryPreservesHold (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.194481+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeUnplacedResumeRecoveryPreservesHold","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.194508+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeUnpublishedCompensationNeverTreatsDispatchAsUnsent"}
+{"Time":"2026-10-21T23:48:37.194529+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeUnpublishedCompensationNeverTreatsDispatchAsUnsent","Output":"=== RUN   TestNativeUnpublishedCompensationNeverTreatsDispatchAsUnsent\n"}
+{"Time":"2026-10-21T23:48:37.194559+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeUnpublishedCompensationNeverTreatsDispatchAsUnsent","Output":"    native_lifecycle_test.go:142: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.19458+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeUnpublishedCompensationNeverTreatsDispatchAsUnsent","Output":"--- SKIP: TestNativeUnpublishedCompensationNeverTreatsDispatchAsUnsent (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.194593+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeUnpublishedCompensationNeverTreatsDispatchAsUnsent","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.194607+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeComputeAdmissionDoesNotLaunchVMM"}
+{"Time":"2026-10-21T23:48:37.194614+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeComputeAdmissionDoesNotLaunchVMM","Output":"=== RUN   TestNativeComputeAdmissionDoesNotLaunchVMM\n"}
+{"Time":"2026-10-21T23:48:37.404114+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeComputeAdmissionDoesNotLaunchVMM","Output":"--- PASS: TestNativeComputeAdmissionDoesNotLaunchVMM (0.21s)\n"}
+{"Time":"2026-10-21T23:48:37.40416+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeComputeAdmissionDoesNotLaunchVMM","Elapsed":0.21}
+{"Time":"2026-10-21T23:48:37.404182+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDeleteOutboxRetriesAfterControlFailure"}
+{"Time":"2026-10-21T23:48:37.404215+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDeleteOutboxRetriesAfterControlFailure","Output":"=== RUN   TestNativeDeleteOutboxRetriesAfterControlFailure\n"}
+{"Time":"2026-10-21T23:48:37.486753+08:00","Action":"output","Package":"ssf.dev/ssf/gateway","Output":"ok  \tssf.dev/ssf/gateway\t8.663s\n"}
+{"Time":"2026-10-21T23:48:37.486802+08:00","Action":"pass","Package":"ssf.dev/ssf/gateway","Elapsed":8.665}
+{"Time":"2026-10-21T23:48:37.49538+08:00","Action":"start","Package":"ssf.dev/ssf/runtime/verification"}
+{"Time":"2026-10-21T23:48:37.566862+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDeleteOutboxRetriesAfterControlFailure","Output":"--- PASS: TestNativeDeleteOutboxRetriesAfterControlFailure (0.16s)\n"}
+{"Time":"2026-10-21T23:48:37.566922+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeDeleteOutboxRetriesAfterControlFailure","Elapsed":0.16}
+{"Time":"2026-10-21T23:48:37.566942+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare"}
+{"Time":"2026-10-21T23:48:37.566957+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare","Output":"=== RUN   TestNativeCancelUnstartedFencesPrepare\n"}
+{"Time":"2026-10-21T23:48:37.566981+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare/false"}
+{"Time":"2026-10-21T23:48:37.566995+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare/false","Output":"=== RUN   TestNativeCancelUnstartedFencesPrepare/false\n"}
+{"Time":"2026-10-21T23:48:37.762544+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare/false","Output":"--- PASS: TestNativeCancelUnstartedFencesPrepare/false (0.20s)\n"}
+{"Time":"2026-10-21T23:48:37.762596+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare/false","Elapsed":0.2}
+{"Time":"2026-10-21T23:48:37.762623+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare/true"}
+{"Time":"2026-10-21T23:48:37.762633+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare/true","Output":"=== RUN   TestNativeCancelUnstartedFencesPrepare/true\n"}
+{"Time":"2026-10-21T23:48:37.846004+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare/true","Output":"2026/10/21 23:48:37 WARN storage control request failed status=409 error=\"conflicting operation or active resource\"\n"}
+{"Time":"2026-10-21T23:48:37.84678+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare/true","Output":"--- PASS: TestNativeCancelUnstartedFencesPrepare/true (0.08s)\n"}
+{"Time":"2026-10-21T23:48:37.846814+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare/true","Elapsed":0.08}
+{"Time":"2026-10-21T23:48:37.846859+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare","Output":"--- PASS: TestNativeCancelUnstartedFencesPrepare (0.28s)\n"}
+{"Time":"2026-10-21T23:48:37.846874+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeCancelUnstartedFencesPrepare","Elapsed":0.28}
+{"Time":"2026-10-21T23:48:37.846884+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePublicationDeletionCannotCollectUnknownCommit"}
+{"Time":"2026-10-21T23:48:37.84693+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePublicationDeletionCannotCollectUnknownCommit","Output":"=== RUN   TestNativePublicationDeletionCannotCollectUnknownCommit\n"}
+{"Time":"2026-10-21T23:48:37.846962+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePublicationDeletionCannotCollectUnknownCommit","Output":"    native_publication_test.go:18: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.847004+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePublicationDeletionCannotCollectUnknownCommit","Output":"--- SKIP: TestNativePublicationDeletionCannotCollectUnknownCommit (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.847021+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePublicationDeletionCannotCollectUnknownCommit","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.847035+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeRepositoryOutboxRequiresExplicitRepositoryEvidence"}
+{"Time":"2026-10-21T23:48:37.84705+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeRepositoryOutboxRequiresExplicitRepositoryEvidence","Output":"=== RUN   TestNativeRepositoryOutboxRequiresExplicitRepositoryEvidence\n"}
+{"Time":"2026-10-21T23:48:37.868691+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeRepositoryOutboxRequiresExplicitRepositoryEvidence","Output":"--- PASS: TestNativeRepositoryOutboxRequiresExplicitRepositoryEvidence (0.02s)\n"}
+{"Time":"2026-10-21T23:48:37.868739+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeRepositoryOutboxRequiresExplicitRepositoryEvidence","Elapsed":0.02}
+{"Time":"2026-10-21T23:48:37.868762+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeTemplateDeleteWaitsForArtifactConsumer"}
+{"Time":"2026-10-21T23:48:37.868771+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeTemplateDeleteWaitsForArtifactConsumer","Output":"=== RUN   TestNativeTemplateDeleteWaitsForArtifactConsumer\n"}
+{"Time":"2026-10-21T23:48:37.86878+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeTemplateDeleteWaitsForArtifactConsumer","Output":"    native_publication_test.go:138: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.86881+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeTemplateDeleteWaitsForArtifactConsumer","Output":"--- SKIP: TestNativeTemplateDeleteWaitsForArtifactConsumer (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.868835+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeTemplateDeleteWaitsForArtifactConsumer","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.868843+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePVCReferencePinsUIDWithoutVisibleAlias"}
+{"Time":"2026-10-21T23:48:37.86885+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePVCReferencePinsUIDWithoutVisibleAlias","Output":"=== RUN   TestNativePVCReferencePinsUIDWithoutVisibleAlias\n"}
+{"Time":"2026-10-21T23:48:37.868878+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePVCReferencePinsUIDWithoutVisibleAlias","Output":"    native_pvc_test.go:19: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.868903+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePVCReferencePinsUIDWithoutVisibleAlias","Output":"--- SKIP: TestNativePVCReferencePinsUIDWithoutVisibleAlias (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.868914+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePVCReferencePinsUIDWithoutVisibleAlias","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.868934+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeReferenceGCWaitsForLogicalOwnerAndKeepsRetryableRuns"}
+{"Time":"2026-10-21T23:48:37.868942+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeReferenceGCWaitsForLogicalOwnerAndKeepsRetryableRuns","Output":"=== RUN   TestNativeReferenceGCWaitsForLogicalOwnerAndKeepsRetryableRuns\n"}
+{"Time":"2026-10-21T23:48:37.86897+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeReferenceGCWaitsForLogicalOwnerAndKeepsRetryableRuns","Output":"    native_reference_gc_test.go:11: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.868995+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeReferenceGCWaitsForLogicalOwnerAndKeepsRetryableRuns","Output":"--- SKIP: TestNativeReferenceGCWaitsForLogicalOwnerAndKeepsRetryableRuns (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.869005+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeReferenceGCWaitsForLogicalOwnerAndKeepsRetryableRuns","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.869026+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeResumeUsesOneSuccessorAndDeleteFollowsIt"}
+{"Time":"2026-10-21T23:48:37.869043+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeResumeUsesOneSuccessorAndDeleteFollowsIt","Output":"=== RUN   TestNativeResumeUsesOneSuccessorAndDeleteFollowsIt\n"}
+{"Time":"2026-10-21T23:48:37.869073+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeResumeUsesOneSuccessorAndDeleteFollowsIt","Output":"    native_resume_test.go:19: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.869093+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeResumeUsesOneSuccessorAndDeleteFollowsIt","Output":"--- SKIP: TestNativeResumeUsesOneSuccessorAndDeleteFollowsIt (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.869105+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeResumeUsesOneSuccessorAndDeleteFollowsIt","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.869114+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePausedResumeOnReplacementPodKeepsPhysicalPlacement"}
+{"Time":"2026-10-21T23:48:37.86912+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePausedResumeOnReplacementPodKeepsPhysicalPlacement","Output":"=== RUN   TestNativePausedResumeOnReplacementPodKeepsPhysicalPlacement\n"}
+{"Time":"2026-10-21T23:48:37.869188+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePausedResumeOnReplacementPodKeepsPhysicalPlacement","Output":"    native_resume_test.go:97: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.869204+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePausedResumeOnReplacementPodKeepsPhysicalPlacement","Output":"--- SKIP: TestNativePausedResumeOnReplacementPodKeepsPhysicalPlacement (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.869212+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativePausedResumeOnReplacementPodKeepsPhysicalPlacement","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.869226+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeResumeMissingMappedCloneNeverFallsBack"}
+{"Time":"2026-10-21T23:48:37.869232+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeResumeMissingMappedCloneNeverFallsBack","Output":"=== RUN   TestNativeResumeMissingMappedCloneNeverFallsBack\n"}
+{"Time":"2026-10-21T23:48:37.869291+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeResumeMissingMappedCloneNeverFallsBack","Output":"    native_resume_test.go:136: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.869309+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeResumeMissingMappedCloneNeverFallsBack","Output":"--- SKIP: TestNativeResumeMissingMappedCloneNeverFallsBack (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.869342+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeResumeMissingMappedCloneNeverFallsBack","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.869352+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneRequiresFixedLoopbackEndpoints"}
+{"Time":"2026-10-21T23:48:37.869359+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneRequiresFixedLoopbackEndpoints","Output":"=== RUN   TestStandaloneRequiresFixedLoopbackEndpoints\n"}
+{"Time":"2026-10-21T23:48:37.869422+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneRequiresFixedLoopbackEndpoints","Output":"--- PASS: TestStandaloneRequiresFixedLoopbackEndpoints (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.869448+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneRequiresFixedLoopbackEndpoints","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.86946+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs"}
+{"Time":"2026-10-21T23:48:37.86948+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs","Output":"=== RUN   TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs\n"}
+{"Time":"2026-10-21T23:48:37.869726+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs","Output":"2026/10/21 23:48:37 WARN storage control request failed status=409 error=\"operation pending; inspect or retry with same request ID\"\n"}
+{"Time":"2026-10-21T23:48:37.869846+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs","Output":"2026/10/21 23:48:37 WARN storage control request failed status=409 error=\"operation pending; inspect or retry with same request ID\"\n"}
+{"Time":"2026-10-21T23:48:37.869997+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs","Output":"2026/10/21 23:48:37 WARN storage control request failed status=409 error=\"operation pending; inspect or retry with same request ID\"\n"}
+{"Time":"2026-10-21T23:48:37.870061+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs","Output":"2026/10/21 23:48:37 WARN storage control request failed status=400 error=\"conflicting operation or active resource\"\n"}
+{"Time":"2026-10-21T23:48:37.87012+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs","Output":"2026/10/21 23:48:37 WARN storage control request failed status=409 error=\"operation is not supported for externally managed volumes\"\n"}
+{"Time":"2026-10-21T23:48:37.870156+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs","Output":"--- PASS: TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.870175+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestStandaloneAdmissionPreservesBodyAndRejectsOtherAPIs","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870189+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence"}
+{"Time":"2026-10-21T23:48:37.8702+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence","Output":"=== RUN   TestNativeStopReplacementRequiresPhysicalBootFence\n"}
+{"Time":"2026-10-21T23:48:37.870208+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/same_pod"}
+{"Time":"2026-10-21T23:48:37.870229+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/same_pod","Output":"=== RUN   TestNativeStopReplacementRequiresPhysicalBootFence/same_pod\n"}
+{"Time":"2026-10-21T23:48:37.870267+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/same_pod","Output":"--- PASS: TestNativeStopReplacementRequiresPhysicalBootFence/same_pod (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.870282+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/same_pod","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870315+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/reboot_replacement"}
+{"Time":"2026-10-21T23:48:37.870327+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/reboot_replacement","Output":"=== RUN   TestNativeStopReplacementRequiresPhysicalBootFence/reboot_replacement\n"}
+{"Time":"2026-10-21T23:48:37.87036+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/reboot_replacement","Output":"--- PASS: TestNativeStopReplacementRequiresPhysicalBootFence/reboot_replacement (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.870375+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/reboot_replacement","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870388+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/pod_restart_is_not_host_fence"}
+{"Time":"2026-10-21T23:48:37.870394+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/pod_restart_is_not_host_fence","Output":"=== RUN   TestNativeStopReplacementRequiresPhysicalBootFence/pod_restart_is_not_host_fence\n"}
+{"Time":"2026-10-21T23:48:37.870422+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/pod_restart_is_not_host_fence","Output":"--- PASS: TestNativeStopReplacementRequiresPhysicalBootFence/pod_restart_is_not_host_fence (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.870432+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/pod_restart_is_not_host_fence","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870449+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/reused_node_name"}
+{"Time":"2026-10-21T23:48:37.870458+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/reused_node_name","Output":"=== RUN   TestNativeStopReplacementRequiresPhysicalBootFence/reused_node_name\n"}
+{"Time":"2026-10-21T23:48:37.870486+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/reused_node_name","Output":"--- PASS: TestNativeStopReplacementRequiresPhysicalBootFence/reused_node_name (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.870498+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/reused_node_name","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870509+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/missing_boot"}
+{"Time":"2026-10-21T23:48:37.870517+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/missing_boot","Output":"=== RUN   TestNativeStopReplacementRequiresPhysicalBootFence/missing_boot\n"}
+{"Time":"2026-10-21T23:48:37.870549+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/missing_boot","Output":"--- PASS: TestNativeStopReplacementRequiresPhysicalBootFence/missing_boot (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.87056+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence/missing_boot","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870584+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence","Output":"--- PASS: TestNativeStopReplacementRequiresPhysicalBootFence (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.870599+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopReplacementRequiresPhysicalBootFence","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870609+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopDoesNotRequireSchedulingHealth"}
+{"Time":"2026-10-21T23:48:37.870617+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopDoesNotRequireSchedulingHealth","Output":"=== RUN   TestNativeStopDoesNotRequireSchedulingHealth\n"}
+{"Time":"2026-10-21T23:48:37.870648+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopDoesNotRequireSchedulingHealth","Output":"--- PASS: TestNativeStopDoesNotRequireSchedulingHealth (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.870665+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeStopDoesNotRequireSchedulingHealth","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870677+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeObservedCapacityIncludesBackendRounding"}
+{"Time":"2026-10-21T23:48:37.870686+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeObservedCapacityIncludesBackendRounding","Output":"=== RUN   TestNativeObservedCapacityIncludesBackendRounding\n"}
+{"Time":"2026-10-21T23:48:37.870716+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeObservedCapacityIncludesBackendRounding","Output":"    native_volumes_test.go:18: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.870739+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeObservedCapacityIncludesBackendRounding","Output":"--- SKIP: TestNativeObservedCapacityIncludesBackendRounding (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.870749+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeObservedCapacityIncludesBackendRounding","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870759+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning"}
+{"Time":"2026-10-21T23:48:37.870765+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning","Output":"=== RUN   TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning\n"}
+{"Time":"2026-10-21T23:48:37.870793+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/uninitialized-readonly"}
+{"Time":"2026-10-21T23:48:37.870801+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/uninitialized-readonly","Output":"=== RUN   TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/uninitialized-readonly\n"}
+{"Time":"2026-10-21T23:48:37.870879+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/uninitialized-readonly","Output":"--- PASS: TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/uninitialized-readonly (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.870903+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/uninitialized-readonly","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870915+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unknown-provider"}
+{"Time":"2026-10-21T23:48:37.870922+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unknown-provider","Output":"=== RUN   TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unknown-provider\n"}
+{"Time":"2026-10-21T23:48:37.870931+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unknown-provider","Output":"--- PASS: TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unknown-provider (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.870939+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unknown-provider","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.870966+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/multiple-sources"}
+{"Time":"2026-10-21T23:48:37.87099+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/multiple-sources","Output":"=== RUN   TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/multiple-sources\n"}
+{"Time":"2026-10-21T23:48:37.871029+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/multiple-sources","Output":"--- PASS: TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/multiple-sources (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.871059+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/multiple-sources","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.87108+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unauthorized-namespace"}
+{"Time":"2026-10-21T23:48:37.871088+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unauthorized-namespace","Output":"=== RUN   TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unauthorized-namespace\n"}
+{"Time":"2026-10-21T23:48:37.871145+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unauthorized-namespace","Output":"--- PASS: TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unauthorized-namespace (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.871159+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning/unauthorized-namespace","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.87119+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning","Output":"--- PASS: TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.871207+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeRejectsUnsafeSourcesBeforeProvisioning","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.871216+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeViewDoesNotOverflowCapacity"}
+{"Time":"2026-10-21T23:48:37.871222+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeViewDoesNotOverflowCapacity","Output":"=== RUN   TestNativeVolumeViewDoesNotOverflowCapacity\n"}
+{"Time":"2026-10-21T23:48:37.871281+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeViewDoesNotOverflowCapacity","Output":"--- PASS: TestNativeVolumeViewDoesNotOverflowCapacity (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.871299+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeVolumeViewDoesNotOverflowCapacity","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.871312+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeInitializationCanContinueOnlyAfterPriorOperationReleased"}
+{"Time":"2026-10-21T23:48:37.871321+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeInitializationCanContinueOnlyAfterPriorOperationReleased","Output":"=== RUN   TestNativeInitializationCanContinueOnlyAfterPriorOperationReleased\n"}
+{"Time":"2026-10-21T23:48:37.871334+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeInitializationCanContinueOnlyAfterPriorOperationReleased","Output":"    native_volumes_test.go:68: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:37.871365+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeInitializationCanContinueOnlyAfterPriorOperationReleased","Output":"--- SKIP: TestNativeInitializationCanContinueOnlyAfterPriorOperationReleased (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.871392+08:00","Action":"skip","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestNativeInitializationCanContinueOnlyAfterPriorOperationReleased","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.871401+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent"}
+{"Time":"2026-10-21T23:48:37.871407+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent","Output":"=== RUN   TestPreparationRebootKeepsLogicalDeviceAndFormatIntent\n"}
+{"Time":"2026-10-21T23:48:37.87169+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/operation"}
+{"Time":"2026-10-21T23:48:37.871711+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/operation","Output":"=== RUN   TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/operation\n"}
+{"Time":"2026-10-21T23:48:37.871831+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/operation","Output":"--- PASS: TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/operation (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.871849+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/operation","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.87186+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/epoch"}
+{"Time":"2026-10-21T23:48:37.871869+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/epoch","Output":"=== RUN   TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/epoch\n"}
+{"Time":"2026-10-21T23:48:37.872001+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/epoch","Output":"--- PASS: TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/epoch (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.872012+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/epoch","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.87202+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/volume"}
+{"Time":"2026-10-21T23:48:37.87203+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/volume","Output":"=== RUN   TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/volume\n"}
+{"Time":"2026-10-21T23:48:37.872165+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/volume","Output":"--- PASS: TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/volume (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.872185+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/volume","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.872195+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/source"}
+{"Time":"2026-10-21T23:48:37.872201+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/source","Output":"=== RUN   TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/source\n"}
+{"Time":"2026-10-21T23:48:37.872326+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/source","Output":"--- PASS: TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/source (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.872345+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/source","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.872356+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/node"}
+{"Time":"2026-10-21T23:48:37.872362+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/node","Output":"=== RUN   TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/node\n"}
+{"Time":"2026-10-21T23:48:37.872499+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/node","Output":"--- PASS: TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/node (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.872523+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/node","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.872579+08:00","Action":"run","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/size"}
+{"Time":"2026-10-21T23:48:37.872591+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/size","Output":"=== RUN   TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/size\n"}
+{"Time":"2026-10-21T23:48:37.872748+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/size","Output":"--- PASS: TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/size (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.87277+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent/size","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.872798+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent","Output":"--- PASS: TestPreparationRebootKeepsLogicalDeviceAndFormatIntent (0.00s)\n"}
+{"Time":"2026-10-21T23:48:37.872809+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Test":"TestPreparationRebootKeepsLogicalDeviceAndFormatIntent","Elapsed":0}
+{"Time":"2026-10-21T23:48:37.872838+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:38.630461+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestPVCDeleteRequiresPermit"}
+{"Time":"2026-10-21T23:48:38.630511+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestPVCDeleteRequiresPermit","Output":"=== RUN   TestPVCDeleteRequiresPermit\n"}
+{"Time":"2026-10-21T23:48:38.886325+08:00","Action":"output","Package":"ssf.dev/ssf/adapter/agentenvadapter","Output":"ok  \tssf.dev/ssf/adapter/agentenvadapter\t10.068s\n"}
+{"Time":"2026-10-21T23:48:38.886396+08:00","Action":"pass","Package":"ssf.dev/ssf/adapter/agentenvadapter","Elapsed":10.069}
+{"Time":"2026-10-21T23:48:38.913969+08:00","Action":"start","Package":"ssf.dev/ssf/sdk/go"}
+{"Time":"2026-10-21T23:48:38.914019+08:00","Action":"output","Package":"ssf.dev/ssf/sdk/go","Output":"?   \tssf.dev/ssf/sdk/go\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:38.914037+08:00","Action":"skip","Package":"ssf.dev/ssf/sdk/go","Elapsed":0}
+{"Time":"2026-10-21T23:48:38.914069+08:00","Action":"start","Package":"ssf.dev/ssf/testing/csidriver"}
+{"Time":"2026-10-21T23:48:39.461352+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestPVCDeleteRequiresPermit","Output":"--- PASS: TestPVCDeleteRequiresPermit (0.83s)\n"}
+{"Time":"2026-10-21T23:48:39.461422+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestPVCDeleteRequiresPermit","Elapsed":0.83}
+{"Time":"2026-10-21T23:48:39.461443+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestNativePodCannotStealManagedVolume"}
+{"Time":"2026-10-21T23:48:39.46145+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestNativePodCannotStealManagedVolume","Output":"=== RUN   TestNativePodCannotStealManagedVolume\n"}
+{"Time":"2026-10-21T23:48:39.468145+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestNativePodCannotStealManagedVolume","Output":"--- PASS: TestNativePodCannotStealManagedVolume (0.01s)\n"}
+{"Time":"2026-10-21T23:48:39.468202+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestNativePodCannotStealManagedVolume","Elapsed":0.01}
+{"Time":"2026-10-21T23:48:39.468237+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestSelectedNodeNeedsPlacementPermit"}
+{"Time":"2026-10-21T23:48:39.468266+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestSelectedNodeNeedsPlacementPermit","Output":"=== RUN   TestSelectedNodeNeedsPlacementPermit\n"}
+{"Time":"2026-10-21T23:48:39.468805+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestSelectedNodeNeedsPlacementPermit","Output":"--- PASS: TestSelectedNodeNeedsPlacementPermit (0.00s)\n"}
+{"Time":"2026-10-21T23:48:39.46883+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestSelectedNodeNeedsPlacementPermit","Elapsed":0}
+{"Time":"2026-10-21T23:48:39.468853+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestProfiledPVCProtection"}
+{"Time":"2026-10-21T23:48:39.468862+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestProfiledPVCProtection","Output":"=== RUN   TestProfiledPVCProtection\n"}
+{"Time":"2026-10-21T23:48:39.470575+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestProfiledPVCProtection","Output":"--- PASS: TestProfiledPVCProtection (0.00s)\n"}
+{"Time":"2026-10-21T23:48:39.470605+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestProfiledPVCProtection","Elapsed":0}
+{"Time":"2026-10-21T23:48:39.470618+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestSnapshotLedgerProtectionSurvivesMissingLabel"}
+{"Time":"2026-10-21T23:48:39.470624+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestSnapshotLedgerProtectionSurvivesMissingLabel","Output":"=== RUN   TestSnapshotLedgerProtectionSurvivesMissingLabel\n"}
+{"Time":"2026-10-21T23:48:39.471095+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestSnapshotLedgerProtectionSurvivesMissingLabel","Output":"--- PASS: TestSnapshotLedgerProtectionSurvivesMissingLabel (0.00s)\n"}
+{"Time":"2026-10-21T23:48:39.471137+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestSnapshotLedgerProtectionSurvivesMissingLabel","Elapsed":0}
+{"Time":"2026-10-21T23:48:39.471152+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestUnlabelledContentInheritsSnapshotProtection"}
+{"Time":"2026-10-21T23:48:39.47116+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestUnlabelledContentInheritsSnapshotProtection","Output":"=== RUN   TestUnlabelledContentInheritsSnapshotProtection\n"}
+{"Time":"2026-10-21T23:48:39.472438+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestUnlabelledContentInheritsSnapshotProtection","Output":"--- PASS: TestUnlabelledContentInheritsSnapshotProtection (0.00s)\n"}
+{"Time":"2026-10-21T23:48:39.472462+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestUnlabelledContentInheritsSnapshotProtection","Elapsed":0}
+{"Time":"2026-10-21T23:48:39.472493+08:00","Action":"run","Package":"ssf.dev/ssf/guard","Test":"TestUnmanagedOrphanContentKeepsNativeGC"}
+{"Time":"2026-10-21T23:48:39.472517+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestUnmanagedOrphanContentKeepsNativeGC","Output":"=== RUN   TestUnmanagedOrphanContentKeepsNativeGC\n"}
+{"Time":"2026-10-21T23:48:39.472835+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Test":"TestUnmanagedOrphanContentKeepsNativeGC","Output":"--- PASS: TestUnmanagedOrphanContentKeepsNativeGC (0.00s)\n"}
+{"Time":"2026-10-21T23:48:39.472855+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Test":"TestUnmanagedOrphanContentKeepsNativeGC","Elapsed":0}
+{"Time":"2026-10-21T23:48:39.472865+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:40.483263+08:00","Action":"output","Package":"ssf.dev/ssf/guard","Output":"ok  \tssf.dev/ssf/guard\t11.659s\n"}
+{"Time":"2026-10-21T23:48:40.483319+08:00","Action":"pass","Package":"ssf.dev/ssf/guard","Elapsed":11.66}
+{"Time":"2026-10-21T23:48:40.49637+08:00","Action":"start","Package":"ssf.dev/ssf/tools/check-native-deploy"}
+{"Time":"2026-10-21T23:48:40.496404+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-native-deploy","Output":"?   \tssf.dev/ssf/tools/check-native-deploy\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:40.496416+08:00","Action":"skip","Package":"ssf.dev/ssf/tools/check-native-deploy","Elapsed":0}
+{"Time":"2026-10-21T23:48:40.496444+08:00","Action":"start","Package":"ssf.dev/ssf/tools/check-openapi"}
+{"Time":"2026-10-21T23:48:40.93328+08:00","Action":"run","Package":"ssf.dev/ssf/kubernetes","Test":"TestResolveIdentityAndBlock"}
+{"Time":"2026-10-21T23:48:40.933345+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestResolveIdentityAndBlock","Output":"=== RUN   TestResolveIdentityAndBlock\n"}
+{"Time":"2026-10-21T23:48:41.777344+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestResolveIdentityAndBlock","Output":"--- PASS: TestResolveIdentityAndBlock (0.84s)\n"}
+{"Time":"2026-10-21T23:48:41.777405+08:00","Action":"pass","Package":"ssf.dev/ssf/kubernetes","Test":"TestResolveIdentityAndBlock","Elapsed":0.84}
+{"Time":"2026-10-21T23:48:41.777434+08:00","Action":"run","Package":"ssf.dev/ssf/kubernetes","Test":"TestWFFCSelectionIsSticky"}
+{"Time":"2026-10-21T23:48:41.777445+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestWFFCSelectionIsSticky","Output":"=== RUN   TestWFFCSelectionIsSticky\n"}
+{"Time":"2026-10-21T23:48:41.807913+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestWFFCSelectionIsSticky","Output":"--- PASS: TestWFFCSelectionIsSticky (0.03s)\n"}
+{"Time":"2026-10-21T23:48:41.807973+08:00","Action":"pass","Package":"ssf.dev/ssf/kubernetes","Test":"TestWFFCSelectionIsSticky","Elapsed":0.03}
+{"Time":"2026-10-21T23:48:41.808013+08:00","Action":"run","Package":"ssf.dev/ssf/kubernetes","Test":"TestStaticReservation"}
+{"Time":"2026-10-21T23:48:41.808024+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestStaticReservation","Output":"=== RUN   TestStaticReservation\n"}
+{"Time":"2026-10-21T23:48:41.834928+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestStaticReservation","Output":"--- PASS: TestStaticReservation (0.03s)\n"}
+{"Time":"2026-10-21T23:48:41.834981+08:00","Action":"pass","Package":"ssf.dev/ssf/kubernetes","Test":"TestStaticReservation","Elapsed":0.03}
+{"Time":"2026-10-21T23:48:41.835003+08:00","Action":"run","Package":"ssf.dev/ssf/kubernetes","Test":"TestClusterNativeProvisioning"}
+{"Time":"2026-10-21T23:48:41.835031+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestClusterNativeProvisioning","Output":"=== RUN   TestClusterNativeProvisioning\n"}
+{"Time":"2026-10-21T23:48:41.835041+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestClusterNativeProvisioning","Output":"    cluster_test.go:19: requires dedicated kind fixture kubeconfig\n"}
+{"Time":"2026-10-21T23:48:41.835053+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestClusterNativeProvisioning","Output":"--- SKIP: TestClusterNativeProvisioning (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.835072+08:00","Action":"skip","Package":"ssf.dev/ssf/kubernetes","Test":"TestClusterNativeProvisioning","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.835085+08:00","Action":"run","Package":"ssf.dev/ssf/kubernetes","Test":"TestPreparationSourcePinsUID"}
+{"Time":"2026-10-21T23:48:41.835092+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestPreparationSourcePinsUID","Output":"=== RUN   TestPreparationSourcePinsUID\n"}
+{"Time":"2026-10-21T23:48:41.840759+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestPreparationSourcePinsUID","Output":"--- PASS: TestPreparationSourcePinsUID (0.01s)\n"}
+{"Time":"2026-10-21T23:48:41.840826+08:00","Action":"pass","Package":"ssf.dev/ssf/kubernetes","Test":"TestPreparationSourcePinsUID","Elapsed":0.01}
+{"Time":"2026-10-21T23:48:41.840842+08:00","Action":"run","Package":"ssf.dev/ssf/kubernetes","Test":"TestSnapshotPinsSourceIdentityAndRequiresRetainClass"}
+{"Time":"2026-10-21T23:48:41.840849+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestSnapshotPinsSourceIdentityAndRequiresRetainClass","Output":"=== RUN   TestSnapshotPinsSourceIdentityAndRequiresRetainClass\n"}
+{"Time":"2026-10-21T23:48:41.84176+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestSnapshotPinsSourceIdentityAndRequiresRetainClass","Output":"--- PASS: TestSnapshotPinsSourceIdentityAndRequiresRetainClass (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.841798+08:00","Action":"pass","Package":"ssf.dev/ssf/kubernetes","Test":"TestSnapshotPinsSourceIdentityAndRequiresRetainClass","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.841816+08:00","Action":"run","Package":"ssf.dev/ssf/kubernetes","Test":"TestSnapshotReadyRequiresMatchingContentUID"}
+{"Time":"2026-10-21T23:48:41.841828+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestSnapshotReadyRequiresMatchingContentUID","Output":"=== RUN   TestSnapshotReadyRequiresMatchingContentUID\n"}
+{"Time":"2026-10-21T23:48:41.842418+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Test":"TestSnapshotReadyRequiresMatchingContentUID","Output":"--- PASS: TestSnapshotReadyRequiresMatchingContentUID (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.842467+08:00","Action":"pass","Package":"ssf.dev/ssf/kubernetes","Test":"TestSnapshotReadyRequiresMatchingContentUID","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.842481+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:41.870735+08:00","Action":"run","Package":"ssf.dev/ssf/ledger","Test":"TestPauseHoldResumeEpochAndDeletion"}
+{"Time":"2026-10-21T23:48:41.870821+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPauseHoldResumeEpochAndDeletion","Output":"=== RUN   TestPauseHoldResumeEpochAndDeletion\n"}
+{"Time":"2026-10-21T23:48:41.870898+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPauseHoldResumeEpochAndDeletion","Output":"    lifecycle_test.go:36: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:41.870964+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPauseHoldResumeEpochAndDeletion","Output":"--- SKIP: TestPauseHoldResumeEpochAndDeletion (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.870997+08:00","Action":"skip","Package":"ssf.dev/ssf/ledger","Test":"TestPauseHoldResumeEpochAndDeletion","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.871014+08:00","Action":"run","Package":"ssf.dev/ssf/ledger","Test":"TestCheckpointPinsAndDeleteTombstone"}
+{"Time":"2026-10-21T23:48:41.87103+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestCheckpointPinsAndDeleteTombstone","Output":"=== RUN   TestCheckpointPinsAndDeleteTombstone\n"}
+{"Time":"2026-10-21T23:48:41.871114+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestCheckpointPinsAndDeleteTombstone","Output":"    lifecycle_test.go:115: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:41.871161+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestCheckpointPinsAndDeleteTombstone","Output":"--- SKIP: TestCheckpointPinsAndDeleteTombstone (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.871177+08:00","Action":"skip","Package":"ssf.dev/ssf/ledger","Test":"TestCheckpointPinsAndDeleteTombstone","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.871191+08:00","Action":"run","Package":"ssf.dev/ssf/ledger","Test":"TestCheckpointReferenceOwnsNativeAndCSIResourcesAfterParentRelease"}
+{"Time":"2026-10-21T23:48:41.871201+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestCheckpointReferenceOwnsNativeAndCSIResourcesAfterParentRelease","Output":"=== RUN   TestCheckpointReferenceOwnsNativeAndCSIResourcesAfterParentRelease\n"}
+{"Time":"2026-10-21T23:48:41.871274+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestCheckpointReferenceOwnsNativeAndCSIResourcesAfterParentRelease","Output":"    lifecycle_test.go:154: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:41.871317+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestCheckpointReferenceOwnsNativeAndCSIResourcesAfterParentRelease","Output":"--- SKIP: TestCheckpointReferenceOwnsNativeAndCSIResourcesAfterParentRelease (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.871332+08:00","Action":"skip","Package":"ssf.dev/ssf/ledger","Test":"TestCheckpointReferenceOwnsNativeAndCSIResourcesAfterParentRelease","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.871361+08:00","Action":"run","Package":"ssf.dev/ssf/ledger","Test":"TestOfflineMaintenanceFencesWritersHoldsAndReclaim"}
+{"Time":"2026-10-21T23:48:41.871372+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestOfflineMaintenanceFencesWritersHoldsAndReclaim","Output":"=== RUN   TestOfflineMaintenanceFencesWritersHoldsAndReclaim\n"}
+{"Time":"2026-10-21T23:48:41.871442+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestOfflineMaintenanceFencesWritersHoldsAndReclaim","Output":"    maintenance_test.go:10: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:41.871481+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestOfflineMaintenanceFencesWritersHoldsAndReclaim","Output":"--- SKIP: TestOfflineMaintenanceFencesWritersHoldsAndReclaim (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.871495+08:00","Action":"skip","Package":"ssf.dev/ssf/ledger","Test":"TestOfflineMaintenanceFencesWritersHoldsAndReclaim","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.871523+08:00","Action":"run","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresConcurrentWriterAndDrain"}
+{"Time":"2026-10-21T23:48:41.871534+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresConcurrentWriterAndDrain","Output":"=== RUN   TestPostgresConcurrentWriterAndDrain\n"}
+{"Time":"2026-10-21T23:48:41.8716+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresConcurrentWriterAndDrain","Output":"    postgres_test.go:15: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:41.87163+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresConcurrentWriterAndDrain","Output":"--- SKIP: TestPostgresConcurrentWriterAndDrain (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.871664+08:00","Action":"skip","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresConcurrentWriterAndDrain","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.871676+08:00","Action":"run","Package":"ssf.dev/ssf/ledger","Test":"TestPreparationStateMachine"}
+{"Time":"2026-10-21T23:48:41.871687+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPreparationStateMachine","Output":"=== RUN   TestPreparationStateMachine\n"}
+{"Time":"2026-10-21T23:48:41.871778+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPreparationStateMachine","Output":"--- PASS: TestPreparationStateMachine (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.871805+08:00","Action":"pass","Package":"ssf.dev/ssf/ledger","Test":"TestPreparationStateMachine","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.871818+08:00","Action":"run","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresPreparationCASAndImmutableIdentity"}
+{"Time":"2026-10-21T23:48:41.871827+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresPreparationCASAndImmutableIdentity","Output":"=== RUN   TestPostgresPreparationCASAndImmutableIdentity\n"}
+{"Time":"2026-10-21T23:48:41.871941+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresPreparationCASAndImmutableIdentity","Output":"    preparation_test.go:35: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:41.872028+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresPreparationCASAndImmutableIdentity","Output":"--- SKIP: TestPostgresPreparationCASAndImmutableIdentity (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.872052+08:00","Action":"skip","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresPreparationCASAndImmutableIdentity","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.87209+08:00","Action":"run","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresPreparationHandoffRejectsOtherRun"}
+{"Time":"2026-10-21T23:48:41.872105+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresPreparationHandoffRejectsOtherRun","Output":"=== RUN   TestPostgresPreparationHandoffRejectsOtherRun\n"}
+{"Time":"2026-10-21T23:48:41.872171+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresPreparationHandoffRejectsOtherRun","Output":"    preparation_test.go:80: requires dedicated PostgreSQL: SSF_TEST_DATABASE_URL\n"}
+{"Time":"2026-10-21T23:48:41.872199+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresPreparationHandoffRejectsOtherRun","Output":"--- SKIP: TestPostgresPreparationHandoffRejectsOtherRun (0.00s)\n"}
+{"Time":"2026-10-21T23:48:41.87223+08:00","Action":"skip","Package":"ssf.dev/ssf/ledger","Test":"TestPostgresPreparationHandoffRejectsOtherRun","Elapsed":0}
+{"Time":"2026-10-21T23:48:41.872267+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:42.653573+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestCanceledPlanCannotResurrect"}
+{"Time":"2026-10-21T23:48:42.653625+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestCanceledPlanCannotResurrect","Output":"=== RUN   TestCanceledPlanCannotResurrect\n"}
+{"Time":"2026-10-21T23:48:42.775307+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestCanceledPlanCannotResurrect","Output":"--- PASS: TestCanceledPlanCannotResurrect (0.12s)\n"}
+{"Time":"2026-10-21T23:48:42.775611+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestCanceledPlanCannotResurrect","Elapsed":0.12}
+{"Time":"2026-10-21T23:48:42.77565+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestRevocationAfterExpiryAndBootFence"}
+{"Time":"2026-10-21T23:48:42.775664+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestRevocationAfterExpiryAndBootFence","Output":"=== RUN   TestRevocationAfterExpiryAndBootFence\n"}
+{"Time":"2026-10-21T23:48:42.857022+08:00","Action":"output","Package":"ssf.dev/ssf/kubernetes","Output":"ok  \tssf.dev/ssf/kubernetes\t14.027s\n"}
+{"Time":"2026-10-21T23:48:42.871638+08:00","Action":"pass","Package":"ssf.dev/ssf/kubernetes","Elapsed":14.045}
+{"Time":"2026-10-21T23:48:42.876615+08:00","Action":"output","Package":"ssf.dev/ssf/ledger","Output":"ok  \tssf.dev/ssf/ledger\t12.261s\n"}
+{"Time":"2026-10-21T23:48:42.87676+08:00","Action":"pass","Package":"ssf.dev/ssf/ledger","Elapsed":12.261}
+{"Time":"2026-10-21T23:48:42.883565+08:00","Action":"start","Package":"ssf.dev/ssf/tools/cleanup-pvc"}
+{"Time":"2026-10-21T23:48:42.883627+08:00","Action":"output","Package":"ssf.dev/ssf/tools/cleanup-pvc","Output":"?   \tssf.dev/ssf/tools/cleanup-pvc\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:42.88365+08:00","Action":"skip","Package":"ssf.dev/ssf/tools/cleanup-pvc","Elapsed":0}
+{"Time":"2026-10-21T23:48:42.883678+08:00","Action":"start","Package":"ssf.dev/ssf/tools/generate"}
+{"Time":"2026-10-21T23:48:42.88369+08:00","Action":"output","Package":"ssf.dev/ssf/tools/generate","Output":"?   \tssf.dev/ssf/tools/generate\t[no test files]\n"}
+{"Time":"2026-10-21T23:48:42.883701+08:00","Action":"skip","Package":"ssf.dev/ssf/tools/generate","Elapsed":0}
+{"Time":"2026-10-21T23:48:42.926779+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestRevocationAfterExpiryAndBootFence","Output":"--- PASS: TestRevocationAfterExpiryAndBootFence (0.15s)\n"}
+{"Time":"2026-10-21T23:48:42.926841+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestRevocationAfterExpiryAndBootFence","Elapsed":0.15}
+{"Time":"2026-10-21T23:48:42.926858+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestSharedStageAndReleaseEvidence"}
+{"Time":"2026-10-21T23:48:42.926876+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestSharedStageAndReleaseEvidence","Output":"=== RUN   TestSharedStageAndReleaseEvidence\n"}
+{"Time":"2026-10-21T23:48:43.575543+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestSharedStageAndReleaseEvidence","Output":"--- PASS: TestSharedStageAndReleaseEvidence (0.65s)\n"}
+{"Time":"2026-10-21T23:48:43.575579+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestSharedStageAndReleaseEvidence","Elapsed":0.65}
+{"Time":"2026-10-21T23:48:43.575592+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestUnknownPublishAndRetry"}
+{"Time":"2026-10-21T23:48:43.575609+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestUnknownPublishAndRetry","Output":"=== RUN   TestUnknownPublishAndRetry\n"}
+{"Time":"2026-10-21T23:48:43.844941+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestUnknownPublishAndRetry","Output":"--- PASS: TestUnknownPublishAndRetry (0.27s)\n"}
+{"Time":"2026-10-21T23:48:43.845003+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestUnknownPublishAndRetry","Elapsed":0.27}
+{"Time":"2026-10-21T23:48:43.845041+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestWALRestart"}
+{"Time":"2026-10-21T23:48:43.845068+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestWALRestart","Output":"=== RUN   TestWALRestart\n"}
+{"Time":"2026-10-21T23:48:43.943617+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestWALRestart","Output":"--- PASS: TestWALRestart (0.10s)\n"}
+{"Time":"2026-10-21T23:48:43.943661+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestWALRestart","Elapsed":0.1}
+{"Time":"2026-10-21T23:48:43.943675+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestContentPreparationHasNoRuntimeEvidenceAndReplays"}
+{"Time":"2026-10-21T23:48:43.943682+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestContentPreparationHasNoRuntimeEvidenceAndReplays","Output":"=== RUN   TestContentPreparationHasNoRuntimeEvidenceAndReplays\n"}
+{"Time":"2026-10-21T23:48:44.565255+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestContentPreparationHasNoRuntimeEvidenceAndReplays","Output":"--- PASS: TestContentPreparationHasNoRuntimeEvidenceAndReplays (0.62s)\n"}
+{"Time":"2026-10-21T23:48:44.565304+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestContentPreparationHasNoRuntimeEvidenceAndReplays","Elapsed":0.62}
+{"Time":"2026-10-21T23:48:44.565335+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity"}
+{"Time":"2026-10-21T23:48:44.565348+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity","Output":"=== RUN   TestPreparationReceiptCannotCrossIdentity\n"}
+{"Time":"2026-10-21T23:48:44.565426+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/volume"}
+{"Time":"2026-10-21T23:48:44.565441+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/volume","Output":"=== RUN   TestPreparationReceiptCannotCrossIdentity/volume\n"}
+{"Time":"2026-10-21T23:48:44.565545+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/volume","Output":"--- PASS: TestPreparationReceiptCannotCrossIdentity/volume (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.565562+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/volume","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.565574+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/epoch"}
+{"Time":"2026-10-21T23:48:44.565592+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/epoch","Output":"=== RUN   TestPreparationReceiptCannotCrossIdentity/epoch\n"}
+{"Time":"2026-10-21T23:48:44.565675+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/epoch","Output":"--- PASS: TestPreparationReceiptCannotCrossIdentity/epoch (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.565706+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/epoch","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.565727+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/boot"}
+{"Time":"2026-10-21T23:48:44.565739+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/boot","Output":"=== RUN   TestPreparationReceiptCannotCrossIdentity/boot\n"}
+{"Time":"2026-10-21T23:48:44.565802+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/boot","Output":"--- PASS: TestPreparationReceiptCannotCrossIdentity/boot (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.565837+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/boot","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.565852+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/node"}
+{"Time":"2026-10-21T23:48:44.565861+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/node","Output":"=== RUN   TestPreparationReceiptCannotCrossIdentity/node\n"}
+{"Time":"2026-10-21T23:48:44.565915+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/node","Output":"--- PASS: TestPreparationReceiptCannotCrossIdentity/node (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.565954+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/node","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.566013+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/uuid"}
+{"Time":"2026-10-21T23:48:44.566023+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/uuid","Output":"=== RUN   TestPreparationReceiptCannotCrossIdentity/uuid\n"}
+{"Time":"2026-10-21T23:48:44.566064+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/uuid","Output":"--- PASS: TestPreparationReceiptCannotCrossIdentity/uuid (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.566085+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/uuid","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.566098+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/device"}
+{"Time":"2026-10-21T23:48:44.566108+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/device","Output":"=== RUN   TestPreparationReceiptCannotCrossIdentity/device\n"}
+{"Time":"2026-10-21T23:48:44.566169+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/device","Output":"--- PASS: TestPreparationReceiptCannotCrossIdentity/device (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.566185+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/device","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.566197+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/release"}
+{"Time":"2026-10-21T23:48:44.566206+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/release","Output":"=== RUN   TestPreparationReceiptCannotCrossIdentity/release\n"}
+{"Time":"2026-10-21T23:48:44.566257+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/release","Output":"--- PASS: TestPreparationReceiptCannotCrossIdentity/release (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.566272+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/release","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.5663+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/plan"}
+{"Time":"2026-10-21T23:48:44.566311+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/plan","Output":"=== RUN   TestPreparationReceiptCannotCrossIdentity/plan\n"}
+{"Time":"2026-10-21T23:48:44.566378+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/plan","Output":"--- PASS: TestPreparationReceiptCannotCrossIdentity/plan (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.566401+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity/plan","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.566414+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity","Output":"--- PASS: TestPreparationReceiptCannotCrossIdentity (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.56643+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestPreparationReceiptCannotCrossIdentity","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.566464+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestRebootRequiresRuntimeReconciliation"}
+{"Time":"2026-10-21T23:48:44.566483+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestRebootRequiresRuntimeReconciliation","Output":"=== RUN   TestRebootRequiresRuntimeReconciliation\n"}
+{"Time":"2026-10-21T23:48:44.813144+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestRebootRequiresRuntimeReconciliation","Output":"--- PASS: TestRebootRequiresRuntimeReconciliation (0.25s)\n"}
+{"Time":"2026-10-21T23:48:44.81318+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestRebootRequiresRuntimeReconciliation","Elapsed":0.25}
+{"Time":"2026-10-21T23:48:44.813194+08:00","Action":"run","Package":"ssf.dev/ssf/node","Test":"TestReleasedRecordsLeaveActiveIndex"}
+{"Time":"2026-10-21T23:48:44.813201+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestReleasedRecordsLeaveActiveIndex","Output":"=== RUN   TestReleasedRecordsLeaveActiveIndex\n"}
+{"Time":"2026-10-21T23:48:44.920319+08:00","Action":"run","Package":"ssf.dev/ssf/preparation","Test":"TestReceiptRequiresExactPreparationAndRelease"}
+{"Time":"2026-10-21T23:48:44.920368+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestReceiptRequiresExactPreparationAndRelease","Output":"=== RUN   TestReceiptRequiresExactPreparationAndRelease\n"}
+{"Time":"2026-10-21T23:48:44.923976+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestReceiptRequiresExactPreparationAndRelease","Output":"--- PASS: TestReceiptRequiresExactPreparationAndRelease (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.924007+08:00","Action":"pass","Package":"ssf.dev/ssf/preparation","Test":"TestReceiptRequiresExactPreparationAndRelease","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.92402+08:00","Action":"run","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresConcurrentPreparationAndDeletion"}
+{"Time":"2026-10-21T23:48:44.924032+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresConcurrentPreparationAndDeletion","Output":"=== RUN   TestPostgresConcurrentPreparationAndDeletion\n"}
+{"Time":"2026-10-21T23:48:44.924043+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresConcurrentPreparationAndDeletion","Output":"    integration_test.go:152: requires dedicated PostgreSQL\n"}
+{"Time":"2026-10-21T23:48:44.924054+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresConcurrentPreparationAndDeletion","Output":"--- SKIP: TestPostgresConcurrentPreparationAndDeletion (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.924064+08:00","Action":"skip","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresConcurrentPreparationAndDeletion","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.924074+08:00","Action":"run","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresDeletingContentReadyRetriesRelease"}
+{"Time":"2026-10-21T23:48:44.924088+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresDeletingContentReadyRetriesRelease","Output":"=== RUN   TestPostgresDeletingContentReadyRetriesRelease\n"}
+{"Time":"2026-10-21T23:48:44.924097+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresDeletingContentReadyRetriesRelease","Output":"    integration_test.go:188: requires dedicated PostgreSQL\n"}
+{"Time":"2026-10-21T23:48:44.924107+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresDeletingContentReadyRetriesRelease","Output":"--- SKIP: TestPostgresDeletingContentReadyRetriesRelease (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.924117+08:00","Action":"skip","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresDeletingContentReadyRetriesRelease","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.924126+08:00","Action":"run","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresPreparationRebootPreservesOperation"}
+{"Time":"2026-10-21T23:48:44.924135+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresPreparationRebootPreservesOperation","Output":"=== RUN   TestPostgresPreparationRebootPreservesOperation\n"}
+{"Time":"2026-10-21T23:48:44.924174+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresPreparationRebootPreservesOperation","Output":"    integration_test.go:213: requires dedicated PostgreSQL\n"}
+{"Time":"2026-10-21T23:48:44.924193+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresPreparationRebootPreservesOperation","Output":"--- SKIP: TestPostgresPreparationRebootPreservesOperation (0.00s)\n"}
+{"Time":"2026-10-21T23:48:44.924204+08:00","Action":"skip","Package":"ssf.dev/ssf/preparation","Test":"TestPostgresPreparationRebootPreservesOperation","Elapsed":0}
+{"Time":"2026-10-21T23:48:44.924215+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:45.149571+08:00","Action":"output","Package":"ssf.dev/ssf/node","Test":"TestReleasedRecordsLeaveActiveIndex","Output":"--- PASS: TestReleasedRecordsLeaveActiveIndex (0.34s)\n"}
+{"Time":"2026-10-21T23:48:45.149617+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Test":"TestReleasedRecordsLeaveActiveIndex","Elapsed":0.34}
+{"Time":"2026-10-21T23:48:45.149632+08:00","Action":"output","Package":"ssf.dev/ssf/node","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:45.663153+08:00","Action":"run","Package":"ssf.dev/ssf/runtime","Test":"TestCaptureCloneRequiresCompleteProfile"}
+{"Time":"2026-10-21T23:48:45.663206+08:00","Action":"output","Package":"ssf.dev/ssf/runtime","Test":"TestCaptureCloneRequiresCompleteProfile","Output":"=== RUN   TestCaptureCloneRequiresCompleteProfile\n"}
+{"Time":"2026-10-21T23:48:45.663277+08:00","Action":"output","Package":"ssf.dev/ssf/runtime","Test":"TestCaptureCloneRequiresCompleteProfile","Output":"--- PASS: TestCaptureCloneRequiresCompleteProfile (0.00s)\n"}
+{"Time":"2026-10-21T23:48:45.663392+08:00","Action":"pass","Package":"ssf.dev/ssf/runtime","Test":"TestCaptureCloneRequiresCompleteProfile","Elapsed":0}
+{"Time":"2026-10-21T23:48:45.663476+08:00","Action":"output","Package":"ssf.dev/ssf/runtime","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:45.930867+08:00","Action":"output","Package":"ssf.dev/ssf/preparation","Output":"ok  \tssf.dev/ssf/preparation\t13.837s\n"}
+{"Time":"2026-10-21T23:48:45.930946+08:00","Action":"pass","Package":"ssf.dev/ssf/preparation","Elapsed":13.837}
+{"Time":"2026-10-21T23:48:46.155763+08:00","Action":"output","Package":"ssf.dev/ssf/node","Output":"ok  \tssf.dev/ssf/node\t14.947s\n"}
+{"Time":"2026-10-21T23:48:46.155816+08:00","Action":"pass","Package":"ssf.dev/ssf/node","Elapsed":14.948}
+{"Time":"2026-10-21T23:48:46.424475+08:00","Action":"run","Package":"ssf.dev/ssf/runtime/verification","Test":"TestDoesNotClaimGuestReady"}
+{"Time":"2026-10-21T23:48:46.424533+08:00","Action":"output","Package":"ssf.dev/ssf/runtime/verification","Test":"TestDoesNotClaimGuestReady","Output":"=== RUN   TestDoesNotClaimGuestReady\n"}
+{"Time":"2026-10-21T23:48:46.424697+08:00","Action":"output","Package":"ssf.dev/ssf/runtime/verification","Test":"TestDoesNotClaimGuestReady","Output":"--- PASS: TestDoesNotClaimGuestReady (0.00s)\n"}
+{"Time":"2026-10-21T23:48:46.424738+08:00","Action":"pass","Package":"ssf.dev/ssf/runtime/verification","Test":"TestDoesNotClaimGuestReady","Elapsed":0}
+{"Time":"2026-10-21T23:48:46.424756+08:00","Action":"output","Package":"ssf.dev/ssf/runtime/verification","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:46.669505+08:00","Action":"output","Package":"ssf.dev/ssf/runtime","Output":"ok  \tssf.dev/ssf/runtime\t9.860s\n"}
+{"Time":"2026-10-21T23:48:46.669557+08:00","Action":"pass","Package":"ssf.dev/ssf/runtime","Elapsed":9.86}
+{"Time":"2026-10-21T23:48:47.277108+08:00","Action":"run","Package":"ssf.dev/ssf/testing/csidriver","Test":"TestFixtureFaultAfterSideEffectIsDurableAndDoesNotRepeatCreate"}
+{"Time":"2026-10-21T23:48:47.277182+08:00","Action":"output","Package":"ssf.dev/ssf/testing/csidriver","Test":"TestFixtureFaultAfterSideEffectIsDurableAndDoesNotRepeatCreate","Output":"=== RUN   TestFixtureFaultAfterSideEffectIsDurableAndDoesNotRepeatCreate\n"}
+{"Time":"2026-10-21T23:48:47.324213+08:00","Action":"output","Package":"ssf.dev/ssf/testing/csidriver","Test":"TestFixtureFaultAfterSideEffectIsDurableAndDoesNotRepeatCreate","Output":"--- PASS: TestFixtureFaultAfterSideEffectIsDurableAndDoesNotRepeatCreate (0.05s)\n"}
+{"Time":"2026-10-21T23:48:47.32429+08:00","Action":"pass","Package":"ssf.dev/ssf/testing/csidriver","Test":"TestFixtureFaultAfterSideEffectIsDurableAndDoesNotRepeatCreate","Elapsed":0.05}
+{"Time":"2026-10-21T23:48:47.324312+08:00","Action":"run","Package":"ssf.dev/ssf/testing/csidriver","Test":"TestFixtureFaultBeforeCallDoesNotApplyBackendMutation"}
+{"Time":"2026-10-21T23:48:47.324337+08:00","Action":"output","Package":"ssf.dev/ssf/testing/csidriver","Test":"TestFixtureFaultBeforeCallDoesNotApplyBackendMutation","Output":"=== RUN   TestFixtureFaultBeforeCallDoesNotApplyBackendMutation\n"}
+{"Time":"2026-10-21T23:48:47.365267+08:00","Action":"output","Package":"ssf.dev/ssf/testing/csidriver","Test":"TestFixtureFaultBeforeCallDoesNotApplyBackendMutation","Output":"--- PASS: TestFixtureFaultBeforeCallDoesNotApplyBackendMutation (0.04s)\n"}
+{"Time":"2026-10-21T23:48:47.36531+08:00","Action":"pass","Package":"ssf.dev/ssf/testing/csidriver","Test":"TestFixtureFaultBeforeCallDoesNotApplyBackendMutation","Elapsed":0.04}
+{"Time":"2026-10-21T23:48:47.365322+08:00","Action":"output","Package":"ssf.dev/ssf/testing/csidriver","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:47.431289+08:00","Action":"output","Package":"ssf.dev/ssf/runtime/verification","Output":"ok  \tssf.dev/ssf/runtime/verification\t9.936s\n"}
+{"Time":"2026-10-21T23:48:47.431375+08:00","Action":"pass","Package":"ssf.dev/ssf/runtime/verification","Elapsed":9.936}
+{"Time":"2026-10-21T23:48:47.848537+08:00","Action":"run","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible"}
+{"Time":"2026-10-21T23:48:47.848581+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible","Output":"=== RUN   TestOnlyApprovedPVCAlternativeIsCompatible\n"}
+{"Time":"2026-10-21T23:48:47.849288+08:00","Action":"run","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/name-type"}
+{"Time":"2026-10-21T23:48:47.849308+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/name-type","Output":"=== RUN   TestOnlyApprovedPVCAlternativeIsCompatible/name-type\n"}
+{"Time":"2026-10-21T23:48:47.849783+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/name-type","Output":"--- PASS: TestOnlyApprovedPVCAlternativeIsCompatible/name-type (0.00s)\n"}
+{"Time":"2026-10-21T23:48:47.849804+08:00","Action":"pass","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/name-type","Elapsed":0}
+{"Time":"2026-10-21T23:48:47.849814+08:00","Action":"run","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/path-required"}
+{"Time":"2026-10-21T23:48:47.84982+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/path-required","Output":"=== RUN   TestOnlyApprovedPVCAlternativeIsCompatible/path-required\n"}
+{"Time":"2026-10-21T23:48:47.850332+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/path-required","Output":"--- PASS: TestOnlyApprovedPVCAlternativeIsCompatible/path-required (0.00s)\n"}
+{"Time":"2026-10-21T23:48:47.850375+08:00","Action":"pass","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/path-required","Elapsed":0}
+{"Time":"2026-10-21T23:48:47.850397+08:00","Action":"run","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/security"}
+{"Time":"2026-10-21T23:48:47.850408+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/security","Output":"=== RUN   TestOnlyApprovedPVCAlternativeIsCompatible/security\n"}
+{"Time":"2026-10-21T23:48:47.85088+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/security","Output":"--- PASS: TestOnlyApprovedPVCAlternativeIsCompatible/security (0.00s)\n"}
+{"Time":"2026-10-21T23:48:47.850914+08:00","Action":"pass","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible/security","Elapsed":0}
+{"Time":"2026-10-21T23:48:47.850938+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible","Output":"--- PASS: TestOnlyApprovedPVCAlternativeIsCompatible (0.00s)\n"}
+{"Time":"2026-10-21T23:48:47.850955+08:00","Action":"pass","Package":"ssf.dev/ssf/tools/check-openapi","Test":"TestOnlyApprovedPVCAlternativeIsCompatible","Elapsed":0}
+{"Time":"2026-10-21T23:48:47.85101+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-openapi","Output":"PASS\n"}
+{"Time":"2026-10-21T23:48:48.370883+08:00","Action":"output","Package":"ssf.dev/ssf/testing/csidriver","Output":"ok  \tssf.dev/ssf/testing/csidriver\t9.457s\n"}
+{"Time":"2026-10-21T23:48:48.370953+08:00","Action":"pass","Package":"ssf.dev/ssf/testing/csidriver","Elapsed":9.457}
+{"Time":"2026-10-21T23:48:48.856046+08:00","Action":"output","Package":"ssf.dev/ssf/tools/check-openapi","Output":"ok  \tssf.dev/ssf/tools/check-openapi\t8.360s\n"}
+{"Time":"2026-10-21T23:48:48.856142+08:00","Action":"pass","Package":"ssf.dev/ssf/tools/check-openapi","Elapsed":8.36}

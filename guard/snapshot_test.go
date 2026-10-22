@@ -84,3 +84,51 @@ func TestUnmanagedOrphanContentKeepsNativeGC(t *testing.T) {
 		t.Fatal(reason)
 	}
 }
+
+func TestManagedSnapshotFinalizerRemovalRequiresDedicatedIdentity(t *testing.T) {
+	old := map[string]any{"metadata": map[string]any{"uid": "uid", "finalizers": []any{"snapshot.storage.kubernetes.io/volumesnapshotcontent-bound-protection"}}, "spec": map[string]any{"driver": "test"}}
+	next := map[string]any{"metadata": map[string]any{"uid": "uid"}, "spec": map[string]any{"driver": "test"}}
+	h := &Handler{Ledger: checkpointPermits{tracked: true, deletion: true}, CoordinatorUsers: []string{"coordinator"}, SnapshotControllerUsers: []string{"snapshot-controller"}}
+	r := snapshotRequest("VolumeSnapshotContent", admission.Update, old, next)
+	for _, user := range []string{"user", "coordinator"} {
+		r.UserInfo.Username = user
+		if ok, _ := h.check(context.Background(), r); ok {
+			t.Fatalf("%s removed storage finalizer", user)
+		}
+	}
+	r.UserInfo.Username = "snapshot-controller"
+	if ok, reason := h.check(context.Background(), r); !ok {
+		t.Fatal(reason)
+	}
+}
+
+type directSnapshotPermitFixture struct {
+	checkpointPermits
+	pending bool
+}
+
+func (p directSnapshotPermitFixture) DirectSnapshotDeletionPending(context.Context, string) (bool, error) {
+	return p.pending, nil
+}
+func TestDirectSnapshotDeleteRetainsNativeFinalizerBoundary(t *testing.T) {
+	h := &Handler{Ledger: directSnapshotPermitFixture{checkpointPermits: checkpointPermits{tracked: true}, pending: true}}
+	for _, kind := range []string{"VolumeSnapshot", "VolumeSnapshotContent"} {
+		finalizer := kube.SnapshotBoundFinalizer
+		if kind == "VolumeSnapshotContent" {
+			finalizer = kube.SnapshotContentBoundFinalizer
+		}
+		old := map[string]any{"metadata": map[string]any{"uid": "uid", "finalizers": []any{finalizer}}, "spec": map[string]any{}}
+		if ok, reason := h.check(context.Background(), snapshotRequest(kind, admission.Delete, old, nil)); !ok {
+			t.Fatal(reason)
+		}
+		delete(old["metadata"].(map[string]any), "finalizers")
+		if ok, _ := h.check(context.Background(), snapshotRequest(kind, admission.Delete, old, nil)); ok {
+			t.Fatal("direct deletion bypassed native protection")
+		}
+	}
+	h.Ledger = directSnapshotPermitFixture{checkpointPermits: checkpointPermits{tracked: true}, pending: false}
+	old := map[string]any{"metadata": map[string]any{"uid": "uid", "finalizers": []any{kube.SnapshotBoundFinalizer}}, "spec": map[string]any{}}
+	if ok, _ := h.check(context.Background(), snapshotRequest("VolumeSnapshot", admission.Delete, old, nil)); ok {
+		t.Fatal("live reference ignored")
+	}
+}

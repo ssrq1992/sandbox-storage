@@ -38,7 +38,7 @@ for resource in ('deployments', 'daemonsets', 'services', 'endpointslices', 'eve
 for resource in ('nodes', 'csinodes', 'csidrivers', 'storageclasses', 'persistentvolumes', 'volumeattachments', 'volumesnapshotcontents', 'volumesnapshotclasses'):
     collect(resource, ['get', resource, '-o', 'json'])
 pods = collect('native-pods', ['get', 'pods', '-n', args.namespace, '-l',
-                              'app.kubernetes.io/name in (agentenv-node,agentenv-scheduler,agentenv-gateway)', '-o', 'json'])
+                              'app.kubernetes.io/name in (agentenv-node,agentenv-scheduler,agentenv-gateway,ssf-coordinator)', '-o', 'json'])
 if pods:
     for pod in json.loads(pods).get('items', []):
         name = pod['metadata']['name']
@@ -46,9 +46,19 @@ if pods:
             raise ValueError('invalid Pod name in API response')
         for container in pod['spec'].get('containers', []) + pod['spec'].get('initContainers', []):
             container_name = container['name']
-            if container_name not in {'agentenv', 'gateway', 'scheduler', 'agentenv-storage', 'ssf-node'}:
+            if container_name not in {'agentenv', 'gateway', 'scheduler', 'agentenv-storage', 'ssf-node', 'coordinator',
+                                      'overlaybd-daemon', 'overlaybd-native', 'overlaybd-worker',
+                                      'overlaybd-csi', 'overlaybd-registrar'}:
                 continue
             collect(name + '-' + container_name, ['logs', '-n', args.namespace, name, '-c', container_name, '--timestamps', '--tail=5000'])
+controller_pods = collect('overlaybd-controller-pods', ['get', 'pods', '-n', args.namespace,
+                           '-l', 'app=ssf-overlaybd-controller', '-o', 'json'])
+if controller_pods:
+    for pod in json.loads(controller_pods).get('items', []):
+        name = pod['metadata']['name']
+        for container in pod['spec'].get('containers', []):
+            collect(name + '-' + container['name'], ['logs', '-n', args.namespace, name,
+                    '-c', container['name'], '--timestamps', '--tail=5000'])
 (out / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print(out / 'report.json')
 raise SystemExit(1 if any(check['status'] == 'failed' for check in report['checks']) else 0)

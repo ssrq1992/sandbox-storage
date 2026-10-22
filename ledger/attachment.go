@@ -84,3 +84,23 @@ func (s *Store) AttachmentState(ctx context.Context, key, node string) (state, n
 	}
 	return
 }
+
+// BackendAttachmentGrant observes the durable SSF attachment intent issued
+// before a CSI ControllerPublish call. The native driver uses this public
+// boundary rather than inventing a writer lease from a VolumeAttachment.
+func (s *Store) BackendAttachmentGrant(ctx context.Context, driver, handle, nodeID string, readonly bool) (string, error) {
+	if driver == "" || handle == "" || nodeID == "" {
+		return "", errors.New("backend and node identity required")
+	}
+	key := (core.Volume{Driver: driver, Handle: handle}).Key()
+	var fingerprint string
+	err := s.executor(ctx).QueryRow(ctx, `SELECT a.fingerprint FROM ssf_attachments a
+        JOIN ssf_volumes v ON v.key=a.volume_key
+        WHERE a.volume_key=$1 AND a.node_id=$2 AND a.state IN ('Attaching','Attached')
+        AND EXISTS(SELECT 1 FROM ssf_bindings b WHERE b.volume_key=a.volume_key AND b.node=a.node
+            AND b.state NOT IN ('Released','Releasing') AND ($3 OR NOT b.readonly))`, key, nodeID, readonly).Scan(&fingerprint)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return "", core.ErrConflict
+	}
+	return fingerprint, err
+}

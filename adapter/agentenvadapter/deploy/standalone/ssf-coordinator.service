@@ -1,0 +1,14 @@
+[Unit]
+Description=SSF consumption and preparation coordinator
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/agentenv-storage/ledger.env
+ExecStart=/usr/local/bin/ssf-coordinator -config /etc/agentenv-storage/coordinator.json
+Restart=on-failure
+TimeoutStopSec=60
+
+[Install]
+WantedBy=multi-user.target

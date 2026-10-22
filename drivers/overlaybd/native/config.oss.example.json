@@ -1,0 +1,24 @@
+{
+  "repository_id": "agentenv-overlaybd",
+  "repository_backend": "oss",
+  "state_root": "/var/lib/ssf/overlaybd/host",
+  "socket": "/run/ssf-overlaybd/backend.sock",
+  "node_id": "node-a",
+  "daemon_socket": "/run/ssf-overlaybd/daemon.sock",
+  "overlaybd_config": "/etc/ssf-overlaybd/overlaybd.json",
+  "accessible_nodes": [],
+  "max_size_mb": 1048576,
+  "max_mounts": 24,
+  "request_timeout_seconds": 300,
+  "oss": {
+    "bucket": "REPLACE_WITH_DEDICATED_BUCKET",
+    "endpoint": "https://REPLACE_WITH_OSS_ENDPOINT",
+    "region": "REPLACE_WITH_REGION",
+    "prefix": "ssf/overlaybd/agentenv",
+    "access_key_id_file": "/etc/ssf-overlaybd/oss/access-key-id",
+    "secret_access_key_file": "/etc/ssf-overlaybd/oss/secret-access-key",
+    "anonymous": false,
+    "compression": "raw",
+    "compression_workers": 1
+  }
+}

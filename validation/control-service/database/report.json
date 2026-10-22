@@ -1,0 +1,15 @@
+{
+  "scope": "postgres-ledger-and-native-plugin-with-node-fixtures",
+  "time": "2026-10-21T15:47:41.593997+00:00",
+  "real_csi": false,
+  "real_kvm": false,
+  "status": "passed",
+  "exit_code": 0,
+  "skipped_tests": [],
+  "invariant_tool": {
+    "clean_exit": 0,
+    "corrupt_fixture_exit": 1,
+    "status": "passed"
+  },
+  "shutdown_exit_code": 0
+}

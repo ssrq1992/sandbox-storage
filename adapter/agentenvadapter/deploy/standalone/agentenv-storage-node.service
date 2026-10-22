@@ -1,12 +1,11 @@
 [Unit]
 Description=AgentENV native storage provider
-After=network-online.target ssf-node.service
-Wants=network-online.target ssf-node.service
+After=network-online.target ssf-node.service ssf-coordinator.service
+Wants=network-online.target ssf-node.service ssf-coordinator.service
 Before=agentenv.service
 
 [Service]
 Type=simple
-EnvironmentFile=/etc/agentenv-storage/control.env
 ExecStart=/usr/local/bin/agentenvadapter node -config /etc/agentenv-storage/node.json
 Restart=on-failure
 RestartSec=5

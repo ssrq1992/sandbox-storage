@@ -1,0 +1,22 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.76s
+     Running unittests src/lib.rs (adapter/agentenvadapter/runtime/target/debug/deps/agentenv_storage_plugin-7dbced021d6aaddf)
+
+running 9 tests
+test guest::tests::guest_paths_remain_argv_and_overlay_check_uses_last_mount ... ok
+test freeze::tests::capture_requires_known_device_and_safe_unique_paths ... ok
+test header_tests::private_headers_are_removed_from_every_native_request ... ok
+test freeze::tests::obligations_round_trip_without_host_capabilities ... ok
+test transition::tests::replacement_preserves_old_slots_and_allocates_distinct_new_devices ... ok
+test devices::tests::readonly_devices_use_only_readonly_slots ... ok
+test artifact_gc::tests::artifact_task_atomic_write_preserves_all_capture_identities ... ok
+test artifacts::tests::capture_and_parent_remain_marked_across_reopen ... ok
+test artifacts::tests::repository_observation_is_atomic_and_replayable ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+
+   Doc-tests agentenv_storage_plugin
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

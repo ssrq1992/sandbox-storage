@@ -1,0 +1,25 @@
+[
+  {
+    "input": {
+      "repository_id": "repo_a",
+      "capacity_bytes": 1073741824,
+      "readonly": false,
+      "profile_revision": "agentenv-overlaybd-ext4-v1"
+    },
+    "digest": "9a6e6776c38c6192f534d216ca52cc28637caeb68dd43c242f563d205d4e4e44"
+  },
+  {
+    "input": {
+      "repository_id": "repo_a",
+      "capacity_bytes": 9007199254740993,
+      "readonly": true,
+      "profile_revision": "agentenv-overlaybd-ext4-v1",
+      "source": {
+        "volume_id": "vol_parent",
+        "head_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "snapshot_id": "snapshot_a"
+      }
+    },
+    "digest": "de9e9d489eb66462e116f05bef9cdf0aa93738fe88326b8bbef42a439ffbaca6"
+  }
+]

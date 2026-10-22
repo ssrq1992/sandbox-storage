@@ -69,3 +69,7 @@ tool (
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc
 	google.golang.org/protobuf/cmd/protoc-gen-go
 )
+
+require ssf.dev/control v0.0.0
+
+replace ssf.dev/control => ./sdk/go/control

@@ -25,6 +25,13 @@ func (c *NativeControl) RetireNativeCapture(ctx context.Context, request, node, 
 		if _, err = c.physicalCandidate(ctx, d.Candidate, node); err != nil {
 			return err
 		}
+		var pendingDirect bool
+		if err = c.Ledger.Session(ctx).QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM agentenv_native_direct_captures c JOIN ssf_direct_snapshots s ON s.id=c.id WHERE c.request_id=$1 AND c.barrier=$2 AND NOT s.retired)`, request, barrier).Scan(&pendingDirect); err != nil {
+			return err
+		}
+		if pendingDirect {
+			return core.ErrPending
+		}
 		var terminal bool
 		if err = c.Ledger.Session(ctx).QueryRow(ctx, `SELECT r.state IN ('Released','Revoked','Resumed') AND NOT EXISTS(SELECT 1 FROM agentenv_native_runs other WHERE other.owner_uid=r.owner_uid AND other.state NOT IN ('Released','Revoked','Resumed')) FROM agentenv_native_runs r WHERE r.id=$1 AND r.intent->>'tenant'=$2`, request, c.Principal.Tenant).Scan(&terminal); err != nil {
 			return err

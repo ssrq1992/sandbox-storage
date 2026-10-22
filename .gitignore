@@ -2,3 +2,7 @@
 /test-results/
 /sdk/rust/target/
 *.key
+
+/adapter/agentenvadapter/runtime/target/
+**/__pycache__/
+/drivers/overlaybd/native/target/

@@ -10,12 +10,15 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
+	v1 "ssf.dev/ssf/api/ssf/v1"
 	"strings"
 	"sync"
 	"time"
 )
 
 type Session struct {
+	Managed                v1.ManagedStorageDriverClient
+	Capture                bool
 	Conn                   *grpc.ClientConn
 	Identity               csi.IdentityClient
 	Controller             csi.ControllerClient
@@ -50,6 +53,10 @@ func Dial(ctx context.Context, endpoint, name, role, revision string, t *tls.Con
 		return fail(errors.New("CSI driver identity mismatch"))
 	}
 	s.Name = i.Name
+	s.Capture = i.Manifest["ssf.dev/managed-capture"] == "v1"
+	if i.Manifest["ssf.dev/managed-runtime"] == "v1" {
+		s.Managed = v1.NewManagedStorageDriverClient(c)
+	}
 	p, e := s.Identity.Probe(ctx, &csi.ProbeRequest{})
 	if e != nil {
 		return fail(e)

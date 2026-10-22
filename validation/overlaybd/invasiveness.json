@@ -1,0 +1,857 @@
+{
+  "baseline_patch": "/Users/admin/work/agent/agent-runtime/sandboxstorage/refactor-baseline/20261021-230142/AgentENV/worktree.patch",
+  "upstream": "6cccaa7842bd5be2051111d4f74d9e37aa721244",
+  "before": {
+    "groups": {
+      "dependencies_config": {
+        "files": 3,
+        "added": 280,
+        "removed": 0
+      },
+      "sdk_cli": {
+        "files": 1,
+        "added": 61,
+        "removed": 5
+      },
+      "deployment": {
+        "files": 11,
+        "added": 360,
+        "removed": 1
+      },
+      "generated": {
+        "files": 5,
+        "added": 936,
+        "removed": 99
+      },
+      "existing_core_including_inline_tests": {
+        "files": 38,
+        "added": 2907,
+        "removed": 294
+      },
+      "separate_tests": {
+        "files": 8,
+        "added": 651,
+        "removed": 67
+      },
+      "added_integration_modules": {
+        "files": 15,
+        "added": 2576,
+        "removed": 0
+      }
+    },
+    "total": {
+      "files": 81,
+      "added": 7771,
+      "removed": 466
+    },
+    "files": {
+      ".gitignore": [
+        4,
+        0
+      ],
+      "crates/aenv/src/client/sandboxes.rs": [
+        61,
+        5
+      ],
+      "deploy/docker/Dockerfile.scheduler.ssf": [
+        27,
+        0
+      ],
+      "deploy/k8s/base/config/gateway.json": [
+        1,
+        1
+      ],
+      "deploy/k8s/overlays/ssf/README.md": [
+        11,
+        0
+      ],
+      "deploy/k8s/overlays/ssf/config/control.json": [
+        40,
+        0
+      ],
+      "deploy/k8s/overlays/ssf/config/node.json": [
+        27,
+        0
+      ],
+      "deploy/k8s/overlays/ssf/config/ssf-node.json": [
+        23,
+        0
+      ],
+      "deploy/k8s/overlays/ssf/gateway.yaml": [
+        21,
+        0
+      ],
+      "deploy/k8s/overlays/ssf/kustomization.yaml": [
+        22,
+        0
+      ],
+      "deploy/k8s/overlays/ssf/node.yaml": [
+        112,
+        0
+      ],
+      "deploy/k8s/overlays/ssf/rbac.yaml": [
+        30,
+        0
+      ],
+      "deploy/k8s/overlays/ssf/scheduler.yaml": [
+        46,
+        0
+      ],
+      "services/api/proto/scheduler.pb.go": [
+        187,
+        87
+      ],
+      "services/api/proto/scheduler.proto": [
+        14,
+        0
+      ],
+      "services/api/proto/scheduler_grpc.pb.go": [
+        104,
+        2
+      ],
+      "services/gateway/cmd/main.go": [
+        9,
+        0
+      ],
+      "services/gateway/internal/server.go": [
+        32,
+        3
+      ],
+      "services/gateway/internal/server_test.go": [
+        12,
+        0
+      ],
+      "services/gateway/internal/storage.go": [
+        71,
+        0
+      ],
+      "services/gateway/internal/storage_test.go": [
+        93,
+        0
+      ],
+      "services/go.ssf.mod": [
+        78,
+        0
+      ],
+      "services/go.ssf.sum": [
+        198,
+        0
+      ],
+      "services/scheduler/cmd/main.go": [
+        9,
+        0
+      ],
+      "services/scheduler/cmd/storage_default.go": [
+        17,
+        0
+      ],
+      "services/scheduler/cmd/storage_ssf.go": [
+        181,
+        0
+      ],
+      "services/scheduler/cmd/storage_wire_test.go": [
+        69,
+        0
+      ],
+      "services/scheduler/internal/node_registry.go": [
+        1,
+        0
+      ],
+      "services/scheduler/internal/service.go": [
+        16,
+        1
+      ],
+      "services/scheduler/internal/storage_plugin.go": [
+        41,
+        0
+      ],
+      "services/scheduler/internal/storage_plugin_test.go": [
+        46,
+        0
+      ],
+      "services/scheduler/internal/types.go": [
+        1,
+        0
+      ],
+      "services/shared/storage/protocol.go": [
+        139,
+        0
+      ],
+      "services/shared/storage/protocol_test.go": [
+        43,
+        0
+      ],
+      "src/api/generated/src/apis/volumes.rs": [
+        34,
+        0
+      ],
+      "src/api/generated/src/models.rs": [
+        386,
+        10
+      ],
+      "src/api/generated/src/server/mod.rs": [
+        225,
+        0
+      ],
+      "src/api/impls/auth.rs": [
+        1,
+        1
+      ],
+      "src/api/impls/mod.rs": [
+        4,
+        0
+      ],
+      "src/api/impls/sandbox.rs": [
+        327,
+        77
+      ],
+      "src/api/impls/storage.rs": [
+        142,
+        0
+      ],
+      "src/api/impls/storage_fork.rs": [
+        153,
+        0
+      ],
+      "src/api/impls/volume_provider.rs": [
+        83,
+        0
+      ],
+      "src/api/impls/volumes.rs": [
+        219,
+        6
+      ],
+      "src/api/openapi.yml": [
+        91,
+        1
+      ],
+      "src/api/proxy.rs": [
+        1,
+        1
+      ],
+      "src/api/server.rs": [
+        2,
+        0
+      ],
+      "src/bin/server.rs": [
+        3,
+        0
+      ],
+      "src/cfg.rs": [
+        30,
+        2
+      ],
+      "src/orchestrator/launch_plan.rs": [
+        19,
+        0
+      ],
+      "src/orchestrator/persistence/file_backed.rs": [
+        58,
+        1
+      ],
+      "src/orchestrator/service.rs": [
+        415,
+        45
+      ],
+      "src/orchestrator/store/metadata.rs": [
+        3,
+        0
+      ],
+      "src/orchestrator/tests.rs": [
+        385,
+        67
+      ],
+      "src/sandbox/backend.rs": [
+        55,
+        0
+      ],
+      "src/sandbox/custom_extension/mod.rs": [
+        2,
+        2
+      ],
+      "src/sandbox/extra_drive.rs": [
+        13,
+        0
+      ],
+      "src/sandbox/firecracker/config.rs": [
+        180,
+        16
+      ],
+      "src/sandbox/firecracker/factory.rs": [
+        21,
+        0
+      ],
+      "src/sandbox/firecracker/sandbox.rs": [
+        784,
+        112
+      ],
+      "src/sandbox/firecracker/startup_pack.rs": [
+        32,
+        7
+      ],
+      "src/sandbox/manifest.rs": [
+        24,
+        0
+      ],
+      "src/sandbox/mock.rs": [
+        36,
+        3
+      ],
+      "src/sandbox/mod.rs": [
+        7,
+        3
+      ],
+      "src/sandbox/storage/artifact_gc.rs": [
+        327,
+        0
+      ],
+      "src/sandbox/storage/artifacts.rs": [
+        121,
+        0
+      ],
+      "src/sandbox/storage/devices.rs": [
+        578,
+        0
+      ],
+      "src/sandbox/storage/freeze.rs": [
+        89,
+        0
+      ],
+      "src/sandbox/storage/mod.rs": [
+        448,
+        0
+      ],
+      "src/sandbox/storage/repository.rs": [
+        40,
+        0
+      ],
+      "src/sandbox/storage/transition.rs": [
+        146,
+        0
+      ],
+      "src/snapshot/manager.rs": [
+        93,
+        10
+      ],
+      "src/snapshot/repository/backends/oss/client.rs": [
+        12,
+        0
+      ],
+      "src/snapshot/repository/backends/oss/repository.rs": [
+        5,
+        0
+      ],
+      "src/snapshot/repository/backends/posixfs/backend.rs": [
+        25,
+        2
+      ],
+      "src/snapshot/repository/backends/posixfs/catalog.rs": [
+        49,
+        0
+      ],
+      "src/snapshot/repository/interfaces.rs": [
+        5,
+        0
+      ],
+      "src/snapshot/types/snapshot.rs": [
+        19,
+        1
+      ],
+      "src/volume.rs": [
+        290,
+        0
+      ],
+      "tests/integration/posix_startup_pack.rs": [
+        1,
+        0
+      ],
+      "tests/integration/snapshot.rs": [
+        2,
+        0
+      ]
+    }
+  },
+  "after": {
+    "groups": {
+      "dependencies_config": {
+        "files": 5,
+        "added": 61,
+        "removed": 1
+      },
+      "sdk_cli": {
+        "files": 1,
+        "added": 61,
+        "removed": 5
+      },
+      "generated": {
+        "files": 5,
+        "added": 712,
+        "removed": 75
+      },
+      "existing_core_including_inline_tests": {
+        "files": 55,
+        "added": 4031,
+        "removed": 3952
+      },
+      "separate_tests": {
+        "files": 13,
+        "added": 1304,
+        "removed": 68
+      },
+      "added_integration_modules": {
+        "files": 10,
+        "added": 2579,
+        "removed": 0
+      },
+      "shared_native_library": {
+        "files": 20,
+        "added": 5615,
+        "removed": 0
+      }
+    },
+    "total": {
+      "files": 109,
+      "added": 14363,
+      "removed": 4101
+    },
+    "files": {
+      ".gitignore": [
+        4,
+        0
+      ],
+      "Cargo.lock": [
+        46,
+        0
+      ],
+      "Cargo.toml": [
+        3,
+        0
+      ],
+      "crates/aenv/src/client/sandboxes.rs": [
+        61,
+        5
+      ],
+      "services/api/proto/scheduler.pb.go": [
+        65,
+        63
+      ],
+      "services/api/proto/scheduler.proto": [
+        6,
+        0
+      ],
+      "services/api/proto/scheduler_grpc.pb.go": [
+        2,
+        2
+      ],
+      "services/gateway/cmd/main.go": [
+        9,
+        0
+      ],
+      "services/gateway/internal/server.go": [
+        32,
+        3
+      ],
+      "services/gateway/internal/server_test.go": [
+        12,
+        0
+      ],
+      "services/gateway/internal/storage.go": [
+        71,
+        0
+      ],
+      "services/gateway/internal/storage_test.go": [
+        93,
+        0
+      ],
+      "services/go.mod": [
+        4,
+        0
+      ],
+      "services/scheduler/cmd/main.go": [
+        6,
+        0
+      ],
+      "services/scheduler/internal/node_registry.go": [
+        1,
+        0
+      ],
+      "services/scheduler/internal/service.go": [
+        16,
+        1
+      ],
+      "services/scheduler/internal/storage_plugin.go": [
+        19,
+        0
+      ],
+      "services/scheduler/internal/storage_plugin_test.go": [
+        46,
+        0
+      ],
+      "services/scheduler/internal/types.go": [
+        1,
+        0
+      ],
+      "services/shared/storage/protocol.go": [
+        139,
+        0
+      ],
+      "services/shared/storage/protocol_test.go": [
+        43,
+        0
+      ],
+      "src/api/generated/src/apis/volumes.rs": [
+        34,
+        0
+      ],
+      "src/api/generated/src/models.rs": [
+        386,
+        10
+      ],
+      "src/api/generated/src/server/mod.rs": [
+        225,
+        0
+      ],
+      "src/api/impls/auth.rs": [
+        1,
+        1
+      ],
+      "src/api/impls/mod.rs": [
+        4,
+        0
+      ],
+      "src/api/impls/sandbox.rs": [
+        327,
+        77
+      ],
+      "src/api/impls/storage.rs": [
+        167,
+        0
+      ],
+      "src/api/impls/storage_fork.rs": [
+        153,
+        0
+      ],
+      "src/api/impls/volume_provider.rs": [
+        83,
+        0
+      ],
+      "src/api/impls/volumes.rs": [
+        242,
+        29
+      ],
+      "src/api/openapi.yml": [
+        91,
+        1
+      ],
+      "src/api/proxy.rs": [
+        1,
+        1
+      ],
+      "src/api/server.rs": [
+        2,
+        0
+      ],
+      "src/bin/server.rs": [
+        3,
+        0
+      ],
+      "src/cfg.rs": [
+        31,
+        2
+      ],
+      "src/digest.rs": [
+        2,
+        133
+      ],
+      "src/observability/prometheus.rs": [
+        1,
+        119
+      ],
+      "src/orchestrator/launch_plan.rs": [
+        19,
+        0
+      ],
+      "src/orchestrator/persistence/file_backed.rs": [
+        58,
+        1
+      ],
+      "src/orchestrator/sandbox_metrics.rs": [
+        1,
+        1
+      ],
+      "src/orchestrator/service.rs": [
+        502,
+        52
+      ],
+      "src/orchestrator/store/metadata.rs": [
+        3,
+        0
+      ],
+      "src/orchestrator/tests.rs": [
+        385,
+        67
+      ],
+      "src/sandbox/backend.rs": [
+        55,
+        0
+      ],
+      "src/sandbox/custom_extension/mod.rs": [
+        2,
+        2
+      ],
+      "src/sandbox/extra_drive.rs": [
+        13,
+        0
+      ],
+      "src/sandbox/firecracker/config.rs": [
+        180,
+        16
+      ],
+      "src/sandbox/firecracker/factory.rs": [
+        21,
+        0
+      ],
+      "src/sandbox/firecracker/sandbox.rs": [
+        810,
+        150
+      ],
+      "src/sandbox/firecracker/startup_pack.rs": [
+        41,
+        6
+      ],
+      "src/sandbox/manifest.rs": [
+        24,
+        0
+      ],
+      "src/sandbox/mock.rs": [
+        36,
+        3
+      ],
+      "src/sandbox/mod.rs": [
+        8,
+        4
+      ],
+      "src/sandbox/storage/mod.rs": [
+        105,
+        0
+      ],
+      "src/sandbox/ublk/overlaybd.rs": [
+        24,
+        77
+      ],
+      "src/snapshot/manager.rs": [
+        89,
+        10
+      ],
+      "src/snapshot/repository/backends/common/mod.rs": [
+        10,
+        98
+      ],
+      "src/snapshot/repository/backends/common/recontainerize.rs": [
+        7,
+        410
+      ],
+      "src/snapshot/repository/backends/oss/client.rs": [
+        41,
+        587
+      ],
+      "src/snapshot/repository/backends/oss/layout.rs": [
+        3,
+        0
+      ],
+      "src/snapshot/repository/backends/oss/repository.rs": [
+        91,
+        636
+      ],
+      "src/snapshot/repository/backends/posixfs/artifacts.rs": [
+        9,
+        400
+      ],
+      "src/snapshot/repository/backends/posixfs/backend.rs": [
+        25,
+        2
+      ],
+      "src/snapshot/repository/backends/posixfs/catalog.rs": [
+        74,
+        293
+      ],
+      "src/snapshot/repository/backends/posixfs/layout.rs": [
+        0,
+        12
+      ],
+      "src/snapshot/repository/errors.rs": [
+        13,
+        0
+      ],
+      "src/snapshot/repository/interfaces.rs": [
+        6,
+        7
+      ],
+      "src/snapshot/types/snapshot.rs": [
+        20,
+        21
+      ],
+      "src/volume.rs": [
+        375,
+        764
+      ],
+      "storage/overlaybd/src/ext4_stat.rs": [
+        51,
+        4
+      ],
+      "storage/overlaybd/src/image/image_file.rs": [
+        202,
+        1
+      ],
+      "storage/ublk-daemon/Cargo.toml": [
+        4,
+        1
+      ],
+      "storage/ublk-daemon/src/client.rs": [
+        95,
+        3
+      ],
+      "storage/ublk-daemon/src/main.rs": [
+        11,
+        1
+      ],
+      "storage/ublk-daemon/src/protocol.rs": [
+        112,
+        2
+      ],
+      "storage/ublk-daemon/src/runtime.rs": [
+        39,
+        5
+      ],
+      "storage/ublk-daemon/src/server.rs": [
+        185,
+        17
+      ],
+      "storage/ublk-daemon/tests/ublk_daemon_test.rs": [
+        6,
+        1
+      ],
+      "tests/integration/posix_startup_pack.rs": [
+        1,
+        0
+      ],
+      "tests/integration/snapshot.rs": [
+        2,
+        0
+      ],
+      "services/scheduler/cmd/storage.go": [
+        188,
+        0
+      ],
+      "services/scheduler/cmd/storage_test.go": [
+        79,
+        0
+      ],
+      "storage/ublk-daemon/src/server/maintenance.rs": [
+        936,
+        0
+      ],
+      "storage/ublk-daemon/src/server/managed.rs": [
+        718,
+        0
+      ],
+      "storage/volume-core/Cargo.toml": [
+        35,
+        0
+      ],
+      "storage/volume-core/src/catalog.rs": [
+        32,
+        0
+      ],
+      "storage/volume-core/src/compact.rs": [
+        113,
+        0
+      ],
+      "storage/volume-core/src/content.rs": [
+        161,
+        0
+      ],
+      "storage/volume-core/src/digest.rs": [
+        133,
+        0
+      ],
+      "storage/volume-core/src/engine.rs": [
+        864,
+        0
+      ],
+      "storage/volume-core/src/head_repository.rs": [
+        142,
+        0
+      ],
+      "storage/volume-core/src/heads.rs": [
+        220,
+        0
+      ],
+      "storage/volume-core/src/journal.rs": [
+        226,
+        0
+      ],
+      "storage/volume-core/src/layers.rs": [
+        462,
+        0
+      ],
+      "storage/volume-core/src/lib.rs": [
+        40,
+        0
+      ],
+      "storage/volume-core/src/materialize.rs": [
+        114,
+        0
+      ],
+      "storage/volume-core/src/metrics.rs": [
+        122,
+        0
+      ],
+      "storage/volume-core/src/model.rs": [
+        206,
+        0
+      ],
+      "storage/volume-core/src/object.rs": [
+        551,
+        0
+      ],
+      "storage/volume-core/src/object_layers.rs": [
+        265,
+        0
+      ],
+      "storage/volume-core/src/oss_client.rs": [
+        681,
+        0
+      ],
+      "storage/volume-core/src/posix.rs": [
+        568,
+        0
+      ],
+      "storage/volume-core/src/recontainerize.rs": [
+        417,
+        0
+      ],
+      "storage/volume-core/src/repositories.rs": [
+        263,
+        0
+      ],
+      "storage/volume-core/tests/catalog.rs": [
+        158,
+        0
+      ],
+      "storage/volume-core/tests/heads.rs": [
+        83,
+        0
+      ],
+      "storage/volume-core/tests/journal.rs": [
+        94,
+        0
+      ],
+      "storage/volume-core/tests/object_catalog.rs": [
+        302,
+        0
+      ]
+    }
+  },
+  "note": "Counts are additions/deletions against upstream, not removals of native features. Inline tests remain in their production source category; added integration modules counted separately. Existing user deployment fixes retained."
+}

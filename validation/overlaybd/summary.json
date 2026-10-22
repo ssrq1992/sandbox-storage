@@ -1,0 +1,378 @@
+{
+  "updated": "2026-10-22T12:07:50.362185+00:00",
+  "implementation_complete": false,
+  "deployable_overlaybd_csi": false,
+  "real_kvm_executed": false,
+  "real_csi_executed": false,
+  "real_ublk_executed": false,
+  "real_oss_executed": false,
+  "checks": {
+    "postgres": {
+      "status": "passed",
+      "exit_code": 0,
+      "skipped_tests": [],
+      "current_source_matches": true,
+      "changed_since_test": []
+    },
+    "native-cross": {
+      "status": "passed",
+      "exit_code": 0,
+      "source_stable": true,
+      "current_source_matches": true,
+      "changed_since_test": []
+    },
+    "host-cross": {
+      "status": "passed",
+      "exit_code": 0,
+      "source_stable": true,
+      "current_source_matches": true,
+      "changed_since_test": []
+    },
+    "shared-library": {
+      "checks": [
+        {
+          "name": "native-core",
+          "command": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "aenv-volume-core",
+            "--features",
+            "metadata"
+          ],
+          "exit_code": 0,
+          "status": "passed"
+        },
+        {
+          "name": "backend-protocol",
+          "command": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "--manifest-path",
+            "drivers/overlaybd/native/Cargo.toml",
+            "--features",
+            "metadata"
+          ],
+          "exit_code": 0,
+          "status": "passed"
+        }
+      ]
+    },
+    "node-driver-local": {
+      "status": "passed",
+      "scope": "Go unit/race/vet and Linux cross build/typecheck; no device/VM execution",
+      "packages": [
+        "auth",
+        "node",
+        "drivers/overlaybd",
+        "drivers/csi"
+      ],
+      "added": [
+        "binding-scoped-stage",
+        "signed-node-authorization",
+        "managed-finalize-before-unmount",
+        "final-capture-response-loss",
+        "verify-only-overlaybd-profile",
+        "repository-worker-boundary"
+      ]
+    },
+    "protocol-generated": {
+      "status": "passed",
+      "command": "python3 scripts/check_generated.py"
+    },
+    "linux-driver-build": {
+      "status": "passed",
+      "scope": "GOOS=linux GOARCH=amd64 build and vet; not Linux execution"
+    },
+    "docker-build": {
+      "status": "not_executed",
+      "reason": "Docker unavailable in local environment"
+    },
+    "snapshot-catalog-and-query": {
+      "status": "passed",
+      "scope": "Go unit tests, PostgreSQL race integration and vet; no real native snapshot or clone data I/O",
+      "schema_version": 5,
+      "tests": [
+        "snapshot versus volume deletion race",
+        "clone pin and tombstone",
+        "clone retry after source deletion",
+        "CSI volume query pagination and publication status"
+      ]
+    },
+    "capture-protocol-and-recovery": {
+      "status": "passed",
+      "scope": "Go unit/race/vet, generated protocol comparison, temporary PostgreSQL integration, Linux Go build and Rust host typecheck; no device or VM execution",
+      "coverage": [
+        "public Node and private driver capture scope",
+        "freeze evidence rejection",
+        "capture WAL restart and thaw-safe publication",
+        "publication response loss without recapture",
+        "readonly immutable head validation",
+        "recovery never captures unknown work"
+      ],
+      "production_remaining": [
+        "pre-seal barrier recovery",
+        "interrupted active restack recovery",
+        "full unknown kernel device recovery"
+      ]
+    },
+    "checkpoint-csi-handoff": {
+      "status": "passed",
+      "scope": "temporary PostgreSQL, fake Kubernetes API/native backend; no OverlayBD device or VM I/O",
+      "public_schema_version": 7,
+      "driver_schema_version": 5,
+      "coverage": [
+        "all participants prepared before publication",
+        "immutable capture handoff",
+        "capture/source pins",
+        "first observed Snapshot UID fixed before CSI acceptance",
+        "replacement Snapshot/Content pair rejected",
+        "PVC UID replacement rejected",
+        "metadata driver/handle/mode rejected",
+        "CSI create/query/delete and independent clone handler",
+        "concurrent registration/delete tombstone",
+        "sidecar/coordinator share first Content UID and reject replacement"
+      ]
+    },
+    "controller-render": {
+      "status": "passed",
+      "scope": "JSON generation and structural assertions only; no kubectl or deployment",
+      "remaining": [
+        "actual Kubernetes deployment and shutdown validation"
+      ]
+    },
+    "latest-go": {
+      "status": "passed",
+      "commands": [
+        "go test ./...",
+        "go test -race ./drivers/overlaybd ./adapter/agentenvadapter ./consume ./node ./ledger",
+        "go vet ./...",
+        "GOOS=linux GOARCH=amd64 go build ./cmd/overlaybd-csi"
+      ],
+      "note": "Latest authority changes additionally verified by PostgreSQL race integration and targeted vet; Linux build is not Linux execution."
+    },
+    "standalone-units": {
+      "status": "not_executed",
+      "delivered": [
+        "daemon",
+        "native host",
+        "CSI Node",
+        "repository worker",
+        "CSI Controller"
+      ],
+      "scope": "service files and configuration instructions; Linux/systemd validation and joint drain not executed"
+    },
+    "idle-snapshot-prerequisites": {
+      "status": "passed",
+      "public_schema_version": 8,
+      "scope": "Go tests/vet, PostgreSQL race integration, backend fixture and read-only invariant corruption detection; no device or VM I/O",
+      "production_entry_enabled": true,
+      "coverage": [
+        "canonical backend/PVC identity",
+        "capture/writer competition",
+        "paused hold and unknown preparation exclusion",
+        "maintenance and reclaim fencing",
+        "immutable receipt replay during later writer",
+        "delete-before-create and late receipt tombstones",
+        "consumer role access"
+      ],
+      "remaining": [
+        "active volume native barrier entry",
+        "real Kubernetes/OverlayBD verification"
+      ]
+    },
+    "direct-kubernetes-idle-snapshot": {
+      "status": "passed",
+      "schema_version": 9,
+      "scope": "Go unit/race/vet, real temporary PostgreSQL with fake Kubernetes/native backend, Linux Go build, Controller RBAC rendering; no real device/VM/Kubernetes run",
+      "coverage": [
+        "snapshot admission group/version/operation/scope/fail policy",
+        "dedicated finalizer-controller identities",
+        "paired Snapshot/Content UID source tracking",
+        "idle CreateSnapshot through production authority",
+        "source retain until Driver deletion",
+        "native-finalizer protected DELETE",
+        "cancelled unknown read recovery",
+        "cancel/register race preserves successful Retain snapshot",
+        "same Snapshot UID alias rejection",
+        "Content-only reference protects both objects"
+      ],
+      "active_volume_entry": "implemented; pre-seal interrupted operation recovery incomplete"
+    },
+    "native-sealed-thaw": {
+      "status": "passed",
+      "scope": "PostgreSQL state/replay, Go tests/race/vet, native Rust typecheck; real VMM not executed",
+      "mixed_generic_csi_waits_until_ready": true,
+      "runtime_snapshot_thaws_before_publication": true
+    },
+    "native-node-overlay": {
+      "status": "passed",
+      "scope": "Kustomize rendering and original-workload structure check; Kubernetes deployment not executed",
+      "inventory_unit_tests": 3,
+      "node_drain_fixture": "passed",
+      "real_node_shutdown": false
+    },
+    "go-all": {
+      "status": "passed",
+      "scope": "go test ./...; database integrations separately executed"
+    },
+    "go-vet": {
+      "status": "passed"
+    },
+    "go-race-increment": {
+      "status": "passed",
+      "packages": [
+        "consume",
+        "adapter/agentenvadapter",
+        "drivers/overlaybd",
+        "cmd/overlaybd-config"
+      ]
+    },
+    "static-registration": {
+      "status": "passed",
+      "scope": "Go unit, disposable PostgreSQL, Rust metadata executable tests and Linux host typecheck; no PV/VM/device execution"
+    },
+    "direct-live-snapshot": {
+      "status": "passed",
+      "scope": "role separation, PostgreSQL run pin/ready replay/reference retirement, no idle fallback, Rust native typecheck and SDK request marker tests; no VM freeze/CSI execution",
+      "incomplete": "unknown interruption before durable seal remains pending"
+    },
+    "published-pause-snapshot": {
+      "status": "passed",
+      "scope": "disposable PostgreSQL paused hold/StopRun/resume mutual exclusion; no actual VM/device execution"
+    },
+    "daemon-cross": {
+      "status": "passed",
+      "exit_code": 0,
+      "source_stable": true,
+      "current_source_matches": true,
+      "changed_since_test": []
+    },
+    "ext4-geometry": {
+      "status": "passed",
+      "tests": 4,
+      "scope": "macOS executable tests, no actual device"
+    },
+    "native-metadata-expansion": {
+      "status": "passed",
+      "tests": 17,
+      "scope": "POSIX catalog and memory OSS CAS fixture; no real OSS"
+    },
+    "overlaybd-deployment-render": {
+      "status": "passed",
+      "python_tests": 6,
+      "namespace": "ssf-overlaybd-test",
+      "cluster_applied": false
+    },
+    "native-patch-replay": {
+      "status": "passed",
+      "changed_paths": 109,
+      "note": "Exact replay after maintenance recovery and same-daemon owner receipt recovery."
+    },
+    "native-restack-files": {
+      "status": "passed",
+      "tests": 5,
+      "scope": "macOS executable original LSMT file-layer tests; no ublk/VM"
+    },
+    "evidence-race": {
+      "status": "passed",
+      "scope": "Go race tests for evidence CLI and OverlayBD driver; no hardware"
+    },
+    "python-tools": {
+      "status": "passed",
+      "tests": 14,
+      "scope": "CLI evidence validation and fault scope tests; dry-run never executes hardware workloads"
+    },
+    "linux-evidence-build": {
+      "status": "passed",
+      "scope": "Linux cross build only, not execution"
+    }
+  },
+  "additional_checks": [
+    {
+      "command": "go test ./...",
+      "status": "passed",
+      "note": "Local listen permission required; database and hardware conditional tests are not covered by this invocation."
+    },
+    {
+      "command": "go test -race ./drivers/overlaybd ./ledger ./gateway",
+      "status": "passed"
+    },
+    {
+      "command": "go vet ./drivers/overlaybd ./ledger ./gateway",
+      "status": "passed"
+    },
+    {
+      "command": "python3 scripts/check_generated.py",
+      "status": "passed"
+    },
+    {
+      "command": "rustfmt --check (43 changed native/shared Rust files)",
+      "status": "passed"
+    },
+    {
+      "command": "cargo clippy",
+      "status": "not_executed",
+      "reason": "cargo-clippy is not installed in the local isolated Rust toolchain"
+    }
+  ],
+  "remaining_implementation": [
+    "Unknown ADD_DEV result and daemon restart kernel-device ownership recovery",
+    "Active capture interrupted inside restack before durable runtime config",
+    "Pre-seal direct native snapshot barrier recovery",
+    "Maintenance daemon restart before filesystem tools durably complete",
+    "Earlier unresolved capture versus final stopped capture recovery",
+    "Full lifecycle fault regressions and real hardware/backend acceptance"
+  ],
+  "status_document": "design/28-overlaybd-csi-implementation-status.md",
+  "oss_factory_implemented": true,
+  "repository_worker_route_implemented": true,
+  "environment": {
+    "real_environment_available": false,
+    "source": "user confirmed no real test environment",
+    "deployment_authorization": "isolated test namespace only; no deployment executed"
+  },
+  "current_public_schema_version": 9,
+  "remaining": [
+    "Unknown ADD_DEV result and daemon restart kernel-device ownership recovery",
+    "Active capture interrupted inside restack before durable runtime config",
+    "Pre-seal direct native snapshot barrier recovery",
+    "Maintenance daemon restart before filesystem tools durably complete",
+    "Earlier unresolved capture versus final stopped capture recovery",
+    "Full lifecycle fault regressions and real hardware/backend acceptance"
+  ],
+  "offline_expansion": {
+    "controller": true,
+    "native_host": true,
+    "maintenance_daemon": true,
+    "guard_intent_admission": true,
+    "ledger_fence": true,
+    "capacity_publication": true,
+    "resizer_render": true,
+    "interrupted_recovery_complete": false,
+    "real_device_executed": false
+  },
+  "same_daemon_create_receipt_recovery": {
+    "implemented": true,
+    "scope": "Original live native handle only; owner installed at management map insertion",
+    "real_device_test_executed": false
+  },
+  "maintenance_seal_recovery": {
+    "implemented": [
+      "partial seal original upper",
+      "complete unmoved seal exact inode hardlink",
+      "moved seal exact inode validation",
+      "persisted runtime config missing receipt"
+    ],
+    "requires": [
+      "old kernel endpoint absent",
+      "e2fsck and resize2fs durably complete",
+      "fixed filesystem UUID and capacity"
+    ],
+    "linux_device_test_executed": false
+  }
+}

@@ -27,6 +27,6 @@ class PreparationRenderTests(unittest.TestCase):
         self.assertNotIn('storageclass.kubernetes.io/is-default-class', sc['metadata']['annotations'])
         self.assertEqual(webhook['webhooks'][0]['failurePolicy'], 'Fail')
         self.assertEqual(json.loads(config['data']['config.json'])['CoordinatorUsers'],
-                         ['system:serviceaccount:tenant:agentenv-scheduler'])
+                         ['system:serviceaccount:tenant:ssf-coordinator'])
         with self.assertRaises(ValueError):
             render(original, 'vendor', 'Immediate', 'tenant', 'ssf-system', b'ca')

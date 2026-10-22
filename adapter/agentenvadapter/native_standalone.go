@@ -89,55 +89,6 @@ func signLocalDispatch(key []byte, d NativeDispatch) (json.RawMessage, error) {
 	return json.Marshal(nativeAdmitRequest{Context: base64.RawURLEncoding.EncodeToString(signed), BodyDigest: d.BodyDigest})
 }
 
-func (n *Node) openStandalone(ctx context.Context, path string) (func(), error) {
-	cfg, err := LoadNativeConfig(path)
-	if err != nil {
-		return nil, err
-	}
-	if cfg.Standalone == nil || cfg.Standalone.Validate() != nil || cfg.Standalone.NodeID != n.Config.NativeNodeID || cfg.Standalone.KubeNode != n.Config.NodeName || base(cfg.Standalone.Endpoint) != base(n.Config.AgentURL) {
-		return nil, errors.New("standalone control must identify this native host")
-	}
-	key, err := os.ReadFile(n.Config.DispatchKeyFile)
-	if err != nil {
-		return nil, err
-	}
-	key = []byte(strings.TrimSpace(string(key)))
-	if len(key) < 32 {
-		return nil, errors.New("standalone dispatch key too short")
-	}
-	control, close, err := OpenNativeControl(ctx, cfg)
-	if err != nil {
-		return nil, err
-	}
-	candidate := NativeCandidate{ID: cfg.Standalone.NodeID, Endpoint: cfg.Standalone.Endpoint}
-	choose := func(nodes []NativeCandidate) (NativeCandidate, error) {
-		if len(nodes) != 1 || nodes[0].ID != candidate.ID {
-			return NativeCandidate{}, core.ErrConflict
-		}
-		return nodes[0], nil
-	}
-	n.LocalPrepare = func(ctx context.Context, q NativeIntent) (NativeDispatch, error) {
-		q.Tenant = control.Principal.Tenant
-		q.FixedNode = candidate.ID
-		return control.Prepare(ctx, q, []NativeCandidate{candidate}, choose)
-	}
-	n.Control = func(ctx context.Context, command NativeCommand) (json.RawMessage, error) {
-		if command.NodeID != candidate.ID {
-			return nil, core.ErrConflict
-		}
-		reply, err := control.Command(ctx, command, []NativeCandidate{candidate}, choose)
-		if err != nil {
-			return nil, err
-		}
-		if reply.Dispatch != nil {
-			return signLocalDispatch(key, *reply.Dispatch)
-		}
-		return json.Marshal(reply.Data)
-	}
-	go control.RecoverNative(ctx, time.Duration(cfg.RecoverySeconds)*time.Second)
-	return close, nil
-}
-
 func (n *Node) nativeLocalAdmit(w http.ResponseWriter, r *http.Request) {
 	if n.LocalPrepare == nil || n.isDraining() {
 		problem(w, 409, ErrUnsupported)

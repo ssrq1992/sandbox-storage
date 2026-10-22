@@ -36,7 +36,7 @@ def render(source, name, mode, namespace, ssf_namespace, ca):
     config = dict(Listen=':9443', Cert='/etc/ssf-tls/tls.crt', Key='/etc/ssf-tls/tls.key',
                   CA='/etc/ssf-tls/ca.crt', VolumeProfiles=[profile],
                   ManagedNamespaces=[namespace],
-                  CoordinatorUsers=['system:serviceaccount:' + namespace + ':agentenv-scheduler'])
+                  CoordinatorUsers=['system:serviceaccount:' + namespace + ':ssf-coordinator'])
     webhook = dict(apiVersion='admissionregistration.k8s.io/v1',
                    kind='MutatingWebhookConfiguration', metadata={'name': 'ssf-volume-profile'},
                    webhooks=[dict(name='volume-profile.ssf.dev', admissionReviewVersions=['v1'],

@@ -8,7 +8,7 @@
   "CA": "/etc/ssf-node-tls/ca.crt",
   "AllowedPeers": [
     "spiffe://ssf/agentenv/node",
-    "spiffe://ssf/agentenv/scheduler"
+    "spiffe://ssf/agentenv/coordinator"
   ],
   "EvidenceEndpoint": "https://127.0.0.1:9444/v1/evidence",
   "Drivers": [

@@ -46,6 +46,7 @@ def secret(name, content):
 
 for name, identity, dns in [
     ('agentenv-storage-control-tls', 'scheduler', 'agentenv-scheduler.' + args.namespace + '.svc'),
+    ('agentenv-storage-coordinator-tls', 'coordinator', 'ssf-coordinator.' + args.namespace + '.svc'),
     ('agentenv-storage-node-tls', 'node', 'agentenv-storage-node.' + args.namespace + '.svc'),
     ('agentenv-ssf-node-tls', 'ssf-node', 'agentenv-ssf-node.' + args.namespace + '.svc'),
 ]:

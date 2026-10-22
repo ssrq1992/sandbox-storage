@@ -2,3 +2,7 @@
 bin
 test-results
 sdk/rust/target
+
+**/target
+**/__pycache__
+validation

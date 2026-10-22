@@ -1,0 +1,152 @@
+syntax = "proto3";
+package ssf.overlaybd.v1;
+option go_package = "ssf.dev/ssf/api/overlaybd/v1;overlaybdv1";
+
+// Private management protocol over a restricted Unix socket. It never carries
+// guest data I/O. The Go owner validates SSF authorization before these calls.
+service NativeStorageBackend {
+  rpc Describe(DescribeRequest) returns (BackendIdentity);
+  rpc EnsureVolume(EnsureVolumeRequest) returns (VolumeReceipt);
+  rpc InspectVolume(InspectVolumeRequest) returns (VolumeReceipt);
+  rpc ResolveVolume(ResolveVolumeRequest) returns (VolumeReceipt);
+  rpc PublishHead(PublishHeadRequest) returns (VolumeReceipt);
+  rpc DeleteVolume(DeleteVolumeRequest) returns (OperationReceipt);
+  rpc PrepareDevice(PrepareDeviceRequest) returns (DeviceReceipt);
+  rpc InspectDevice(InspectDeviceRequest) returns (DeviceReceipt);
+  rpc CaptureDevice(CaptureDeviceRequest) returns (CaptureReceipt);
+  rpc ReleaseDevice(ReleaseDeviceRequest) returns (OperationReceipt);
+  rpc ExpandVolume(ExpandVolumeRequest) returns (VolumeReceipt);
+}
+message DescribeRequest {}
+message BackendIdentity {
+  string protocol = 1;
+  string instance_id = 2;
+  repeated string capabilities = 3;
+  repeated string repository_ids = 4;
+}
+message OperationIdentity {
+  string operation_id = 1;
+  string input_digest = 2;
+  string repository_id = 3;
+  string volume_id = 4;
+}
+message VolumeSource {
+  string volume_id = 1;
+  string head_revision = 2;
+  string snapshot_id = 3;
+}
+message EnsureVolumeRequest {
+  OperationIdentity operation = 1;
+  uint64 capacity_bytes = 2;
+  bool readonly = 3;
+  VolumeSource source = 4;
+  string profile_revision = 5;
+}
+message InspectVolumeRequest { OperationIdentity operation = 1; }
+message ResolveVolumeRequest {
+  string repository_id = 1;
+  string volume_id = 2;
+  // Empty resolves the current published head; non-empty pins an immutable one.
+  string head_revision = 3;
+  // Administrative static registration only. Requires negotiated
+  // static-registration-v1; old hosts must never silently ignore these checks.
+  bool require_idle = 4;
+  bool require_writable = 5;
+  bool require_readonly = 6;
+}
+message VolumeReceipt {
+  OperationIdentity operation = 1;
+  string state = 2;
+  string head_revision = 3;
+  uint64 capacity_bytes = 4;
+  string fs_uuid = 5;
+  uint64 capacity_generation = 6;
+  string content_digest = 7;
+  string reason = 8;
+  repeated string accessible_nodes = 9;
+}
+message UseGrant {
+  string owner_id = 1;
+  string run_id = 2;
+  uint64 epoch = 3;
+  string node_id = 4;
+  string head_revision = 5;
+  string authorization_digest = 6;
+  bool readonly = 7;
+  string purpose = 8;
+}
+message PrepareDeviceRequest {
+  OperationIdentity operation = 1;
+  UseGrant grant = 2;
+  string session_id = 3;
+}
+message InspectDeviceRequest {
+  OperationIdentity operation = 1;
+  string session_id = 2;
+}
+message DeviceReceipt {
+  OperationIdentity operation = 1;
+  string session_id = 2;
+  UseGrant grant = 3;
+  string state = 4;
+  string device_path = 5;
+  uint32 major = 6;
+  uint32 minor = 7;
+  uint64 capacity_bytes = 8;
+  string fs_uuid = 9;
+  string node_boot_id = 10;
+  string daemon_instance_id = 11;
+  string device_identity = 12;
+  string reason = 13;
+}
+message CaptureDeviceRequest {
+  OperationIdentity operation = 1;
+  string session_id = 2;
+  UseGrant grant = 3;
+  string capture_id = 4;
+  string barrier_id = 5;
+  string freeze_evidence_digest = 6;
+  // Non-empty for a final capture after the native VMM has stopped.
+  string stopped_evidence_digest = 7;
+}
+message CaptureReceipt {
+  OperationIdentity operation = 1;
+  string session_id = 2;
+  string capture_id = 3;
+  string barrier_id = 4;
+  string state = 5;
+  string sealed_revision = 6;
+  string content_digest = 7;
+  string reason = 8;
+}
+message PublishHeadRequest {
+  OperationIdentity operation = 1;
+  string capture_id = 2;
+  string expected_head_revision = 3;
+  UseGrant grant = 4;
+}
+message ReleaseDeviceRequest {
+  OperationIdentity operation = 1;
+  string session_id = 2;
+  UseGrant grant = 3;
+  string stopped_evidence_digest = 4;
+  string borrowed_refs_released_digest = 5;
+  string final_capture_id = 6;
+  string published_head_revision = 7;
+  string preparation_release_digest = 8;
+}
+message DeleteVolumeRequest {
+  OperationIdentity operation = 1;
+  string drain_authorization_digest = 2;
+}
+message ExpandVolumeRequest {
+  OperationIdentity operation = 1;
+  string expected_head_revision = 2;
+  uint64 capacity_bytes = 3;
+  string maintenance_authorization_digest = 4;
+}
+message OperationReceipt {
+  OperationIdentity operation = 1;
+  string state = 2;
+  string reason = 3;
+}

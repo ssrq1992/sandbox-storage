@@ -3,6 +3,9 @@ package ssf.v1;
 option go_package = "ssf.dev/ssf/api/ssf/v1;ssfv1";
 
 service RuntimeStorageNode {
+ rpc PrepareCapture(DriverCaptureRequest) returns (DriverCaptureResult);
+ rpc InspectCapture(DriverCaptureRequest) returns (DriverCaptureResult);
+ rpc PublishCapture(DriverCaptureRequest) returns (DriverCaptureResult);
  rpc PrepareVolumes(PrepareRequest) returns (PrepareResponse);
  rpc MarkRuntimeReady(RuntimeRequest) returns (Operation);
  rpc ReleaseVolumes(RuntimeRequest) returns (Operation);
@@ -33,4 +36,42 @@ message VolumePreparation {
  string receipt_json=3;
  string reason=4;
  string protocol=5;
+}
+
+// Optional driver extension for managed devices. Ordinary CSI drivers do not
+// implement it. The private endpoint shares the CSI driver's transport trust.
+service ManagedStorageDriver {
+ rpc PrepareCapture(DriverCaptureRequest) returns (DriverCaptureResult);
+ rpc InspectCapture(DriverCaptureRequest) returns (DriverCaptureResult);
+ rpc PublishCapture(DriverCaptureRequest) returns (DriverCaptureResult);
+ rpc FinalizeRuntime(DriverFinalizeRequest) returns (Operation);
+ rpc FinalizePreparation(DriverPreparationReleaseRequest) returns (Operation);
+}
+message DriverFinalizeRequest {
+ string signed_node_plan=1;
+ string binding_uid=2;
+ string detached_evidence=3;
+}
+
+message DriverPreparationReleaseRequest {
+ string signed_node_plan=1;
+ string binding_uid=2;
+ string receipt_json=3;
+}
+
+message DriverCaptureRequest {
+ string signed_node_plan=1;
+ string binding_uid=2;
+ string capture_intent_json=3;
+ string evidence=4;
+}
+message DriverCaptureResult {
+ string binding_uid=1;
+ string capture_id=2;
+ string barrier_id=3;
+ string state=4;
+ string sealed_revision=5;
+ string published_head=6;
+ uint64 capacity_bytes=7;
+ string filesystem_uuid=8;
 }

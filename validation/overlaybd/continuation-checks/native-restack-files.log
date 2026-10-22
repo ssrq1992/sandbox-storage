@@ -1,0 +1,26 @@
+warning: use of deprecated method `std::sync::atomic::Atomic::<i64>::fetch_update`: renamed to `try_update` for consistency
+   --> storage/overlaybd/src/download_gate.rs:187:10
+    |
+187 |         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+    |          ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+187 -         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+187 +         .try_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+    |
+
+warning: `overlaybd` (lib test) generated 1 warning (run `cargo fix --lib -p overlaybd --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.37s
+     Running unittests src/lib.rs (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/target/debug/deps/overlaybd-b4d3a0da67b7f584)
+
+running 5 tests
+test image::image_file::tests::test_create_snapshot_and_restack_rename_failure_is_terminal ... ok
+test image::image_file::tests::test_create_snapshot_and_restack_keeps_hybrid_image_writable ... ok
+test image::image_file::tests::test_create_snapshot_and_restack_keeps_image_writable ... ok
+test image::image_file::tests::test_checkpointed_restack_reopens_unmoved_upper_after_partial_seal ... ok
+test image::image_file::tests::test_checkpointed_restack_recovers_from_persisted_config_and_rejects_failed_checkpoint ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 369 filtered out; finished in 0.70s
+

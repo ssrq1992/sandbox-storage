@@ -53,6 +53,8 @@ def run(name, command, cwd=root, env=None, events=False):
             check['status'] = 'passed_with_skips'
     report['checks'].append(check)
 
+run('control-dependency-boundary', ['python3', 'scripts/check_control_boundary.py'])
+run('control-sdk', ['go', 'test', '-race', './...'], cwd=root / 'sdk/go/control')
 run('native-tool-contracts', ['python3', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-v'])
 run('ssf-unit', ['go', 'test', '-count=1', '-json', './...'], events=True)
 run('ssf-race', ['go', 'test', '-race', '-count=1', '-json', './...'], events=True)
@@ -62,10 +64,10 @@ run('ssf-linux-build', ['go', 'build', './cmd/...', './adapter/agentenvadapter/c
 run('ssf-generated', ['python3', 'scripts/check_generated.py'])
 run('native-openapi-compatible', ['go', 'run', './tools/check-openapi', '-baseline', '6cccaa7842bd5be2051111d4f74d9e37aa721244'])
 run('agentenv-services-unit', ['go', 'test', '-count=1', '-json', './...'], cwd=root.parent / 'AgentENV/services', events=True)
-run('agentenv-ssf-unit', ['go', 'test', '-modfile=go.ssf.mod', '-tags', 'ssf', '-count=1', '-json', './...'], cwd=root.parent / 'AgentENV/services', events=True)
-run('agentenv-ssf-race', ['go', 'test', '-modfile=go.ssf.mod', '-tags', 'ssf', '-race', '-count=1', '-json', './scheduler/...', './gateway/...', './shared/storage'], cwd=root.parent / 'AgentENV/services', events=True)
-run('agentenv-ssf-vet', ['go', 'vet', '-modfile=go.ssf.mod', '-tags', 'ssf', './...'], cwd=root.parent / 'AgentENV/services')
-run('agentenv-ssf-linux-build', ['go', 'build', '-modfile=go.ssf.mod', '-tags', 'ssf', './scheduler/cmd', './gateway/cmd'], cwd=root.parent / 'AgentENV/services', env=env)
+run('agentenv-services-race', ['go', 'test', '-race', '-count=1', '-json', './...'], cwd=root.parent / 'AgentENV/services', events=True)
+run('agentenv-services-vet', ['go', 'vet', './...'], cwd=root.parent / 'AgentENV/services')
+run('agentenv-services-linux-build', ['go', 'build', './scheduler/cmd', './gateway/cmd'], cwd=root.parent / 'AgentENV/services', env=env)
+
 
 if args.database:
     if not os.environ.get('SSF_TEST_DATABASE_URL'):

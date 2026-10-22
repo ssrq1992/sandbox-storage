@@ -15,6 +15,38 @@ import time
 from native_lifecycle_e2e import Suite, require
 
 
+OVERLAYBD_DRIVER = 'overlaybd.csi.ssf.dev'
+
+
+def expected_profile(driver_kind):
+    return ('agentenv-overlaybd-ext4-v1' if driver_kind == 'native-overlaybd'
+            else 'agentenv-block-ext4-v1')
+
+
+def validate_overlaybd_evidence(handle, observations):
+    require(handle.startswith('obd1.'), 'PV is not a native OverlayBD handle')
+    live = []
+    heads = []
+    for observation in observations:
+        proof = observation['evidence']
+        require(proof.get('handle') == handle, 'evidence belongs to another volume')
+        require(proof.get('scope') == 'read-only-native-journal-and-device-observation',
+                'unsupported native evidence format')
+        live += [item for item in proof.get('sessions', [])
+                 if item.get('live_block') is True and item.get('identity')
+                 and item.get('device', '').startswith('/dev/ublkb')]
+        heads += [item for item in proof.get('heads', [])
+                  if item.get('revision') and item.get('layers', 0) > 0
+                  and item.get('generation', 0) > 0 and item.get('filesystem_uuid')
+                  and item.get('capacity_bytes', 0) > 0]
+    require(live, 'no live native ublk block device for this PVC')
+    require(heads, 'no immutable OverlayBD layer head recorded for this PVC')
+    revisions = {item['revision'] for item in heads}
+    require(any(item.get('head') in revisions for item in live),
+            'live ublk session has no matching immutable source head')
+    return {'live_devices': live, 'heads': heads}
+
+
 class PVCSuite(Suite):
     def kube(self, *arguments, body=None):
         command = [self.args.kubectl]
@@ -25,6 +57,27 @@ class PVCSuite(Suite):
                                 capture_output=True, text=True, timeout=self.args.timeout)
         require(result.returncode == 0, 'kubectl operation failed: ' + result.stderr[:2000])
         return json.loads(result.stdout) if result.stdout.strip() else None
+
+    def native_evidence(self, handle, phase):
+        if self.args.driver_kind != 'native-overlaybd':
+            return
+        pods = self.kube('get', 'pods', '-n', self.args.namespace, '-o', 'json')
+        observations = []
+        for pod in pods['items']:
+            spec = pod['spec']
+            containers = spec.get('containers', []) + spec.get('initContainers', [])
+            if not any(c['name'] == 'overlaybd-daemon' for c in containers):
+                continue
+            if pod.get('metadata', {}).get('deletionTimestamp'):
+                continue
+            proof = self.kube('exec', '-n', self.args.namespace, pod['metadata']['name'],
+                              '-c', 'overlaybd-daemon', '--', 'overlaybd-evidence',
+                              '-volume-handle', handle)
+            observations.append({'pod': pod['metadata']['name'],
+                                 'node': spec.get('nodeName'), 'evidence': proof})
+        self.report.setdefault('overlaybd_evidence', {})[phase] = observations
+        self.save()
+        validate_overlaybd_evidence(handle, observations)
 
     def claim(self, name):
         return self.kube('get', 'pvc', name, '-n', self.args.namespace, '-o', 'json')
@@ -55,6 +108,11 @@ class PVCSuite(Suite):
         state = {}
 
         def create_pvc():
+            sc = self.kube('get', 'storageclass', self.args.storage_class, '-o', 'json')
+            require(sc['metadata'].get('annotations', {}).get('ssf.dev/volume-profile')
+                    == expected_profile(self.args.driver_kind), 'StorageClass has the wrong preparation profile')
+            if self.args.driver_kind == 'native-overlaybd':
+                require(sc.get('provisioner') == OVERLAYBD_DRIVER, 'StorageClass is not OverlayBD')
             name = self.args.pvc or self.id + '-data'
             claim = self.claim(name) if self.args.pvc else self.provision(name)
             state.update(name=name, uid=claim['metadata']['uid'])
@@ -62,9 +120,8 @@ class PVCSuite(Suite):
                 self.report.setdefault('pvcs', []).append({
                     'namespace': self.args.namespace, 'name': name,
                     'uid': state['uid'], 'created_by_test': False})
-            sc = self.kube('get', 'storageclass', self.args.storage_class, '-o', 'json')
-            require(sc['metadata'].get('annotations', {}).get('ssf.dev/volume-profile')
-                    == 'agentenv-block-ext4-v1', 'StorageClass has no AgentENV preparation profile')
+            require(claim['spec'].get('storageClassName') == self.args.storage_class,
+                    'PVC does not use the requested StorageClass')
             mode = sc.get('volumeBindingMode', 'Immediate')
             self.report['binding_mode'] = mode
             if mode == 'Immediate':
@@ -97,6 +154,12 @@ class PVCSuite(Suite):
             require(claim['status']['phase'] == 'Bound', 'sandbox succeeded without Bound PVC')
             pv = self.kube('get', 'pv', claim['spec']['volumeName'], '-o', 'json')
             self.report['pv'] = {'name': pv['metadata']['name'], 'uid': pv['metadata']['uid']}
+            if self.args.driver_kind == 'native-overlaybd':
+                csi = pv['spec'].get('csi', {})
+                require(csi.get('driver') == OVERLAYBD_DRIVER, 'PV is not served by OverlayBD')
+                state['handle'] = csi.get('volumeHandle', '')
+                self.report['pv']['handle'] = state['handle']
+                self.native_evidence(state['handle'], 'sandbox-A')
 
         def recreate():
             self.api('DELETE', '/sandboxes/' + state['sandbox']['sandboxID'], expected=204)
@@ -106,6 +169,13 @@ class PVCSuite(Suite):
                 'image': self.args.image, 'timeout': 3600,
                 'volumeMounts': self.mounts(state['name'])})
             self.check(state['sandbox'], self.id)
+            if self.args.driver_kind == 'native-overlaybd':
+                claim = self.claim(state['name'])
+                pv = self.kube('get', 'pv', claim['spec']['volumeName'], '-o', 'json')
+                require(pv['metadata']['uid'] == self.report['pv']['uid']
+                        and pv['spec']['csi']['volumeHandle'] == state['handle'],
+                        'PV or backend identity changed between sandboxes')
+                self.native_evidence(state['handle'], 'sandbox-B')
 
         def resume():
             original = state['sandbox']['sandboxID']
@@ -189,7 +259,7 @@ def main():
     p.add_argument('--namespace', required=True)
     p.add_argument('--storage-class', required=True)
     p.add_argument('--pvc', help='use an existing dedicated test PVC instead of creating one')
-    p.add_argument('--driver-kind', choices=['fixture', 'vendor'], required=True)
+    p.add_argument('--driver-kind', choices=['fixture', 'vendor', 'native-overlaybd'], required=True)
     p.add_argument('--api-key-env', default='AENV_API_KEY')
     p.add_argument('--ca')
     p.add_argument('--kubectl', default='kubectl')

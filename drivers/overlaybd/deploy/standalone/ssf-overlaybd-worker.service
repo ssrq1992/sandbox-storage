@@ -1,0 +1,17 @@
+[Unit]
+Description=SSF OverlayBD authenticated repository worker
+After=network-online.target ssf-overlaybd-host.service
+Wants=network-online.target ssf-overlaybd-host.service
+Before=ssf-overlaybd-controller.service
+
+[Service]
+Type=simple
+UMask=0077
+ExecStart=/usr/local/bin/overlaybd-csi -config /etc/ssf-overlaybd/worker.json
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=infinity
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

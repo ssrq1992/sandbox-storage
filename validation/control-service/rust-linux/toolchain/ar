@@ -1,0 +1,4 @@
+#!/usr/local/opt/python@3.14/bin/python3.14
+import os,sys
+args=[arg for arg in sys.argv[1:] if not arg.startswith("--target=")]
+os.execv('/private/tmp/ssf-zig/zig-x86_64-macos-0.17.0/zig', ['/private/tmp/ssf-zig/zig-x86_64-macos-0.17.0/zig', 'ar'] + args)

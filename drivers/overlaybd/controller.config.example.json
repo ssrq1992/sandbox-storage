@@ -1,0 +1,12 @@
+{
+  "role": "controller",
+  "socket": "/run/ssf-overlaybd-controller/csi.sock",
+  "databaseURLFile": "/etc/ssf/database-url",
+  "repositories": [
+    {
+      "id": "agentenv-overlaybd",
+      "socket": "/run/ssf-overlaybd/backend.sock",
+      "nodes": []
+    }
+  ]
+}

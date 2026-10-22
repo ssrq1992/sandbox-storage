@@ -1,0 +1,8 @@
+# Optional: install as offline-expansion.conf only with matching Controller,
+# profile and StorageClass settings. Keep the legacy daemon unchanged.
+[Service]
+ExecStartPre=/usr/bin/test -x /opt/aenv-deps/overlaybd/bin/overlaybd-resize
+ExecStartPre=/usr/bin/test -x /usr/sbin/e2fsck
+ExecStartPre=/usr/bin/test -x /usr/sbin/resize2fs
+ExecStart=
+ExecStart=/usr/local/bin/uvm-ublk-daemon --config /etc/ssf-overlaybd/daemon.toml --socket-path /run/ssf-overlaybd/daemon.sock --global-config /etc/ssf-overlaybd/overlaybd.json --resize-global-config /etc/ssf-overlaybd/resize.json --managed-state-dir /var/lib/ssf/overlaybd/daemon --metrics-listen-addr 127.0.0.1:9106

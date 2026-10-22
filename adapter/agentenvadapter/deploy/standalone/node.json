@@ -10,10 +10,10 @@
   "ca": "/etc/agentenv-storage-tls/ca.crt",
   "plan_public_key": "/etc/agentenv-storage/plan.pub",
   "control_peers": [
-    "spiffe://ssf/agentenv/scheduler"
+    "spiffe://ssf/agentenv/coordinator"
   ],
   "evidence_peers": [
-    "spiffe://ssf/agentenv/scheduler",
+    "spiffe://ssf/agentenv/coordinator",
     "spiffe://ssf/agentenv/ssf-node"
   ],
   "ssf_endpoint": "127.0.0.1:9443",
@@ -22,8 +22,16 @@
   "root": "/var/lib/agentenvadapter",
   "runtime_root": "/var/lib/agentenv-external",
   "device_root": "/var/lib/ssf",
-  "standalone_config": "/etc/agentenv-storage/control.json",
   "native_node_id": "agentenv-host",
   "node_name": "worker-1",
-  "kubeconfig": "/etc/agentenv-storage/kubeconfig"
+  "kubeconfig": "/etc/agentenv-storage/kubeconfig",
+  "standalone": true,
+  "coordinator": {
+    "endpoint": "https://localhost:9446",
+    "cert": "/etc/agentenv-storage-tls/tls.crt",
+    "key": "/etc/agentenv-storage-tls/tls.key",
+    "ca": "/etc/agentenv-storage-tls/ca.crt",
+    "peer": "spiffe://ssf/agentenv/coordinator"
+  },
+  "node_control_key_file": "/etc/agentenv-storage/node-key"
 }

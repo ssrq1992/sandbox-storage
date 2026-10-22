@@ -1,0 +1,72 @@
+{
+  "time": "2026-10-22T04:38:28.202803+00:00",
+  "checks": [
+    {
+      "name": "native-core",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "aenv-volume-core",
+        "--features",
+        "metadata"
+      ],
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "name": "backend-protocol",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "drivers/overlaybd/native/Cargo.toml",
+        "--features",
+        "metadata"
+      ],
+      "exit_code": 0,
+      "status": "passed"
+    }
+  ],
+  "content_feature_executed": false,
+  "ublk_executed": false,
+  "kvm_executed": false,
+  "real_oss_executed": false,
+  "source_sha256": {
+    "AgentENV/storage/volume-core/Cargo.toml": "c2f10bb005c99e865be6f2f738f74c2582aa45a9b6c8e81e29bfd345fdd7a4ac",
+    "AgentENV/storage/volume-core/tests/journal.rs": "5ae06f683a59e1a704865a9b217f5e47864ecbee8ae294ea2e45b0fa64d16a1c",
+    "AgentENV/storage/volume-core/tests/catalog.rs": "c02a0471dad7385faa59212a13aa0c1c4d3f331ae38eba9815b7bd2f929409f1",
+    "AgentENV/storage/volume-core/tests/heads.rs": "2c8b913ad843dd58ba7d1825a4c1d4419359b478e0c607d360123ed72c2cf5d6",
+    "AgentENV/storage/volume-core/tests/object_catalog.rs": "4c6286bb70e90f2e8a5e6735f7a0210345469195fec1881b7fdc0f1dd2648c19",
+    "AgentENV/storage/volume-core/src/compact.rs": "d5bfc39f2de7f4e44f72ddfabbb7a9049928b6c9ebabbe24e927433c0173a93b",
+    "AgentENV/storage/volume-core/src/recontainerize.rs": "6e30a38c7d31046acdacaa12b7377e5548fbe609ea939fe011e3259c133f6675",
+    "AgentENV/storage/volume-core/src/journal.rs": "9ddf4eaaa21383a2e5af1b37d8e4aa3da0b35b628683b45222a48e25a5f9dcfc",
+    "AgentENV/storage/volume-core/src/lib.rs": "81734724a5e9f067b6ba14a3646921b43a29cd4acdeda73577ea70831e1bba40",
+    "AgentENV/storage/volume-core/src/object.rs": "be2fbb4ef566e4aa8923f4d1f597f9f40e4becd8f307cdfac3c33d64dca60d9b",
+    "AgentENV/storage/volume-core/src/digest.rs": "cf3c27f3614efc8d0340f9544a9c9416afadeda23b0c29ac0b5212081cc5452a",
+    "AgentENV/storage/volume-core/src/catalog.rs": "7d290b9763b2ba0e431c8071b476d294be53cdeb9b08edb1f4a65b42b48ea6de",
+    "AgentENV/storage/volume-core/src/head_repository.rs": "e447df813e276ab148dc1a98776261bd6916c9951e904abf5e2752ce1f435da8",
+    "AgentENV/storage/volume-core/src/heads.rs": "e96a9ff8d705e4823a2d8b5b8b6a15ad59d13e481343d309a643d15e81c44873",
+    "AgentENV/storage/volume-core/src/posix.rs": "07e515c395e0eb615cfeae109b5fe8863e071da4ce7f4d5f9569725e2eb1a6c1",
+    "AgentENV/storage/volume-core/src/layers.rs": "e4c9d946e07225a0586a87b30dd51cd9ebb75066c56a5686c8a903d726d6e723",
+    "AgentENV/storage/volume-core/src/repositories.rs": "7a0c1629e67e210ba284e1d609ff1259dc1e48430f082cc3c1f2ee724d7172dd",
+    "AgentENV/storage/volume-core/src/object_layers.rs": "4f2f2c65e0abf16255a1af8267091a792a7bb34ad47397bed3ddb51a78a2e9c9",
+    "AgentENV/storage/volume-core/src/model.rs": "7bdb8dfd115c69ec5c534aba19ba4312c016d0f2163af23bb6c7ccf0512f5b48",
+    "AgentENV/storage/volume-core/src/materialize.rs": "9dd8d0486ba23f86eaec2536b38baddea89d6252403b0b5defa6c2790de153ac",
+    "AgentENV/storage/volume-core/src/content.rs": "7f157b45323d9fa0c999efb1642eb267aecd52673f2b2c5d72184aac14761bd3",
+    "AgentENV/storage/volume-core/src/engine.rs": "ce70aa18cc5d44278c51ecfddbe763df25e1d9dd19e580dc1f62742379b91259",
+    "sandbox-storage/drivers/overlaybd/native/Cargo.toml": "bcd1f905df3da7b2589c7e1594be7f7493e2b9cbbdd0b2a3a8331fed9adf48e6",
+    "sandbox-storage/drivers/overlaybd/native/Cargo.lock": "efd6331427c50bd93819318bb04540409ff77523bfdb9b9b2f7df629c31ae359",
+    "sandbox-storage/drivers/overlaybd/native/build.rs": "69a511c0be11f33db10dbef2ea3b1ff9b0a9f1f89e33fbe6665256b28a09aaf1",
+    "sandbox-storage/drivers/overlaybd/native/src/volume_host.rs": "429e4b002a4bea16cdbadb163c9cb12acef7cf421312331ed8a800228f3fcf26",
+    "sandbox-storage/drivers/overlaybd/native/src/lib.rs": "e3bfd95d394f641dd4f513e22455195c059e4e80d529349035cc91d25bbc3d82",
+    "sandbox-storage/drivers/overlaybd/native/src/intent.rs": "8b751520dfcd1dd05337b610496a2be647ced44e38c95b96205bc5ff200feeb3",
+    "sandbox-storage/drivers/overlaybd/native/src/service.rs": "31dfe611150b9031da07ac3c81036e7c6f982419e9a8260b33e499cb768677d3",
+    "sandbox-storage/drivers/overlaybd/native/src/main.rs": "d9f1c22dfe0e3765c56f724b30fe076af53a90ec1ed40af6499482b7637af5db",
+    "sandbox-storage/drivers/overlaybd/native/src/device_host.rs": "e528c8cc6a3888fb6c4a9f2fa296a935cbd415ec1ae053533151dbdd2ff2a30c"
+  }
+}

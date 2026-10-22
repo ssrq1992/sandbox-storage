@@ -6,12 +6,17 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"reflect"
+	"slices"
 
 	admission "k8s.io/api/admission/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	kube "ssf.dev/ssf/kubernetes"
 )
+
+type directSnapshotPermits interface {
+	DirectSnapshotDeletionPending(context.Context, string) (bool, error)
+}
 
 type snapshotPermits interface {
 	SnapshotDeleteAllowed(context.Context, string) (bool, error)
@@ -85,6 +90,20 @@ func (h *Handler) checkSnapshot(ctx context.Context, r *admission.AdmissionReque
 		}
 	}
 	if r.Operation == admission.Delete {
+
+		if direct, ok := h.Ledger.(directSnapshotPermits); ok {
+			allowed, err := direct.DirectSnapshotDeletionPending(ctx, string(old.GetUID()))
+			if err != nil {
+				return false, "direct snapshot authority unavailable"
+			}
+			finalizer := kube.SnapshotBoundFinalizer
+			if r.Kind.Kind == "VolumeSnapshotContent" {
+				finalizer = kube.SnapshotContentBoundFinalizer
+			}
+			if allowed && slices.Contains(old.GetFinalizers(), finalizer) {
+				return true, ""
+			}
+		}
 		p, ok := h.Ledger.(snapshotPermits)
 		if !ok {
 			return false, "checkpoint authority unavailable"
@@ -96,6 +115,14 @@ func (h *Handler) checkSnapshot(ctx context.Context, r *admission.AdmissionReque
 		return true, ""
 	}
 	if r.Operation == admission.Update {
+		// Native finalizers are storage ownership barriers. Ordinary callers
+		// must not remove one even when deletion has previously been approved.
+		for _, finalizer := range old.GetFinalizers() {
+			if !slices.Contains(next.GetFinalizers(), finalizer) && !slices.Contains(h.SnapshotControllerUsers, r.UserInfo.Username) {
+				return false, "snapshot finalizer removal requires trusted snapshot controller"
+			}
+		}
+
 		if old.GetLabels()[kube.ManagedLabel] == "true" && next.GetLabels()[kube.ManagedLabel] != "true" {
 			return false, "cannot remove checkpoint protection"
 		}

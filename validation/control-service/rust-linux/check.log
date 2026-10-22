@@ -1,0 +1,36 @@
+warning: use of deprecated method `std::sync::atomic::Atomic::<i64>::fetch_update`: renamed to `try_update` for consistency
+   --> storage/overlaybd/src/download_gate.rs:187:10
+    |
+187 |         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+    |          ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+187 -         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+187 +         .try_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+    |
+
+warning: `overlaybd` (lib) generated 1 warning (run `cargo fix --lib -p overlaybd` to apply 1 suggestion)
+   Compiling agentenv v0.2.3 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV)
+warning: unused imports: `ManagedMount` and `VolumeReference`
+ --> src/sandbox/storage/mod.rs:8:43
+  |
+8 | pub use agentenv_storage_plugin::{freeze, ManagedMount, StorageContext, VolumeReference};
+  |                                           ^^^^^^^^^^^^                  ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `VolumeReference`
+ --> src/sandbox/storage/mod.rs:8:73
+  |
+8 | pub use agentenv_storage_plugin::{freeze, ManagedMount, StorageContext, VolumeReference};
+  |                                                                         ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `agentenv` (lib) generated 1 warning (run `cargo fix --lib -p agentenv` to apply 1 suggestion)
+warning: `agentenv` (lib test) generated 1 warning (run `cargo fix --lib -p agentenv --tests` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 09s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`

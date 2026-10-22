@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	api "ssf.dev/ssf/api/ssf/v1"
 	"ssf.dev/ssf/consume"
 	"ssf.dev/ssf/core"
 	kube "ssf.dev/ssf/kubernetes"
@@ -78,6 +79,7 @@ type NativeDispatch struct {
 }
 
 type NativeControl struct {
+	CaptureNode      func(context.Context, core.Placement) (api.RuntimeStorageNodeClient, error)
 	DefaultNamespace string
 	Preparation      *preparation.Coordinator
 	Ledger           *ledger.Store
@@ -104,6 +106,9 @@ func (c *NativeControl) coordinator(a *NativeAdmission, endpoint string) *consum
 	return co
 }
 func (c *NativeControl) Prepare(ctx context.Context, q NativeIntent, candidates []NativeCandidate, choose func([]NativeCandidate) (NativeCandidate, error)) (NativeDispatch, error) {
+	return c.prepareLaunch(ctx, q, candidates, choose, false)
+}
+func (c *NativeControl) prepareLaunch(ctx context.Context, q NativeIntent, candidates []NativeCandidate, choose func([]NativeCandidate) (NativeCandidate, error), resolveOnly bool) (NativeDispatch, error) {
 	var out NativeDispatch
 	if q.RequestID == "" || q.Tenant != c.Principal.Tenant || q.BodyDigest != core.Hash(string(q.Body)) {
 		return out, errors.New("invalid authenticated native intent")
@@ -146,6 +151,113 @@ func (c *NativeControl) Prepare(ctx context.Context, q NativeIntent, candidates 
 		if err != nil {
 			return err
 		}
+		var resolved nativeResolved
+		err = c.Ledger.Step(ctx, "agentenv/resolved/"+q.RequestID, core.Digest(q), func(ctx context.Context) (any, error) { return c.resolveNative(ctx, q, owner, run, candidates) }, &resolved)
+		if err != nil {
+			return err
+		}
+		out = resolved.Dispatch
+		out.OwnerUID, out.RunUID = owner, run
+		coreMounts, volumes := resolved.Mounts, resolved.Volumes
+		if resolveOnly {
+			return nil
+		}
+		if q.FixedNode != "" {
+			filtered := []NativeCandidate{}
+			for _, n := range candidates {
+				if n.ID == q.FixedNode {
+					filtered = append(filtered, n)
+				}
+			}
+			candidates = filtered
+		}
+		admission := &NativeAdmission{Ledger: c.Ledger, Kube: c.Kube, Candidates: candidates, Resources: out.Resources, Choose: choose, Refresh: c.Refresh}
+		if len(coreMounts) > 0 {
+			out.Result, err = c.coordinator(admission, "").Prepare(ctx, consume.Request{ID: q.RequestID, Tenant: q.Tenant, Sandbox: run, OwnerUID: owner, RunUID: run, Mounts: coreMounts})
+			if err != nil {
+				return err
+			}
+			out.Reservation = out.Result.Placement
+			for _, b := range out.Result.Plan.Bindings {
+				var boundVolume NativeVolume
+				for _, volume := range volumes {
+					if volume.PVC == b.Volume.PVC {
+						boundVolume = volume
+						break
+					}
+				}
+				if boundVolume.Name == "" {
+					return core.ErrConflict
+				}
+				var initialize bool
+				var e error
+				if _, prepared := out.Result.Plan.PreparedVolumes[b.ID]; !prepared {
+					initialize, e = c.Volumes.AuthorizeInitialization(ctx, q.Tenant, boundVolume.Name, out.Result.Operation)
+				}
+				if e != nil {
+					return e
+				}
+				out.Initialize[b.ID] = initialize
+				current, e := c.Volumes.Get(ctx, q.Tenant, boundVolume.Name)
+				if e != nil {
+					return e
+				}
+				if current.PVC != boundVolume.PVC || current.State == "Expanding" {
+					return core.ErrPending
+				}
+				if current.ExpansionTarget > 0 {
+					out.Expand[b.ID] = current.ExpansionTarget
+				}
+			}
+		} else {
+			out.Reservation, err = admission.Reserve(ctx, "native/"+q.RequestID, nil)
+			if err != nil {
+				return err
+			}
+		}
+		reservation, err := admission.load(ctx, out.Reservation.ID)
+		if err != nil {
+			return err
+		}
+		out.Candidate = reservation.Candidate
+		out.Resources = reservation.Resources
+		raw, err = json.Marshal(out)
+		if err != nil {
+			return err
+		}
+		if len(raw) > NativeMaxPlanBytes {
+			// Persist a no-dispatch tombstone before compensation. Unlike a
+			// failed HTTP request, this branch provably never returned a plan.
+			_, err = c.Ledger.Session(ctx).Exec(ctx, `UPDATE agentenv_native_runs SET state='Unpublished',dispatch=$2,updated=now() WHERE id=$1`, q.RequestID, raw)
+			if err != nil {
+				return err
+			}
+			if err = c.abortNativeUnpublished(ctx, q.RequestID); err != nil {
+				return err
+			}
+			return errors.New("native storage plan exceeds negotiated size limit")
+		}
+		// Returning a dispatch crosses an uncertain transport boundary. Never
+		// classify it as unstarted merely because Gateway disconnected or timed out.
+		_, err = c.Ledger.Session(ctx).Exec(ctx, `UPDATE agentenv_native_runs SET state='Dispatched',dispatch=$2,updated=now() WHERE id=$1`, q.RequestID, raw)
+		return err
+	})
+	return out, err
+}
+
+// Immutable resolution is persisted separately from compute admission. Both RPC
+// phases and local lifecycle admission use exactly this implementation.
+type nativeResolved struct {
+	Dispatch NativeDispatch
+	Mounts   []core.Mount
+	Volumes  []NativeVolume
+}
+
+func (c *NativeControl) resolveNative(ctx context.Context, q NativeIntent, owner, run string, candidates []NativeCandidate) (nativeResolved, error) {
+	var resolved nativeResolved
+	var out NativeDispatch
+	var err error
+	resolve := func() error {
 		var body struct {
 			CPU      *int64          `json:"cpuCount"`
 			Memory   *int64          `json:"memoryMB"`
@@ -383,80 +495,16 @@ func (c *NativeControl) Prepare(ctx context.Context, q NativeIntent, candidates 
 			}
 			candidates = filtered
 		}
-		admission := &NativeAdmission{Ledger: c.Ledger, Kube: c.Kube, Candidates: candidates, Resources: resources, Choose: choose, Refresh: c.Refresh}
 		out = NativeDispatch{ReplaceMounts: replaceMounts, Relocations: relocations, ExpectedNativeID: q.ExpectedNativeID, CheckpointSource: checkpointSource, CheckpointReference: checkpointReference, VolumeNames: volumeNames, MountIDs: mountIDs, RequestID: q.RequestID, OwnerUID: owner, RunUID: run, BodyDigest: q.BodyDigest, TemplatePin: pin, Resources: resources, ManagedMounts: managed, Initialize: map[string]bool{}, Expand: map[string]int64{}}
-		if len(coreMounts) > 0 {
-			out.Result, err = c.coordinator(admission, "").Prepare(ctx, consume.Request{ID: q.RequestID, Tenant: q.Tenant, Sandbox: run, OwnerUID: owner, RunUID: run, Mounts: coreMounts})
-			if err != nil {
-				return err
-			}
-			out.Reservation = out.Result.Placement
-			for _, b := range out.Result.Plan.Bindings {
-				var boundVolume NativeVolume
-				for _, volume := range volumes {
-					if volume.PVC == b.Volume.PVC {
-						boundVolume = volume
-						break
-					}
-				}
-				if boundVolume.Name == "" {
-					return core.ErrConflict
-				}
-				var initialize bool
-				var e error
-				if _, prepared := out.Result.Plan.PreparedVolumes[b.ID]; !prepared {
-					initialize, e = c.Volumes.AuthorizeInitialization(ctx, q.Tenant, boundVolume.Name, out.Result.Operation)
-				}
-				if e != nil {
-					return e
-				}
-				out.Initialize[b.ID] = initialize
-				current, e := c.Volumes.Get(ctx, q.Tenant, boundVolume.Name)
-				if e != nil {
-					return e
-				}
-				if current.PVC != boundVolume.PVC || current.State == "Expanding" {
-					return core.ErrPending
-				}
-				if current.ExpansionTarget > 0 {
-					out.Expand[b.ID] = current.ExpansionTarget
-				}
-			}
-		} else {
-			out.Reservation, err = admission.Reserve(ctx, "native/"+q.RequestID, nil)
-			if err != nil {
-				return err
-			}
-		}
-		reservation, err := admission.load(ctx, out.Reservation.ID)
-		if err != nil {
-			return err
-		}
-		out.Candidate = reservation.Candidate
-		out.Resources = reservation.Resources
-		raw, err = json.Marshal(out)
-		if err != nil {
-			return err
-		}
-		if len(raw) > NativeMaxPlanBytes {
-			// Persist a no-dispatch tombstone before compensation. Unlike a
-			// failed HTTP request, this branch provably never returned a plan.
-			_, err = c.Ledger.Session(ctx).Exec(ctx, `UPDATE agentenv_native_runs SET state='Unpublished',dispatch=$2,updated=now() WHERE id=$1`, q.RequestID, raw)
-			if err != nil {
-				return err
-			}
-			if err = c.abortNativeUnpublished(ctx, q.RequestID); err != nil {
-				return err
-			}
-			return errors.New("native storage plan exceeds negotiated size limit")
-		}
-		// Returning a dispatch crosses an uncertain transport boundary. Never
-		// classify it as unstarted merely because Gateway disconnected or timed out.
-		_, err = c.Ledger.Session(ctx).Exec(ctx, `UPDATE agentenv_native_runs SET state='Dispatched',dispatch=$2,updated=now() WHERE id=$1`, q.RequestID, raw)
-		return err
-	})
-	return out, err
+
+		resolved = nativeResolved{Dispatch: out, Mounts: coreMounts, Volumes: volumes}
+		return nil
+
+	}
+	err = resolve()
+	return resolved, err
 }
+
 func (c *NativeControl) Dispatch(ctx context.Context, requestID string) (NativeDispatch, error) {
 	var out NativeDispatch
 	var raw []byte

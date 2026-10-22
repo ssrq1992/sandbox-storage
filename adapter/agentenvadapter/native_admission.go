@@ -28,6 +28,8 @@ type NativeCandidate struct {
 	SandboxIDs []string  `json:"sandbox_ids"`
 }
 
+var ErrNativeCapacity = errors.New("no native node has compatible storage and compute capacity")
+
 type NativeReservation struct {
 	RequestedResources Resources       `json:"requested_resources"`
 	Placement          core.Placement  `json:"placement"`
@@ -54,6 +56,9 @@ CREATE TABLE IF NOT EXISTS agentenv_native_runs (
 );
 ALTER TABLE agentenv_native_runs ADD COLUMN IF NOT EXISTS ever_ready boolean NOT NULL DEFAULT true;
 ALTER TABLE agentenv_native_runs ALTER COLUMN ever_ready SET DEFAULT false;
+CREATE TABLE IF NOT EXISTS agentenv_native_direct_captures (
+ id text PRIMARY KEY, request_id text NOT NULL, barrier text NOT NULL, binding_id text NOT NULL, descriptor jsonb NOT NULL, UNIQUE(request_id,barrier)
+);
 CREATE TABLE IF NOT EXISTS agentenv_native_retired_captures(request_id text NOT NULL,barrier_id text NOT NULL,PRIMARY KEY(request_id,barrier_id));
 CREATE TABLE IF NOT EXISTS agentenv_native_publications (
  tenant text NOT NULL, repository_id text NOT NULL, native_id text NOT NULL, reference text NOT NULL,
@@ -130,30 +135,9 @@ func (p *NativeAdmission) Reserve(ctx context.Context, id string, volumes []core
 		} else if !errors.Is(err, pgx.ErrNoRows) {
 			return err
 		}
-		candidates := make([]NativeCandidate, 0, len(p.Candidates))
-		for _, candidate := range p.Candidates {
-			n, err := p.Refresh(ctx, candidate)
-			if err != nil {
-				return err
-			}
-			suitable := true
-			for _, v := range volumes {
-				if v.Handle == "" {
-					err = p.Kube.CheckPendingTopology(ctx, v.PVC, n.KubeNode)
-				} else {
-					err = p.Kube.CheckTopology(ctx, v, n.KubeNode)
-				}
-				if errors.Is(err, kube.ErrTopology) || errors.Is(err, core.ErrPending) {
-					suitable = false
-					break
-				}
-				if err != nil {
-					return err
-				}
-			}
-			if suitable {
-				candidates = append(candidates, n)
-			}
+		candidates, err := p.Feasible(ctx, volumes)
+		if err != nil {
+			return err
 		}
 		for len(candidates) > 0 {
 			candidate, err := p.Choose(candidates)
@@ -216,7 +200,7 @@ func (p *NativeAdmission) Reserve(ctx context.Context, id string, volumes []core
 			}
 			candidates = append(candidates[:index], candidates[index+1:]...)
 		}
-		return errors.New("no native node has compatible storage and compute capacity")
+		return ErrNativeCapacity
 	})
 	return result, err
 }
@@ -224,6 +208,17 @@ func (p *NativeAdmission) Validate(ctx context.Context, placement core.Placement
 	r, err := p.load(ctx, placement.ID)
 	if err != nil {
 		return err
+	}
+	if len(p.Candidates) > 0 {
+		matched := false
+		for _, n := range p.Candidates {
+			if n.ID == r.Candidate.ID {
+				matched = true
+			}
+		}
+		if !matched {
+			return core.ErrConflict
+		}
 	}
 	if r.State == "Released" || r.Placement.Node != placement.Node || r.Placement.NodeUID != placement.NodeUID || r.Placement.BootID != placement.BootID {
 		return core.ErrConflict
@@ -295,4 +290,34 @@ func fitsNativeCapacity(capacity, allocated, pending, request Resources) bool {
 		return want <= remaining-reserved
 	}
 	return fits(capacity.CPU, allocated.CPU, pending.CPU, request.CPU) && fits(capacity.MemoryMiB, allocated.MemoryMiB, pending.MemoryMiB, request.MemoryMiB)
+}
+
+func (p *NativeAdmission) Feasible(ctx context.Context, volumes []core.Volume) ([]NativeCandidate, error) {
+	candidates := make([]NativeCandidate, 0, len(p.Candidates))
+	for _, candidate := range p.Candidates {
+		n, err := p.Refresh(ctx, candidate)
+		if err != nil {
+			return nil, err
+		}
+		suitable := true
+		for _, v := range volumes {
+			if v.Handle == "" {
+				err = p.Kube.CheckPendingTopology(ctx, v.PVC, n.KubeNode)
+			} else {
+				err = p.Kube.CheckTopology(ctx, v, n.KubeNode)
+			}
+			if errors.Is(err, kube.ErrTopology) || errors.Is(err, core.ErrPending) {
+				suitable = false
+				break
+			}
+			if err != nil {
+				return nil, err
+			}
+		}
+		if suitable {
+			candidates = append(candidates, n)
+		}
+	}
+
+	return candidates, nil
 }

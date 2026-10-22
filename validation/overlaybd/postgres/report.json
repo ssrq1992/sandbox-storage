@@ -1,0 +1,17 @@
+{
+  "scope": "postgres-ledger-native-plugin-and-overlaybd-journal-with-fixtures",
+  "time": "2026-10-22T11:30:14.326792+00:00",
+  "real_csi": false,
+  "real_kvm": false,
+  "status": "passed",
+  "exit_code": 0,
+  "skipped_tests": [],
+  "consumer_role_schema_access": "passed",
+  "idle_capture_invariant_detected": true,
+  "invariant_tool": {
+    "clean_exit": 0,
+    "corrupt_fixture_exit": 1,
+    "status": "passed"
+  },
+  "shutdown_exit_code": 0
+}

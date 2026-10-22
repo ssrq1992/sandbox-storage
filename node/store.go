@@ -12,13 +12,15 @@ import (
 )
 
 type Record struct {
-	Preparation *core.PreparationReceipt `json:",omitempty"`
-	Plan        core.Plan
-	Digest      string
-	State       string
-	Steps       map[string]string
-	Endpoints   []core.Endpoint
-	Reason      string
+	SignedPlan      string                   `json:",omitempty"`
+	ReleaseEvidence string                   `json:",omitempty"`
+	Preparation     *core.PreparationReceipt `json:",omitempty"`
+	Plan            core.Plan
+	Digest          string
+	State           string
+	Steps           map[string]string
+	Endpoints       []core.Endpoint
+	Reason          string
 }
 type WAL struct{ DB *bolt.DB }
 

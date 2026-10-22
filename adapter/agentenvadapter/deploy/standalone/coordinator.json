@@ -1,0 +1,16 @@
+{
+  "listen": "127.0.0.1:9446",
+  "health_listen": "127.0.0.1:9096",
+  "tls": {
+    "endpoint": "",
+    "cert": "/etc/agentenv-storage-coordinator-tls/tls.crt",
+    "key": "/etc/agentenv-storage-coordinator-tls/tls.key",
+    "ca": "/etc/agentenv-storage-coordinator-tls/ca.crt",
+    "peer": ""
+  },
+  "node_peers": [
+    "spiffe://ssf/agentenv/node"
+  ],
+  "scheduler_peers": [],
+  "runtime_config": "/etc/agentenv-storage/control.json"
+}

@@ -1,0 +1,22 @@
+[Unit]
+Description=Dedicated SSF OverlayBD ublk device owner
+After=local-fs.target
+Before=ssf-overlaybd-host.service
+
+[Service]
+Type=simple
+UMask=0077
+RuntimeDirectory=ssf-overlaybd
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
+ExecStart=/usr/local/bin/uvm-ublk-daemon --socket-path /run/ssf-overlaybd/daemon.sock --global-config /etc/ssf-overlaybd/overlaybd.json --resize-global-config /etc/ssf-overlaybd/resize.json --managed-state-dir /var/lib/ssf/overlaybd/daemon --metrics-listen-addr 127.0.0.1:9106
+Restart=on-failure
+RestartSec=5
+KillSignal=SIGTERM
+# A live managed session must finish publication/release before exit. Never
+# escalate a drain timeout to SIGKILL and silently discard the device owner.
+TimeoutStopSec=infinity
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

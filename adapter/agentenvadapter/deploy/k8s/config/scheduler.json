@@ -1,0 +1,8 @@
+{
+  "endpoint": "https://ssf-coordinator.agentenv-system.svc:9446",
+  "cert": "/etc/agentenv-storage-tls/tls.crt",
+  "key": "/etc/agentenv-storage-tls/tls.key",
+  "ca": "/etc/agentenv-storage-tls/ca.crt",
+  "peer": "spiffe://ssf/agentenv/coordinator",
+  "observe_listen": ":9447"
+}

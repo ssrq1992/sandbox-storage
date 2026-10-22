@@ -1,0 +1,355 @@
+    Checking cfg-if v1.0.4
+    Checking libc v0.2.184
+    Checking pin-project-lite v0.2.17
+    Checking scopeguard v1.2.0
+    Checking log v0.4.29
+    Checking lock_api v0.4.14
+    Checking memchr v2.8.0
+    Checking itoa v1.0.18
+    Checking futures-core v0.3.32
+    Checking slab v0.4.12
+    Checking futures-sink v0.3.32
+    Checking futures-channel v0.3.32
+    Checking futures-task v0.3.32
+    Checking foldhash v0.2.0
+    Checking tracing v0.1.44
+    Checking equivalent v1.0.2
+    Checking futures-util v0.3.32
+    Checking http v1.4.0
+    Checking stable_deref_trait v1.2.1
+    Checking hashbrown v0.16.1
+    Checking parking_lot_core v0.9.12
+    Checking socket2 v0.6.3
+    Checking errno v0.3.14
+    Checking parking_lot v0.12.5
+    Checking signal-hook-registry v1.4.8
+    Checking mio v1.2.0
+    Checking percent-encoding v2.3.2
+    Checking bitflags v2.11.0
+    Checking zerofrom v0.1.7
+    Checking indexmap v2.13.1
+    Checking yoke v0.8.2
+    Checking tokio v1.51.0
+    Checking zerovec v0.11.6
+    Checking form_urlencoded v1.2.2
+    Checking base64 v0.22.1
+    Checking rand_core v0.10.0
+    Checking tinystr v0.8.3
+    Checking getrandom v0.2.17
+    Checking litemap v0.8.2
+    Checking writeable v0.6.3
+    Checking atomic-waker v1.1.2
+    Checking icu_locale_core v2.2.0
+    Checking httparse v1.10.1
+   Compiling aws-lc-sys v0.45.0
+    Checking potential_utf v0.1.5
+    Checking zerotrie v0.2.4
+    Checking utf8_iter v1.0.4
+    Checking fnv v1.0.7
+    Checking icu_collections v2.2.0
+    Checking icu_provider v2.2.0
+   Compiling ring v0.17.14
+    Checking http-body v1.0.1
+    Checking thiserror v2.0.18
+    Checking icu_properties_data v2.2.0
+    Checking icu_normalizer_data v2.2.0
+    Checking tower-service v0.3.3
+    Checking untrusted v0.9.0
+    Checking icu_normalizer v2.2.0
+    Checking icu_properties v2.2.0
+    Checking tokio-util v0.7.18
+    Checking try-lock v0.2.5
+    Checking cpufeatures v0.3.0
+    Checking httpdate v1.0.3
+    Checking want v0.3.1
+    Checking idna_adapter v1.2.1
+    Checking h2 v0.4.13
+    Checking idna v1.1.0
+    Checking cpufeatures v0.2.17
+    Checking url v2.5.8
+    Checking http-body-util v0.1.3
+    Checking openssl-probe v0.2.1
+    Checking getrandom v0.4.2
+    Checking ryu v1.0.23
+    Checking tower-layer v0.3.3
+    Checking zmij v1.0.21
+    Checking chacha20 v0.10.0
+    Checking sync_wrapper v1.0.2
+    Checking zerocopy v0.8.48
+    Checking hyper v1.9.0
+    Checking hyper-util v0.1.20
+    Checking rand v0.10.1
+    Checking serde_json v1.0.149
+    Checking tower v0.5.3
+    Checking rustls-native-certs v0.8.3
+    Checking serde_urlencoded v0.7.1
+    Checking mime v0.3.17
+    Checking ppv-lite86 v0.2.21
+    Checking const-oid v0.9.6
+    Checking digest v0.10.7
+    Checking fastrand v2.4.0
+    Checking encoding_rs v0.8.35
+    Checking crossbeam-utils v0.8.21
+    Checking getrandom v0.3.4
+    Checking iri-string v0.7.12
+    Checking sha1 v0.10.6
+    Checking openssl-sys v0.9.117
+    Checking spin v0.9.8
+    Checking openssl v0.10.81
+    Checking sha1_smol v1.0.1
+    Checking rand_core v0.9.5
+    Checking powerfmt v0.2.0
+    Checking deranged v0.5.8
+    Checking tower-http v0.6.8
+    Checking pin-project v1.1.11
+    Checking uuid v1.23.0
+    Checking futures-executor v0.3.32
+    Checking num-conv v0.2.1
+    Checking time-core v0.1.8
+    Checking mime_guess v2.0.5
+    Checking time v0.3.47
+    Checking futures v0.3.32
+    Checking rand_chacha v0.9.0
+    Checking byteorder v1.5.0
+    Checking rand v0.9.5
+    Checking native-tls v0.2.18
+    Checking futures-lite v2.6.1
+    Checking tokio-native-tls v0.3.1
+    Checking hyper-tls v0.6.0
+    Checking iana-time-zone v0.1.65
+   Compiling zstd-sys v2.0.16+zstd.1.5.7
+    Checking chrono v0.4.44
+    Checking anyhow v1.0.102
+    Checking crypto-common v0.2.2
+    Checking crossbeam-channel v0.5.15
+    Checking crossbeam-epoch v0.9.18
+    Checking futures-buffered v0.2.13
+    Checking tungstenite v0.28.0
+   Compiling sha2-asm v0.6.4
+    Checking digest v0.11.3
+    Checking hashbrown v0.14.5
+    Checking polyval v0.6.2
+    Checking n0-future v0.3.2
+    Checking multer v3.1.0
+    Checking tokio-tungstenite v0.28.0
+    Checking backon v1.6.0
+    Checking axum-core v0.5.6
+    Checking tokio-stream v0.1.18
+    Checking rand_core v0.6.4
+    Checking signature v3.0.0
+    Checking aho-corasick v1.1.4
+    Checking serde_path_to_error v0.1.20
+    Checking linux-raw-sys v0.12.1
+    Checking matchit v0.8.4
+    Checking axum v0.8.8
+    Checking rustix v1.1.4
+    Checking regex-automata v0.4.14
+    Checking curve25519-dalek v5.0.0
+   Compiling lz4-sys v1.11.1+lz4-1.10.0
+    Checking ed25519 v3.0.0
+    Checking rand_chacha v0.3.1
+    Checking sha2 v0.10.9
+    Checking ordered-multimap v0.7.3
+    Checking noq-udp v1.2.0
+    Checking ghash v0.5.1
+    Checking sha2 v0.11.0
+    Checking aes v0.8.4
+    Checking hash32 v0.2.1
+    Checking rapidhash v4.4.1
+    Checking netlink-sys v0.8.8
+    Checking hex v0.4.3
+    Checking aes-gcm v0.10.3
+    Checking metrics v0.24.6
+    Checking ed25519-dalek v3.0.0
+    Checking heapless v0.7.17
+    Checking fastbloom v0.17.0
+    Checking rust-ini v0.21.3
+    Checking rand v0.8.8
+    Checking hickory-proto v0.26.1
+    Checking arc-swap v1.9.1
+    Checking hmac v0.12.1
+    Checking cobs v0.3.0
+    Checking rand_pcg v0.10.2
+    Checking quick-xml v0.37.5
+    Checking home v0.5.12
+   Compiling zstd-safe v7.2.4
+    Checking moka v0.12.15
+    Checking postcard v1.1.3
+    Checking iroh-base v1.0.3
+    Checking crc32c v0.6.8
+    Checking nix v0.30.1
+    Checking netlink-proto v0.12.0
+    Checking netlink-packet-route v0.31.0
+    Checking md-5 v0.10.6
+    Checking quick-xml v0.38.4
+    Checking lazy_static v1.5.0
+    Checking utf8parse v0.2.2
+    Checking blake3 v1.8.7
+    Checking hashbrown v0.17.1
+    Checking anstyle-parse v1.0.0
+    Checking string_cache v0.9.0
+    Checking iroh-metrics v1.0.1
+    Checking io-uring v0.7.11
+    Checking n0-watcher v1.0.0
+    Checking attohttpc v0.30.1
+    Checking simple-dns v0.11.3
+    Checking raw-cpuid v11.6.0
+    Checking is_terminal_polyfill v1.70.2
+    Checking anstyle v1.0.14
+    Checking anstyle-query v1.1.5
+    Checking netdev v0.46.1
+    Checking colorchoice v1.0.5
+    Checking bytemuck v1.25.0
+    Checking roaring v0.10.12
+    Checking netwatch v0.19.2
+    Checking quanta v0.12.6
+    Checking anstream v1.0.0
+    Checking igd-next v0.17.1
+    Checking storage-util v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/storage/util)
+    Checking web_atoms v0.2.6
+    Checking zstd v0.13.3
+    Checking lru v0.18.2
+    Checking sharded-slab v0.1.7
+    Checking matchers v0.2.0
+    Checking dashmap v6.1.0
+    Checking rand_xoshiro v0.7.0
+    Checking left-right v0.11.7
+    Checking tracing-log v0.2.0
+    Checking thread_local v1.1.9
+    Checking sketches-ddsketch v0.3.1
+    Checking nu-ansi-term v0.50.3
+    Checking winnow v1.0.1
+    Checking strsim v0.11.1
+    Checking hashbag v0.1.13
+    Checking clap_lex v1.1.0
+    Checking nom v7.1.3
+    Checking clap_builder v4.6.0
+    Checking toml_parser v1.1.2+spec-1.1.0
+    Checking evmap v11.0.0
+    Checking papaya v0.2.5
+    Checking tracing-subscriber v0.3.23
+    Checking metrics-util v0.20.4
+    Checking markup5ever v0.39.0
+    Checking portmapper v0.19.2
+    Checking ahash v0.8.12
+    Checking tempfile v3.27.0
+    Checking yasna v0.6.0
+    Checking hyper-timeout v0.5.2
+    Checking pem v3.0.6
+    Checking headers-core v0.3.0
+    Checking gethostname v0.2.3
+    Checking tracing-log v0.1.4
+    Checking winnow v0.7.15
+    Checking toml_writer v1.1.1+spec-1.1.0
+    Checking tracing-bunyan-formatter v0.3.10
+    Checking genawaiter v0.99.1
+    Checking rcgen v0.14.9
+    Checking headers v0.4.1
+    Checking tonic v0.14.5
+    Checking clap v4.6.0
+   Compiling librocksdb-sys v0.17.3+10.4.2
+    Checking toml v0.9.12+spec-1.1.0
+    Checking libublk-rs-sys v0.1.0 (https://github.com/ublk-org/libublk-rs.git?rev=c6a3e06#c6a3e069)
+    Checking html5ever v0.39.0
+    Checking nix v0.31.2
+    Checking cookie v0.18.1
+    Checking cssparser v0.37.0
+    Checking regex v1.12.3
+    Checking iroh-io v0.6.2
+    Checking serde_html_form v0.2.8
+    Checking positioned-io v0.3.5
+    Checking bao-tree v0.16.0
+    Checking axum-extra v0.12.5
+    Checking ammonia v4.1.4
+    Checking nom-derive v0.10.1
+    Checking validator v0.20.0
+    Checking tonic-prost v0.14.5
+    Checking serde_with v3.21.0
+    Checking tikv-jemalloc-sys v0.6.1+5.3.0-1-ge13ca993e8ccb9ba9847cc330696e02839f328f7
+    Checking crc32fast v1.5.0
+    Checking rusticata-macros v4.1.0
+    Checking iroh-tickets v1.0.0
+    Checking reflink-copy v0.1.30
+    Checking xattr v1.6.1
+    Checking netlink-packet-route v0.28.0
+    Checking filetime v0.2.27
+    Checking linux-cap v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/crates/linux-cap)
+    Checking warm-pool v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/crates/warm-pool)
+    Checking tar v0.4.46
+    Checking confique v0.4.0
+    Checking tls-parser v0.12.2
+    Checking flate2 v1.1.9
+    Checking tikv-jemallocator v0.6.1
+    Checking agentenv_http_server v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/src/api/generated)
+    Checking rtnetlink v0.20.0
+    Checking which v8.0.2
+   Compiling aws-lc-rs v1.18.1
+   Compiling rustls v0.23.37
+    Checking rustls-webpki v0.103.15
+    Checking tokio-rustls v0.26.4
+    Checking hyper-rustls v0.27.7
+    Checking rustls-platform-verifier v0.7.0
+    Checking reqwest v0.12.28
+    Checking reqwest v0.13.3
+    Checking noq-proto v1.2.0
+    Checking reqsign v0.16.5
+    Checking hickory-net v0.26.1
+    Checking opendal v0.55.0
+    Checking hickory-resolver v0.26.1
+    Checking iroh-dns v1.0.3
+    Checking tokio-websockets v0.13.3
+    Checking metrics-exporter-prometheus v0.18.3
+    Checking noq v1.2.0
+    Checking agentenv-observability v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/crates/observability)
+    Checking object-store-operator v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/crates/object-store-operator)
+    Checking http_client v0.1.1 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/thirdparty/envd/http-client)
+    Checking overlaybd v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/storage/overlaybd)
+    Checking iroh-relay v1.0.3
+    Checking irpc v0.17.0
+    Checking envd v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/thirdparty/envd)
+    Checking iroh v1.0.3
+    Checking custom_extension_client v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/src/custom_extension_api/generated)
+    Checking agentenv-storage-plugin v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/sandbox-storage/adapter/agentenvadapter/runtime)
+warning: use of deprecated method `std::sync::atomic::Atomic::<i64>::fetch_update`: renamed to `try_update` for consistency
+   --> storage/overlaybd/src/download_gate.rs:187:10
+    |
+187 |         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+    |          ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+187 -         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+187 +         .try_update(Ordering::SeqCst, Ordering::SeqCst, |background| {
+    |
+
+    Checking firecracker_client v1.15.1 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/thirdparty/firecracker-client)
+warning: `overlaybd` (lib) generated 1 warning (run `cargo fix --lib -p overlaybd` to apply 1 suggestion)
+    Checking uvm-ublk v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/storage/ublk)
+    Checking aenv-volume-core v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/storage/volume-core)
+    Checking uvm-ublk-daemon v0.1.0 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV/storage/ublk-daemon)
+    Checking iroh-util v0.6.0
+    Checking iroh-blobs v0.103.0
+    Checking rocksdb v0.24.0
+    Checking agentenv v0.2.3 (/Users/admin/work/agent/agent-runtime/sandboxstorage/AgentENV)
+warning: unused imports: `ManagedMount` and `VolumeReference`
+ --> src/sandbox/storage/mod.rs:8:43
+  |
+8 | pub use agentenv_storage_plugin::{freeze, ManagedMount, StorageContext, VolumeReference};
+  |                                           ^^^^^^^^^^^^                  ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `VolumeReference`
+ --> src/sandbox/storage/mod.rs:8:73
+  |
+8 | pub use agentenv_storage_plugin::{freeze, ManagedMount, StorageContext, VolumeReference};
+  |                                                                         ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `agentenv` (lib) generated 1 warning (run `cargo fix --lib -p agentenv` to apply 1 suggestion)
+warning: `agentenv` (lib test) generated 1 warning (run `cargo fix --lib -p agentenv --tests` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3m 54s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`

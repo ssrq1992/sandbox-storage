@@ -2,33 +2,21 @@ package consume
 
 import (
 	"context"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"sort"
+
+	"github.com/jackc/pgx/v5"
 
 	"ssf.dev/ssf/core"
 	kube "ssf.dev/ssf/kubernetes"
 	"ssf.dev/ssf/ledger"
 )
 
-const CaptureVersion = "ssf.capture.v1"
+const CaptureVersion = core.CaptureVersion
 
-// CaptureIntent identifies one immutable native memory/rootfs capture and every
-// CSI volume in that same barrier. The runtime must keep its VMM paused until
-// Advance succeeds or it abandons the checkpoint. Proofs are never persisted.
-type CaptureIntent struct {
-	Version        string            `json:"version"`
-	ID             string            `json:"id"`
-	Operation      string            `json:"operation"`
-	OwnerUID       string            `json:"owner_uid"`
-	RunUID         string            `json:"run_uid"`
-	BarrierID      string            `json:"barrier_id"`
-	NativeArtifact string            `json:"native_artifact"`
-	NativeDigest   string            `json:"native_digest"`
-	Classes        map[string]string `json:"classes"` // binding ID -> native VolumeSnapshotClass
-}
+type CaptureIntent = core.CaptureIntent
 
 type CaptureMember struct {
 	ContentName string      `json:"content_name,omitempty"`
@@ -56,29 +44,32 @@ type CaptureVerifier interface {
 }
 
 type Checkpoints struct {
-	Ledger   *ledger.Store
-	Kube     *kube.Client
-	Evidence CaptureVerifier
-}
-
-func (q CaptureIntent) Validate() error {
-	digest, err := hex.DecodeString(q.NativeDigest)
-	if q.Version != CaptureVersion || q.ID == "" || q.Operation == "" || q.OwnerUID == "" || q.RunUID == "" || q.BarrierID == "" || q.NativeArtifact == "" || err != nil || len(digest) != 32 || len(q.Classes) == 0 || len(q.Classes) > 24 {
-		return errors.New("invalid joint capture identity or native artifact digest")
-	}
-	for binding, class := range q.Classes {
-		if binding == "" || class == "" {
-			return errors.New("snapshot class required for every binding")
-		}
-	}
-	return nil
+	CaptureParticipants func(context.Context, CaptureIntent, []core.Binding, string) error
+	// SealedParticipants identifies drivers whose immutable captures survive thaw.
+	SealedParticipants  func(core.Binding) bool
+	PrepareParticipants func(context.Context, CaptureIntent, []core.Binding, string) error
+	PublishParticipants func(context.Context, CaptureIntent, []core.Binding, string) error
+	Ledger              *ledger.Store
+	Kube                *kube.Client
+	Evidence            CaptureVerifier
 }
 
 // Advance uses native Snapshot resources only. ErrPending means the caller must
-// retain the same barrier and retry, never thaw and reuse the capture identity.
+// retain the barrier unless Seal has durably completed for this exact intent.
 // Durable pins are installed as soon as each API identity is visible, including
 // partial results. Unknown outcomes are retained for reconciliation, not GC'd.
 func (c *Checkpoints) Advance(ctx context.Context, q CaptureIntent, proof string) (CaptureManifest, error) {
+	return c.advance(ctx, q, proof, false)
+}
+
+// Seal persists permission to thaw only after every participant is immutable and
+// pinned. Generic CSI participants must already be Ready; managed participants
+// provide durable captures before asynchronous publication.
+func (c *Checkpoints) Seal(ctx context.Context, q CaptureIntent, proof string) (CaptureManifest, error) {
+	return c.advance(ctx, q, proof, true)
+}
+
+func (c *Checkpoints) advance(ctx context.Context, q CaptureIntent, proof string, sealOnly bool) (CaptureManifest, error) {
 	var result CaptureManifest
 	if err := q.Validate(); err != nil {
 		return result, err
@@ -117,8 +108,33 @@ func (c *Checkpoints) Advance(ctx context.Context, q CaptureIntent, proof string
 					return core.ErrConflict
 				}
 			}
-			if err = c.Evidence.VerifyCapture(ctx, q, bindings, proof); err != nil {
+			// This receipt is written under the checkpoint/operation locks only
+			// after the final live-barrier check. It is never a caller boolean.
+			var seal string
+			sealKey := "checkpoint/sealed/" + q.ID
+			sealDigest := core.Digest(struct {
+				Intent   CaptureIntent
+				Bindings []core.Binding
+			}{q, bindings})
+			sealErr := c.Ledger.ReadStep(ctx, sealKey, &seal)
+			sealed := sealErr == nil
+			if sealErr != nil && !errors.Is(sealErr, pgx.ErrNoRows) && !errors.Is(sealErr, core.ErrPending) {
+				return sealErr
+			}
+			if sealed && seal != sealDigest {
+				return core.ErrConflict
+			}
+			verify := func() error {
+				if sealed {
+					return nil
+				}
+				return c.Evidence.VerifyCapture(ctx, q, bindings, proof)
+			}
+			if err = verify(); err != nil {
 				return err
+			}
+			if sealed && sealOnly {
+				return nil
 			}
 			nativeUID := "native-artifact:" + core.Hash(q.OwnerUID+"/"+q.RunUID+"/"+q.NativeArtifact+"/"+q.NativeDigest)
 			if err = c.Ledger.PinCheckpoint(ctx, q.ID, nativeUID); err != nil {
@@ -129,15 +145,37 @@ func (c *Checkpoints) Advance(ctx context.Context, q CaptureIntent, proof string
 					return err
 				}
 			}
+			if sealOnly {
+				if c.PrepareParticipants == nil || c.PublishParticipants == nil || c.SealedParticipants == nil {
+					return errors.New("sealed capture capability unavailable")
+				}
+				if err = c.PrepareParticipants(ctx, q, bindings, proof); err != nil {
+					return err
+				}
+			} else if sealed {
+				if c.PublishParticipants == nil {
+					return errors.New("sealed publication capability unavailable")
+				}
+				if err = c.PublishParticipants(ctx, q, bindings, proof); err != nil {
+					return err
+				}
+			} else if c.CaptureParticipants != nil {
+				if err = c.CaptureParticipants(ctx, q, bindings, proof); err != nil {
+					return err
+				}
+			}
 			result = CaptureManifest{NativeResourceUID: nativeUID, Intent: q, Members: make([]CaptureMember, 0, len(bindings))}
 			pending := false
 			for _, b := range bindings {
+				if sealOnly && c.SealedParticipants(b) {
+					continue
+				}
 				name := "ssf-cp-" + core.Hash(q.ID + "/" + b.ID)[:40]
 				var identity kube.SnapshotState
 				// Persist the first observed UID before polling status; a deleted/recreated
 				// object with the same name can never replace a checkpoint member.
 				err = c.Ledger.Step(ctx, "checkpoint/snapshot/"+q.ID+"/"+b.ID, core.Digest(q), func(ctx context.Context) (any, error) {
-					if err := c.Evidence.VerifyCapture(ctx, q, bindings, proof); err != nil {
+					if err := verify(); err != nil {
 						return nil, err
 					}
 					if err := c.Kube.Snapshot(ctx, b.Volume.PVC, name, q.Classes[b.ID]); err != nil {
@@ -187,11 +225,14 @@ func (c *Checkpoints) Advance(ctx context.Context, q CaptureIntent, proof string
 			}
 			// Even if all CSI snapshots finished, lost/fenced/thawed VMM evidence cannot
 			// publish a joint native/CSI checkpoint.
-			if err = c.Evidence.VerifyCapture(ctx, q, bindings, proof); err != nil {
+			if err = verify(); err != nil {
 				return err
 			}
 			if pending {
 				return core.ErrPending
+			}
+			if sealOnly {
+				return c.Ledger.Step(ctx, sealKey, core.Digest(q), func(context.Context) (any, error) { return sealDigest, nil }, &seal)
 			}
 			sort.Slice(result.Members, func(i, j int) bool { return result.Members[i].BindingID < result.Members[j].BindingID })
 			return c.Ledger.CommitCheckpoint(ctx, q.ID, result)

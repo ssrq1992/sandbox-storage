@@ -28,11 +28,12 @@ out.mkdir(parents=True, exist_ok=True)
 for name in ('initdb', 'pg_ctl', 'createdb', 'postgres'):
     if not os.access(binaries / name, os.X_OK):
         parser.error('missing executable: ' + str(binaries / name))
-report = {'scope': 'postgres-ledger-and-native-plugin-with-node-fixtures',
+report = {'scope': 'postgres-ledger-native-plugin-and-overlaybd-journal-with-fixtures',
           'time': datetime.datetime.now(datetime.timezone.utc).isoformat(),
           'real_csi': False, 'real_kvm': False, 'status': 'failed'}
 source_hashes = {}
-for source in (root / 'ledger', root / 'consume', root / 'preparation', root / 'adapter/agentenvadapter'):
+for source in (root / 'ledger', root / 'consume', root / 'preparation', root / 'adapter/agentenvadapter',
+               root / 'drivers/overlaybd', root / 'gateway'):
     for path in source.rglob('*.go'):
         source_hashes[str(path.relative_to(root))] = hashlib.sha256(path.read_bytes()).hexdigest()
 (out / 'source-sha256.json').write_text(json.dumps(source_hashes, indent=2) + '\n')
@@ -59,7 +60,8 @@ try:
         env = dict(os.environ, SSF_TEST_DATABASE_URL=connection, SSF_ADAPTER_TEST_DATABASE_URL=connection)
         with (out / 'tests.log').open('w') as log:
             result = subprocess.run(['go', 'test', '-race', '-count=1', '-timeout=5m', '-json',
-                                     './ledger', './consume', './preparation', './adapter/agentenvadapter'],
+                                     './ledger', './consume', './preparation', './adapter/agentenvadapter',
+                                     './drivers/overlaybd', './gateway'],
                                     cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT)
         report['status'] = 'passed' if result.returncode == 0 else 'failed'
         report['exit_code'] = result.returncode
@@ -86,13 +88,19 @@ try:
                 subprocess.run([str(binaries/'psql'), '-X', '-q', '-v', 'ON_ERROR_STOP=1'], input=statement,
                     text=True, env=invariant_env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
             sql(schema)
+            sql((root/'deploy/ledger-roles.sql').read_text())
+            sql("SET ROLE ssf_consumer; SELECT id FROM ssf_idle_captures LIMIT 0; SELECT namespace FROM ssf_snapshot_captures LIMIT 0; SELECT volume_key FROM ssf_backend_tombstones LIMIT 0; RESET ROLE;")
+            report['consumer_role_schema_access'] = 'passed'
             assertion = ['python3', 'scripts/native_invariants.py', '--psql', str(binaries/'psql'), '--output', str(out/'invariants-clean.json')]
             clean = subprocess.run(assertion, cwd=root, env=invariant_env, stdout=subprocess.DEVNULL).returncode
-            sql("INSERT INTO ssf_volumes VALUES('volume','pvc','{}',false); INSERT INTO ssf_use_holds VALUES('volume','owner-a',false,'fixture'),('volume','owner-b',false,'fixture');")
+            sql("INSERT INTO ssf_volumes VALUES('volume','pvc','{}',false); INSERT INTO ssf_use_holds VALUES('volume','owner-a',false,'fixture'),('volume','owner-b',false,'fixture'); INSERT INTO ssf_idle_captures(id,volume_key,pvc_uid,digest,state) VALUES('idle','volume','pvc','fixture','Capturing');")
             assertion[-1] = str(out/'invariants-corrupt-fixture.json')
             corrupt = subprocess.run(assertion, cwd=root, env=invariant_env, stdout=subprocess.DEVNULL).returncode
+            corrupt_checks = json.loads((out/'invariants-corrupt-fixture.json').read_text())['checks']
+            idle_detected = any(c['name'] == 'idle-capture-use-conflict' and c['violations'] > 0 for c in corrupt_checks)
+            report['idle_capture_invariant_detected'] = idle_detected
             report['invariant_tool'] = {'clean_exit': clean, 'corrupt_fixture_exit': corrupt, 'status': 'passed' if clean == 0 and corrupt == 1 else 'failed'}
-            if clean != 0 or corrupt != 1:
+            if clean != 0 or corrupt != 1 or not idle_detected:
                 report['status'] = 'failed'
                 exit_code = 1
     except (OSError, subprocess.CalledProcessError) as error:

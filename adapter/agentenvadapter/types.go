@@ -57,6 +57,7 @@ type RuntimeEvent struct {
 	Devices      []Device       `json:"devices,omitempty"`
 }
 type NodeRecord struct {
+	SealedCaptures     map[string]string  `json:"sealed_captures,omitempty"`
 	EverReady          bool               `json:"ever_ready"`
 	DeleteRequested    bool               `json:"delete_requested"`
 	DeleteAcknowledged bool               `json:"delete_acknowledged"`
