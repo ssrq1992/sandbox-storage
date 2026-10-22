@@ -1,0 +1,50 @@
+%%{init: {"theme":"base","themeVariables":{"background":"#151b24","primaryTextColor":"#e5edf5","lineColor":"#91a4b7","clusterBkg":"#1c2531","clusterBorder":"#596b7c","actorBkg":"#203e58","actorTextColor":"#e5edf5","signalColor":"#91a4b7","signalTextColor":"#e5edf5","noteBkgColor":"#353e4a","noteTextColor":"#e5edf5"}}}%%
+sequenceDiagram
+  participant U as 用户
+  participant K as K8S API / 原生控制器
+  participant S as 官方 CSI sidecar
+  participant C as OverlayBD Controller
+  participant A as 原 Gateway / Scheduler
+  participant F as SSF Coordinator
+  participant H as 原 Node / Orchestrator
+  participant N as SSF Node / Runtime adapter
+  participant D as OverlayBD CSI Node / 原生存储库
+  participant V as microVM
+  U->>K: 创建 Block PVC
+  alt Immediate 动态供卷
+    K-->>S: 供卷事件
+    S->>C: CreateVolume（标准 CSI）
+    C->>C: 复用 native create / 发布初始 head
+    C-->>S: handle / capacity / topology
+    S-->>K: PV，完成 Bound
+  else WFFC
+    K-->>F: WaitingConsumer
+  end
+  U->>A: 原创建接口 + volumeMounts[].pvc
+  A->>F: ResolveLaunch
+  F-->>A: 固定身份 / 存储可行节点
+  A->>A: 原健康过滤和计算策略选点
+  A->>F: PrepareLaunch（选定节点）
+  opt WFFC 首次消费
+    F->>K: 绑定协调 / selected node
+    K-->>S: 原生供卷 / 绑定流程
+    S->>C: CreateVolume（选定拓扑；静态 PV 无此调用）
+    S-->>K: Bound
+  end
+  F->>F: 准备证明 / writer / run / epoch
+  F->>C: 经 CSI Gateway：ControllerPublishVolume
+  C-->>F: attachment grant
+  F-->>A: 签名 dispatch
+  A->>H: 原请求及原生 sandbox ID
+  H->>N: 通用存储 hook
+  N->>D: NodeStageVolume / NodePublishVolume
+  D->>D: 复用 ublk；创建唯一设备会话
+  D-->>N: 实际 Block Endpoint + 会话证明
+  N-->>H: 接纳已有设备的 DriveMount
+  H->>V: 原 Firecracker 接盘 / guest 挂载
+  V-->>H: guest 核验结果
+  H->>F: 持久 GuestReady 回执
+  F-->>H: Commit
+  H-->>U: 原 201 响应
+  Note over C,D: Controller Service 不调用 CSI Node Service
+  Note over V,D: 数据 I/O：guest → virtio-block → ublk → lower / upper；不经过协调服务

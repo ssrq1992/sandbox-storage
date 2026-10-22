@@ -1,0 +1,66 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"PingFang SC, Microsoft YaHei, sans-serif","fontSize":"19px","background":"#0f1822","darkMode":true,"textColor":"#c4d0dc","lineColor":"#8999aa","edgeLabelBackground":"#111922"},"themeCSS":".edgeLabel text{fill:#c4d0dc!important}","flowchart":{"htmlLabels":false,"nodeSpacing":22,"rankSpacing":36,"padding":10,"wrappingWidth":320,"curve":"linear"}}}%%
+flowchart TB
+    subgraph Control[" "]
+        CT["① ateapi：公共控制面调用链"]
+        Template["ActorTemplate / CreateActor<br/>StorageClass provisioner + parameters<br/>Actor SUSPENDED，记录卷需求"]
+        Lease["ResumeActor / Actor lease<br/>ensureVolumesCreated<br/>持久化 handle / volumeContext"]
+        Assign["ensureWorkerAssigned<br/>已有 Worker 的计算与 slot 准入<br/>当前不按卷拓扑供卷"]
+        Attach["ensureVolumesAttached<br/>NodeId = Worker.node_name<br/>收集本次 publishContext"]
+        CDriver["外部 CSI Controller Driver<br/>CreateVolume / ControllerPublish<br/>Delete / ControllerUnpublish"]
+        CT ~~~ Template
+        Template -.->|"Substrate DB 状态"| Lease
+        Lease -->|"建卷先于选 Worker"| Assign
+        Assign --> Attach
+        Lease -->|"CSI CreateVolume"| CDriver
+        Attach -->|"CSI ControllerPublish，按能力"| CDriver
+    end
+
+    subgraph Node[" "]
+        NT["② atelet：公共节点调用链"]
+        Request["Run / Restore<br/>接收已解析卷与两个 context<br/>准备 Actor 目录"]
+        Plugin["VolumePluginWorkerPlane<br/>CSI adapter / 缓存 UDS client"]
+        Stage["外部 CSI Node Driver<br/>NodeStage 按能力<br/>NodePublish 到 Actor target"]
+        Target["宿主卷目录<br/>actors/UID/volumes/name<br/>通过 mount propagation 进入 Worker"]
+        Spec["prepareOCIBundles<br/>buildWorkerWorkloadSpec<br/>ActorDirs + CsiVolumeMounts"]
+        NT ~~~ Request
+        Request --> Plugin
+        Plugin -->|"本机 UDS"| Stage
+        Stage -->|"stage / publish 完成"| Target
+        Request -->|"挂载成功后继续"| Spec
+    end
+
+    subgraph Runtime[" "]
+        RT["③ ateworker-microvm：运行时定制接入"]
+        Shape["宿主 buildActorContainers<br/>ocispec.Build + ShapeMicroVM<br/>OCI bind source 改写为 guest 路径"]
+        Share["stageMergedRootfs / stageCsiVolumes<br/>BindIntoShare：递归 bind 到 csi/<br/>一个共享树承载 rootfs 与数据卷"]
+        VFS["virtiofsd 子进程<br/>kataShared + announce-submounts<br/>find-paths 恢复模式"]
+        VM["Cloud Hypervisor / guest<br/>kata-agent CreateSandbox<br/>在 guest 挂载 kataShared virtiofs"]
+        Container["kata-agent CreateContainer / StartContainer<br/>容器路径 /workspace<br/>不是 CSI Driver 执行 guest mount"]
+        RT ~~~ Shape
+        Shape --> Share
+        Share --> VFS
+        VFS -->|"vhost-user / virtiofs"| VM
+        VM --> Container
+    end
+
+    Backend[("④ CSI 后端业务数据<br/>外部卷当前内容")]
+    Obj[("⑤ 快照对象存储<br/>内存 / rootfs upper / durable-dir")]
+    Attach -->|"atelet Run / Restore RPC<br/>volumeContext + publishContext"| Request
+    Spec -->|"Worker UDS：RunWorkload / Restore"| Shape
+    Target -->|"已挂载目录交付"| Share
+    CDriver -->|"后端卷管理"| Backend
+    Stage -->|"文件系统准备"| Backend
+    Container ==>|"实际 I/O 经 virtiofsd / 宿主文件系统"| Backend
+    VM -->|"Checkpoint：暂停 VM 并生成文件<br/>atelet / objectstore-plugin 上传"| Obj
+
+    classDef common fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd;
+    classDef custom fill:#3d3328,stroke:#937b56,stroke-width:1.4px,color:#d8c6a9;
+    classDef backend fill:#253a33,stroke:#668b7d,stroke-width:1.4px,color:#b4cfc3;
+    classDef title fill:transparent,stroke-width:0px,color:#c4d0dc,font-weight:bold;
+    class Template,Lease,Assign,Attach,Request,Plugin,Target,Spec common;
+    class CDriver,Stage,Shape,Share,VFS,VM,Container custom;
+    class Backend,Obj backend;
+    class CT,NT,RT title;
+    style Control fill:#111922,stroke:#71869d,stroke-width:1.8px,color:#c4d0dc
+    style Node fill:#111922,stroke:#71869d,stroke-width:1.8px,color:#c4d0dc
+    style Runtime fill:#111922,stroke:#71869d,stroke-width:1.8px,color:#c4d0dc

@@ -1,0 +1,45 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"PingFang SC, Microsoft YaHei, sans-serif","fontSize":"18px","background":"#0f1822","darkMode":true,"textColor":"#c4d0dc","lineColor":"#8999aa"},"block":{"padding":16}}}%%
+block-beta
+    columns 3
+    KTitle["① 原生 Kubernetes 管理：API 对象与控制器"]:3
+    Objects["K：API Server / etcd<br/>SC / PVC / PV / Secret<br/>原生 Snapshot / 拓扑对象"]
+    PVCtrl["K：kube-controller-manager<br/>PV Controller / 原生保护<br/>独立 VM 不由 scheduler 自动选点"]
+    Policy["K/N：原生管理 + 消费保护<br/>默认 Retain / 受控回收<br/>PV/PVC 是管理权威"]
+    CTitle["② 原有 CSI Controller Pod：独立 sidecar / Driver 容器"]:3
+    Prov["K：external-provisioner<br/>唯一 Create/DeleteVolume<br/>clone / snapshot restore 供卷"]
+    CD["D：Driver 容器 / 进程<br/>Controller + Identity<br/>本地 CSI UDS"]
+    GW["N：条件 Gateway 容器<br/>mTLS → 本地 UDS<br/>仅 Attach / Detach"]
+    Optional["K：可选 sidecar<br/>snapshotter / resizer<br/>各自调用管理 RPC"]
+    Attacher["K：条件 external-attacher<br/>服务原生 Pod / VA 模式<br/>不并管同一 Direct attachment"]
+    Snapshot["K：独立 snapshot-controller Pod<br/>原生 Snapshot / Content 协调<br/>不是上面的 snapshotter 容器"]
+    PTitle["③ 现有项目控制面 Pod：P 入口 + N 公共模块；默认不新增 ssf-controller"]:3
+    Project["P：CubeMaster / AgentENV 控制入口<br/>租户与 API / 计算调度<br/>原有创建 RPC"]
+    Resolve["N：PVC/PV Resolver / facade<br/>真实 UID / handle / 能力<br/>原生管理接口，不直接建卷"]
+    WFFC["N：DelayedBinding<br/>计算 lease / 原生 WFFC 桥<br/>动态供卷与静态绑定"]
+    Use["N：Use / Drain / operation<br/>writer / Binding / node pin<br/>共享使用账本"]
+    Attach["N：Attach / BuildNodePlan<br/>Controller SessionManager<br/>RPC 前完成 attachment"]
+    Workflow["N：Step Runner / Recovery<br/>请求直接推进<br/>未知结果与补偿"]
+    Support["独立支持：N Guard Deployment；I 共享事务库〔外部/复用/自建〕<br/>Guard 只校验；账本是使用权威，不是第二套 PV/PVC"]:3
+    WTitle["④ Worker：新增 Node Agent Pod + 原 CSI Node Pod"]:3
+    Agent["N：Node Agent 容器 / 进程<br/>Prepare / Stage-Publish / WAL<br/>holder / Recovery / RuntimeBinding"]
+    ND["D：Node Driver 容器 / 进程<br/>Node + Identity / NodeGetInfo<br/>本机 CSI UDS"]
+    Registrar["K：registrar / Probe 容器<br/>Node/CSINode 拓扑注册<br/>kubelet 保留平台 Pod 管理"]
+    HTitle["⑤ 宿主资源、项目 runtime 与独立 guest"]:3
+    Host["N/I：受控 hostPath / mount / device<br/>staging / targets / node-state<br/>明确传播与设备权限"]
+    Runtime["P：Cubelet / AgentENV runtime<br/>Runtime Adapter / ManagedBlock<br/>消费类型化 endpoint"]
+    Guest["P/I：VMM / virtiofsd / Firecracker<br/>独立 VM / guest ready<br/>纯 VM 不要求内容器"]
+    Backend["B：NFS / 云盘 / Ceph / 现有层存储<br/>实际 I/O 不经消费控制面 / Gateway / CSI 管理 RPC 转发"]:3
+    Alt["可选替代：共享消费 Coordinator Pod 取代内嵌执行；VA/Holder profile 单独认证<br/>不存在无 Kubernetes 的 Direct 供卷入口"]:3
+    classDef native fill:#24364a,stroke:#617d9b,color:#c3d0dd;
+    classDef common fill:#244351,stroke:#739bad,color:#c8dee6;
+    classDef custom fill:#44392c,stroke:#aa9066,color:#dfcfb2;
+    classDef driver fill:#3d3328,stroke:#937b56,color:#d8c6a9;
+    classDef title fill:#172330,stroke:#50657b,color:#c4d0dc;
+    class Objects,PVCtrl,Prov,Optional,Attacher,Snapshot,Registrar native
+    class Policy,Resolve,WFFC,Use,Attach,Workflow,Support,Agent,Host common
+    class Project,Runtime,Guest custom
+    class CD,ND driver
+    class KTitle,CTitle,PTitle,WTitle,HTitle title
+    style GW fill:#244351,stroke:#8793a3,color:#c8dee6,stroke-dasharray:7 5
+    style Alt fill:#2b323e,stroke:#8793a3,color:#c6ced9,stroke-dasharray:7 5
+    style Backend fill:#253a33,stroke:#668b7d,color:#b4cfc3

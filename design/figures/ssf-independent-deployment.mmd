@@ -1,0 +1,37 @@
+flowchart TB
+  subgraph NS["agentenv-system namespace"]
+    GW["原 Gateway Deployment"]
+    SCH["原 Scheduler Deployment：原 gRPC + 9447 只读观测"]
+    CO["新增 ssf-coordinator Deployment：2 副本 / 9446 mTLS / 9096 探针"]
+    subgraph NODE["原 AgentENV Node DaemonSet Pod：共享 PID namespace"]
+      HOST["原 Node / Orchestrator / Firecracker"]
+      AD["agentenv-storage 常驻 sidecar：9444 / loopback 9445"]
+      SN["ssf-node 常驻 sidecar：9443 / Node WAL"]
+    end
+    HEAD["原 headless Service / 心跳 / P2P"]
+  end
+  GUARD["SSF Guard Deployment：webhook / 受限数据库角色"]
+  PG[("独立 PostgreSQL")]
+  CSI["厂商 CSI Controller / 可选 Gateway"]
+  DN["厂商 CSI Node DaemonSet"]
+  BACK[("后端存储")]
+  GW --> SCH --> CO
+  CO -->|"ObserveNodes"| SCH
+  CO --> PG
+  GUARD --> PG
+  CO --> CSI
+  GW --> HOST
+  HEAD -.-> HOST
+  HOST --> AD --> SN -->|"UDS Node RPC"| DN
+  AD --> CO
+  CO --> SN
+  HOST ==>|"virtio Block 数据 I/O"| BACK
+  CSI --> BACK
+  classDef common fill:#203e58,stroke:#72a6c9,color:#fff;
+  classDef custom fill:#594331,stroke:#c99c72,color:#fff;
+  classDef native fill:#353e4a,stroke:#9aaabd,color:#fff;
+  classDef data fill:#254d40,stroke:#7cbaa0,color:#fff;
+  class CO,SN,GUARD common;
+  class AD,CSI,DN custom;
+  class GW,SCH,HOST,HEAD native;
+  class PG,BACK data;

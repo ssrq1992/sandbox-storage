@@ -1,0 +1,81 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"PingFang SC, Microsoft YaHei, sans-serif","fontSize":"19px","background":"#0f1822","darkMode":true,"lineColor":"#8999aa","textColor":"#c4d0dc","edgeLabelBackground":"#111922"},"flowchart":{"htmlLabels":false,"nodeSpacing":24,"rankSpacing":34,"padding":12,"wrappingWidth":300,"curve":"linear"}}}%%
+flowchart TB
+    subgraph Management[" "]
+      MT["① 管理调用：Kubernetes 唯一管理入口"]
+      Facade["P/N：项目 Volume API facade"]
+      KAPI["K：API Server / PVC / PV<br/>StorageClass / Snapshot / Secret"]
+      Provision["K：external-provisioner"]
+      PV["K：PV Controller"]
+      Snap["K：snapshot-controller / snapshotter<br/>可选 native resizer"]
+      DC["D：CSI Controller + Identity"]
+      MT ~~~ Facade
+      Facade -.->|"声明 CRUD / dataSource / 容量"| KAPI
+      KAPI -.->|"PVC/PV watch"| Provision
+      Provision -->|"Create / DeleteVolume<br/>含 clone / restore 供卷"| DC
+      KAPI -.->|"绑定协调"| PV
+      KAPI -.->|"快照 / 扩容声明"| Snap
+      Snap -->|"对应管理 RPC"| DC
+    end
+    subgraph Consumption[" "]
+      CT["② 消费调用：嵌入现有项目控制面"]
+      Request["P：CreateSandbox / Restore<br/>request ID + PVCRef / volumeUID"]
+      Resolve["N：Resolver / JointPlan<br/>身份 / 权限 / 能力 / 实际拓扑"]
+      WFFC["N：DelayedBinding〔仅待绑定〕<br/>计算 lease / attempt / 原生桥"]
+      Acquire["N：AcquireUse / 共享事务账本<br/>writer / Binding / node pin"]
+      Attach["N：EnsureAttachment<br/>兼容复用或直接 Attach"]
+      Gateway["N：条件 Gateway / 认证端点<br/>探测 / 能力查询<br/>副作用仅 Publish / Unpublish"]
+      Plan["N：BuildNodePlan<br/>当前 publish_context / 参数 / 授权"]
+      CT ~~~ Request
+      Request --> Resolve
+      Resolve -->|"已 Bound / CatalogReady"| Acquire
+      Resolve -->|"Pending WFFC"| WFFC
+      WFFC -->|"真实 Bound / 保护完成<br/>复核计算 lease"| Acquire
+      Acquire --> Attach
+      Attach -->|"必要时 ControllerPublish"| Gateway
+      Attach -->|"持久确认成功后"| Plan
+    end
+    subgraph Worker[" "]
+      WT["③ 节点执行与 guest 接入"]
+      Create["P：原有节点 Create / Restore RPC<br/>携带受认证 NodeVolumePlan"]
+      Prepare["N：Node Agent Prepare<br/>校验 / WAL / 同卷队列"]
+      NodeCSI["D：CSI Node + Identity"]
+      Host["N：host target / PreparedEndpoint"]
+      Runtime["P：Runtime Adapter / VMM<br/>FileTree share 或 Block drive"]
+      Guest["P：guest mount/device ready<br/>全部卷就绪后才运行任务"]
+      WT ~~~ Create
+      Create --> Prepare
+      Prepare -->|"按能力 NodeStage<br/>逐 Binding NodePublish"| NodeCSI
+      NodeCSI -->|"真实目录 / 块设备"| Host
+      Prepare -->|"校验后的 endpoint"| Runtime
+      Host --> Runtime
+      Runtime --> Guest
+    end
+    Backend[("B：实际存储后端")]
+    KAPI -.->|"资源观测"| Resolve
+    WFFC -.->|"selected-node / 静态预绑定"| KAPI
+    Gateway --> DC
+    Plan --> Create
+    Guest ==>|"实际 I/O，经共享文件系统或虚拟设备"| Backend
+    DC -->|"后端管理"| Backend
+    Release["N/P：停止使用 → 移除 runtime 引用<br/>Unpublish → 末次 Unstage → Detach<br/>删除沙箱只释放，不删除 PVC"]
+    Drain["N：删除卷另走 Drain / 回收许可<br/>K8S 原生回收，消费侧不直接 Delete"]
+    Guest -.->|"暂停 / 销毁 / 失败补偿"| Release
+    Release -.->|"满足独立删除请求"| Drain
+    Drain -.->|"授权原生资源变更"| KAPI
+    classDef native fill:#24364a,stroke:#617d9b,color:#c3d0dd,stroke-width:1.5px;
+    classDef common fill:#244351,stroke:#739bad,color:#c8dee6,stroke-width:1.5px;
+    classDef project fill:#44392c,stroke:#aa9066,color:#dfcfb2,stroke-width:1.5px;
+    classDef driver fill:#3d3328,stroke:#937b56,color:#d8c6a9,stroke-width:1.5px;
+    classDef backend fill:#253a33,stroke:#668b7d,color:#b4cfc3,stroke-width:1.5px;
+    classDef optional fill:#2b323e,stroke:#8793a3,color:#c6ced9,stroke-dasharray:7 5;
+    classDef title fill:transparent,stroke-width:0px,color:#c4d0dc,font-weight:bold;
+    class KAPI,Provision,PV,Snap native;
+    class Resolve,WFFC,Acquire,Attach,Plan,Prepare,Host,Release,Drain common;
+    class Gateway optional;
+    class Facade,Request,Create,Runtime,Guest project;
+    class DC,NodeCSI driver;
+    class Backend backend;
+    class MT,CT,WT title;
+    style Management fill:#111922,stroke:#71869d,color:#c4d0dc
+    style Consumption fill:#111922,stroke:#71869d,color:#c4d0dc
+    style Worker fill:#111922,stroke:#71869d,color:#c4d0dc

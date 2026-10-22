@@ -1,0 +1,62 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"PingFang SC, Microsoft YaHei, sans-serif","fontSize":"19px","background":"#0f1822","darkMode":true,"lineColor":"#8999aa","textColor":"#c4d0dc","edgeLabelBackground":"#111922"},"flowchart":{"htmlLabels":false,"nodeSpacing":24,"rankSpacing":34,"padding":12,"wrappingWidth":300,"curve":"linear"}}}%%
+flowchart TB
+    subgraph Native[" "]
+      NT["① Kubernetes 原生卷管理"]
+      Objects["K：StorageClass / PVC / PV<br/>Snapshot / Secret / 拓扑资源"]
+      Lifecycle["K：PV Controller / 官方 CSI sidecar<br/>供卷、绑定、快照、克隆、扩容、回收"]
+      CD["D：CSI Controller + Identity<br/>厂商标准服务"]
+      NT ~~~ Objects
+      Objects -.-> Lifecycle
+      Lifecycle -->|"唯一管理 RPC"| CD
+    end
+    subgraph Project[" "]
+      PT["② 现有项目控制面 Pod / 进程"]
+      API["P：CreateSandbox / 调度入口<br/>PVCRef / volumeUID<br/>guest 挂载意图"]
+      Coord["N：嵌入式 Consumption Coordinator<br/>Resolver / WFFC / 使用授权<br/>Attach / BuildNodePlan / 恢复"]
+      Ledger["N：共享使用账本<br/>operation / writer / Binding / node pin"]
+      Guard["N：独立 Guard Pod<br/>使用与回收许可校验"]
+      PT ~~~ API
+      API -->|"请求主动推进"| Coord
+      Coord --> Ledger
+      Guard -.-> Ledger
+    end
+    subgraph Node[" "]
+      WT["③ Worker：直接消费，参考 Substrate"]
+      Runtime["P：项目节点创建流程<br/>原有 RPC 携带 NodeVolumePlan"]
+      Agent["N：Node Agent Pod / 进程<br/>Stage-Publish / holder / WAL / 恢复"]
+      ND["D：CSI Node + Identity<br/>标准 Node RPC / 本机 UDS"]
+      Target["N：受管 host target<br/>FileTree 或 BlockDevice"]
+      Adapter["P：Runtime Adapter<br/>文件共享或虚拟磁盘 / guest ready"]
+      VM["P：独立沙箱 VM<br/>纯 VM 或 guest 内容器"]
+      WT ~~~ Runtime
+      Runtime -->|"PrepareVolumes"| Agent
+      Agent -->|"NodeStage / NodePublish"| ND
+      ND --> Target
+      Agent -->|"PreparedEndpoint"| Adapter
+      Target -->|"资源交付"| Adapter
+      Adapter --> VM
+    end
+    Backend[("B：实际后端<br/>NFS / 云盘 / Ceph / 层存储")]
+    Objects -.->|"真实资源 / 身份 / 绑定结果"| Coord
+    Coord -.->|"仅 WFFC 桥 / 原生 API facade"| Objects
+    Coord -->|"Attach：认证 Gateway / endpoint"| CD
+    Coord -->|"Attach 后下发完整计划"| Runtime
+    Objects -.->|"准入调用"| Guard
+    CD -->|"后端管理 API"| Backend
+    VM ==>|"实际卷 I/O；不经 CSI 管理 RPC"| Backend
+    classDef native fill:#24364a,stroke:#617d9b,color:#c3d0dd,stroke-width:1.5px;
+    classDef common fill:#244351,stroke:#739bad,color:#c8dee6,stroke-width:1.5px;
+    classDef project fill:#44392c,stroke:#aa9066,color:#dfcfb2,stroke-width:1.5px;
+    classDef driver fill:#3d3328,stroke:#937b56,color:#d8c6a9,stroke-width:1.5px;
+    classDef backend fill:#253a33,stroke:#668b7d,color:#b4cfc3,stroke-width:1.5px;
+    classDef optional fill:#2b323e,stroke:#8793a3,color:#c6ced9,stroke-dasharray:7 5;
+    classDef title fill:transparent,stroke-width:0px,color:#c4d0dc,font-weight:bold;
+    class Objects,Lifecycle native;
+    class Coord,Ledger,Guard,Agent,Target common;
+    class API,Runtime,Adapter,VM project;
+    class CD,ND driver;
+    class Backend backend;
+    class NT,PT,WT title;
+    style Native fill:#111922,stroke:#71869d,color:#c4d0dc
+    style Project fill:#111922,stroke:#71869d,color:#c4d0dc
+    style Node fill:#111922,stroke:#71869d,color:#c4d0dc

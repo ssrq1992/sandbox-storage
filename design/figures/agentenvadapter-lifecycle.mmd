@@ -1,0 +1,31 @@
+flowchart TB
+classDef common fill:#24364a,stroke:#617d9b,color:#c4d0dc
+classDef adapter fill:#44392c,stroke:#aa9066,color:#c4d0dc
+classDef backend fill:#253a33,stroke:#668b7d,color:#c4d0dc
+subgraph G0["创建 / 提交"]
+N00["原 Gateway → 原 Scheduler：计算预留 + 卷解析 / 绑定"]:::common
+N01["共享 Coordinator Attach → 完整签名计划 → Prepare"]:::common
+N02["原 Orchestrator spawn → guest 设备验证 → 可信 Ready / Commit"]:::adapter
+end
+N00 --> N01 --> N02
+subgraph G1["暂停 / 恢复"]
+N10["冻结与原生暂停；UseHold 保留逻辑使用权"]:::common
+N11["真实 stop → 释放本 run 资源；新 run 原子接续 epoch"]:::adapter
+N12["保留原 ID、自动暂停 / connect 恢复与驱逐策略"]:::common
+end
+N02 --> N10
+N10 --> N11 --> N12
+subgraph G2["快照 / Fork / 模板"]
+N20["native memory・rootfs + legacy + CSI 同屏障捕获"]:::adapter
+N21["CheckpointSet / Snapshot・Content UID / 仓库 pin 联合发布"]:::common
+N22["RW 独立克隆；RO 按语义共享；替换隐藏旧盘并保留 FD"]:::backend
+end
+N12 --> N20
+N20 --> N21 --> N22
+subgraph G3["删除 / 恢复 / 回收"]
+N30["持久清理 outbox → 原 VMM 停止重试与真实证据"]:::adapter
+N31["Unpublish → 最后引用 Unstage → Detach；未知结果不强删"]:::common
+N32["用户卷保留；内部克隆 / capture 仅在所有引用消失后回收"]:::backend
+end
+N22 --> N30
+N30 --> N31 --> N32

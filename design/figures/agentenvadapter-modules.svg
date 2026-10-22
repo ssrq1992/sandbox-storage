@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="1180" viewBox="0 0 1480 1180">
+<rect width="1480" height="1180" fill="#0f1822"/>
+<g font-family="PingFang SC,Microsoft YaHei,sans-serif" fill="#c4d0dc">
+<text x="32" y="48" font-size="28">AgentENV × SSF · 原生模块与权威边界</text>
+<text x="32" y="83" font-size="18">蓝：原生模块 / 公共框架　棕：运行时定制与厂商 Driver　绿：持久存储 / 数据边界</text>
+<rect x="24" y="112" width="1432" height="240" rx="8" fill="#111c27" stroke="#64798d"/>
+<text x="44" y="146" font-size="23">原生请求与生命周期（保留）</text>
+<rect x="44" y="164" width="1392" height="46" rx="6" fill="#24364a" stroke="#64798d"/>
+<text x="60" y="194" font-size="20">Gateway：鉴权 / 路由 / HTTP・WS・流代理</text>
+<rect x="44" y="220" width="1392" height="46" rx="6" fill="#24364a" stroke="#64798d"/>
+<text x="60" y="250" font-size="20">Scheduler：发现 / 健康 / 策略 / 计算准入</text>
+<rect x="44" y="276" width="1392" height="46" rx="6" fill="#24364a" stroke="#64798d"/>
+<text x="60" y="306" font-size="20">AgentENV：SnapshotManager / Orchestrator / VMM</text>
+<rect x="24" y="372" width="1432" height="240" rx="8" fill="#111c27" stroke="#64798d"/>
+<text x="44" y="406" font-size="23">存储插件（定制）与公共消费能力</text>
+<rect x="44" y="424" width="1392" height="46" rx="6" fill="#44392c" stroke="#64798d"/>
+<text x="60" y="454" font-size="20">ControlPlugin：模板 pin / VolumeProviderMux / 生命周期命令</text>
+<rect x="44" y="480" width="1392" height="46" rx="6" fill="#24364a" stroke="#64798d"/>
+<text x="60" y="510" font-size="20">SSF Coordinator：拓扑 / WFFC / owner・run・epoch / Attach</text>
+<rect x="44" y="536" width="1392" height="46" rx="6" fill="#44392c" stroke="#64798d"/>
+<text x="60" y="566" font-size="20">NodePlugin：签名计划 / loopback hook / guest 与停止证据</text>
+<rect x="24" y="632" width="1432" height="240" rx="8" fill="#111c27" stroke="#64798d"/>
+<text x="44" y="666" font-size="23">原生卷管理与直接节点消费</text>
+<rect x="44" y="684" width="1392" height="46" rx="6" fill="#24364a" stroke="#64798d"/>
+<text x="60" y="714" font-size="20">Kubernetes：PVC / PV / Snapshot・Content / 原生 sidecars</text>
+<rect x="44" y="740" width="1392" height="46" rx="6" fill="#24364a" stroke="#64798d"/>
+<text x="60" y="770" font-size="20">SSF Node / WAL / Guard / PostgreSQL：授权・保护・恢复</text>
+<rect x="44" y="796" width="1392" height="46" rx="6" fill="#44392c" stroke="#64798d"/>
+<text x="60" y="826" font-size="20">厂商 CSI Controller・Node：管理 RPC / NodeStage・Publish</text>
+<rect x="24" y="892" width="1432" height="240" rx="8" fill="#111c27" stroke="#64798d"/>
+<text x="44" y="926" font-size="23">实际数据路径与持久性</text>
+<rect x="44" y="944" width="1392" height="46" rx="6" fill="#24364a" stroke="#64798d"/>
+<text x="60" y="974" font-size="20">Firecracker guest → virtio-block → host block（原 VMM 拥有）</text>
+<rect x="44" y="1000" width="1392" height="46" rx="6" fill="#253a33" stroke="#64798d"/>
+<text x="60" y="1030" font-size="20">后端持久存储；业务 I/O 不经过控制插件</text>
+<rect x="44" y="1056" width="1392" height="46" rx="6" fill="#253a33" stroke="#64798d"/>
+<text x="60" y="1086" font-size="20">暂停保留 UseHold；真实 stop → Unpublish → Unstage → Detach</text>
+</g></svg>

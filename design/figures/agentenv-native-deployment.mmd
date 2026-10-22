@@ -1,0 +1,38 @@
+%%{init: {"theme":"dark","themeVariables":{"background":"#111c27","primaryTextColor":"#d5e0ec","lineColor":"#91a9b9","clusterBkg":"#182633","clusterBorder":"#617d9b","actorBkg":"#44392c","actorBorder":"#aa9066","actorTextColor":"#e5d6bb","fontFamily":"Arial, PingFang SC, sans-serif"},"themeCSS":"rect.actor[name='C'],rect.actor[name='N']{fill:#244351!important;stroke:#739bad!important}rect.actor[name='K']{fill:#24364a!important;stroke:#617d9b!important}"}}%%
+flowchart TB
+  subgraph CP[AgentENV 既有控制面工作负载]
+    G[Gateway Deployment / Pod<br/>原 gateway 容器 + 薄上下文桥]
+    S[Scheduler Deployment / Pod<br/>原 scheduler 容器<br/>原生选点及 ReservationStore + ControlPlugin + 公共 Consumption]
+  end
+  subgraph W[每个 Worker]
+    subgraph AP[原 agentenv-node DaemonSet 的 Pod]
+      A[原 AgentENV 容器<br/>API / Orchestrator / VMM]
+      P[新增 NodePlugin sidecar<br/>本地 StorageProvider / evidence]
+      N[新增公共 SSF Node sidecar<br/>先启动后退出 / 持久 WAL]
+    end
+    D[既有 CSI Node DaemonSet / Pod<br/>厂商 Driver / registrar]
+    H[共享 hostPath<br/>SSF publish 与持久 WAL]
+  end
+  K[既有 Kubernetes / CSI Controller<br/>原生卷及快照管理]
+  L[公共 SSF 账本 / 独立 Guard]
+  X[条件 CSI Gateway 容器<br/>位于 CSI Controller Pod]
+  G --> S
+  G --> A
+  A -.原心跳与事件.-> S
+  A --> P
+  P --> N
+  N -->|UDS| D
+  N -.挂载可见性.-> H
+  P -.HostToContainer.-> H
+  A -.HostToContainer.-> H
+  S --> K
+  S -.状态 / 权限.-> L
+  S --> X
+  classDef common fill:#244351,stroke:#739bad,color:#d3e4eb;
+  classDef project fill:#44392c,stroke:#aa9066,color:#e5d6bb;
+  classDef native fill:#24364a,stroke:#617d9b,color:#d5e0ec;
+  classDef optional fill:#2b323e,stroke:#7b8798,stroke-dasharray:6 4,color:#d1d9e3;
+  class G,S,A,P,D project;
+  class N,L common;
+  class K,H native;
+  class X optional;

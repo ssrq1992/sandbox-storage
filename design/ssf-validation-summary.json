@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-19",
+  "reference_sha256": "9733935a2c0e2d144b67c8404361c835e7f8ed45d2b508992cb230da31b3d5dc",
+  "links_checked": 113,
+  "go_sources": 65,
+  "tests": {
+    "unit": {
+      "passed": [
+        "TestPlanScope",
+        "TestManagementRPCsDenied",
+        "TestDoesNotClaimGuestReady",
+        "TestCapabilityPersistence",
+        "TestMountValidation",
+        "TestPVCDeleteRequiresPermit",
+        "TestNativePodCannotStealManagedVolume",
+        "TestSelectedNodeNeedsPlacementPermit",
+        "TestCanceledPlanCannotResurrect",
+        "TestSharedStageAndReleaseEvidence",
+        "TestUnknownPublishAndRetry",
+        "TestWALRestart",
+        "TestRebootRequiresRuntimeReconciliation",
+        "TestReleasedRecordsLeaveActiveIndex",
+        "TestResolveIdentityAndBlock",
+        "TestWFFCSelectionIsSticky",
+        "TestStaticReservation"
+      ],
+      "skipped": [
+        "TestPostgresConsumptionLifecycle",
+        "TestPostgresConcurrentWriterAndDrain",
+        "TestClusterNativeProvisioning"
+      ],
+      "failures": []
+    },
+    "race": {
+      "passed": [
+        "TestPlanScope",
+        "TestManagementRPCsDenied",
+        "TestDoesNotClaimGuestReady",
+        "TestCapabilityPersistence",
+        "TestMountValidation",
+        "TestPVCDeleteRequiresPermit",
+        "TestNativePodCannotStealManagedVolume",
+        "TestSelectedNodeNeedsPlacementPermit",
+        "TestCanceledPlanCannotResurrect",
+        "TestSharedStageAndReleaseEvidence",
+        "TestUnknownPublishAndRetry",
+        "TestWALRestart",
+        "TestRebootRequiresRuntimeReconciliation",
+        "TestReleasedRecordsLeaveActiveIndex",
+        "TestResolveIdentityAndBlock",
+        "TestWFFCSelectionIsSticky",
+        "TestStaticReservation"
+      ],
+      "skipped": [
+        "TestPostgresConsumptionLifecycle",
+        "TestPostgresConcurrentWriterAndDrain",
+        "TestClusterNativeProvisioning"
+      ],
+      "failures": []
+    }
+  },
+  "benchmark": "goos: darwin\ngoarch: amd64\npkg: ssf.dev/ssf/node\ncpu: Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz\nBenchmarkPreparedReplay-8   \t    6914\t    151079 ns/op\t   10360 B/op\t     166 allocs/op\nPASS\nok  \tssf.dev/ssf/node\t2.440s\n"
+}

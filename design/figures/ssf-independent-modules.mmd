@@ -1,0 +1,39 @@
+flowchart TB
+  subgraph A["AgentENV 原有进程"]
+    GW["Gateway：鉴权 / 原 HTTP 和 WS 代理"]
+    SCH["Scheduler：发现 / 心跳 / 健康过滤 / 原策略"]
+    HOST["Node + Orchestrator：VMM / 冻结屏障 / 真实停止"]
+    BR["通用宿主 bridge：设备边界 / 工件删除"]
+  end
+  subgraph C["sandbox-storage：ssf-coordinator 进程"]
+    REG["coordinator.Runtime 注册接口"]
+    AD["agentenvadapter：请求 / 模板 / 生命周期映射"]
+    CONS["Consumption / Preparation / Resolver / WFFC"]
+    LED["Ledger：事务 / 使用权 / 恢复"]
+  end
+  PG[("PostgreSQL：唯一共享账本")]
+  G["独立 Guard"]
+  SDK["框架仓库 Rust adapter crate：协议 / outbox / guest 策略"]
+  PL["agentenv-storage 节点插件"]
+  N["SSF Node：CSI Stage/Publish / WAL"]
+  K["Kubernetes：SC / PVC / PV / Snapshot"]
+  GW --> SCH
+  SCH -->|"mTLS ssf.control.v1"| REG
+  REG --> AD --> CONS --> LED --> PG
+  AD -->|"只读 ObserveNodes"| SCH
+  G --> PG
+  K --> G
+  CONS --> K
+  GW -->|"原创建请求 + 签名计划"| HOST
+  HOST --> BR --> SDK -->|"Pod loopback + token"| PL
+  PL -->|"mTLS 生命周期回执"| REG
+  PL --> N
+  N -->|"内容准备回调"| PL
+  classDef common fill:#203e58,stroke:#72a6c9,color:#fff;
+  classDef custom fill:#594331,stroke:#c99c72,color:#fff;
+  classDef native fill:#353e4a,stroke:#9aaabd,color:#fff;
+  classDef data fill:#254d40,stroke:#7cbaa0,color:#fff;
+  class REG,CONS,LED,G,N common;
+  class AD,SDK,PL custom;
+  class GW,SCH,HOST,BR,K native;
+  class PG data;

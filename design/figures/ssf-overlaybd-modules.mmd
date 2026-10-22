@@ -1,0 +1,57 @@
+%%{init: {"theme":"base","themeVariables":{"background":"#151b24","primaryTextColor":"#e5edf5","lineColor":"#91a4b7","clusterBkg":"#1c2531","clusterBorder":"#596b7c","actorBkg":"#203e58","actorTextColor":"#e5edf5","signalColor":"#91a4b7","signalTextColor":"#e5edf5","noteBkgColor":"#353e4a","noteTextColor":"#e5edf5"}}}%%
+flowchart TB
+  subgraph K["Kubernetes 原生管理层"]
+    OBJ["StorageClass / PVC / PV / VolumeSnapshot"]
+    SIDE["官方 provisioner / snapshotter / resizer"]
+  end
+  subgraph F["sandbox-storage：公共框架"]
+    CO["独立 ssf-coordinator：Consumption / Preparation / WFFC"]
+    LED["Ledger：使用权 / epoch / 引用 / 恢复"]
+    GUARD["独立 Guard：准入与删除保护"]
+    NODE["SSF Node：Stage / Publish / 节点 WAL"]
+    CG["CSI Gateway：Attach / Detach"]
+  end
+  subgraph D["sandbox-storage：OverlayBD Driver 与 AgentENV adapter"]
+    CT["OverlayBD CSI Controller：逻辑卷 / 快照 / 容量"]
+    CN["OverlayBD CSI Node：唯一设备会话所有者"]
+    RA["AgentENV Runtime adapter：设备接纳 / 生命周期映射"]
+    CORE["复用原生存储库：Volume / repository / OverlayBD / ublk"]
+  end
+  subgraph A["AgentENV 原有模块与宿主边界"]
+    SCH["Gateway / Scheduler：原 API 与计算选点"]
+    HOST["Orchestrator：VMM / guest / 冻结屏障 / 真实停止"]
+    VM["Firecracker microVM：/data"]
+  end
+  DEV["宿主真实块设备 /dev/ublkbN"]
+  UPPER["运行时 upper：按原生配置落盘"]
+  REPO[("原生 repository：本地或共享 POSIX / OSS")]
+  PG[("PostgreSQL：公共账本 + 隔离的 Driver 元数据")]
+  OBJ -.-> SIDE
+  SIDE -->|"标准 CSI Controller RPC / UDS"| CT
+  SCH -->|"mTLS ssf.control.v1"| CO
+  CO --> LED --> PG
+  CO --> CG -->|"ControllerPublish / Unpublish"| CT
+  CO -->|"Kubernetes API"| OBJ
+  GUARD -.-> OBJ
+  GUARD -->|"受限查询"| PG
+  CO -->|"签名计划，经原创建链路"| HOST
+  HOST --> RA -->|"Prepare / Release"| NODE
+  NODE -->|"标准 CSI Node RPC / UDS"| CN
+  RA -->|"受信 Capture / Inspect 扩展"| CN
+  CT --> CORE
+  CN --> CORE
+  CT --> PG
+  CORE -->|"卷目录 / 封存层 / 发布"| REPO
+  HOST -->|"接纳已有设备；原 Firecracker API"| VM
+  CN -->|"创建 / 发布 / 最终释放"| DEV
+  VM ==>|"virtio-block 数据 I/O"| DEV
+  DEV ==>|"读 lower / 写 upper"| UPPER
+  DEV ==>|"读层或本地缓存"| REPO
+  classDef common fill:#203e58,stroke:#72a6c9,color:#fff;
+  classDef custom fill:#594331,stroke:#c99c72,color:#fff;
+  classDef native fill:#353e4a,stroke:#9aaabd,color:#fff;
+  classDef data fill:#254d40,stroke:#7cbaa0,color:#fff;
+  class OBJ,SIDE,CO,LED,GUARD,NODE,CG common;
+  class CT,CN,RA,CORE custom;
+  class SCH,HOST,VM,DEV native;
+  class UPPER,REPO,PG data;

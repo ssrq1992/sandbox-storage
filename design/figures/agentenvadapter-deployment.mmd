@@ -1,0 +1,24 @@
+flowchart TB
+classDef common fill:#24364a,stroke:#617d9b,color:#c4d0dc
+classDef adapter fill:#44392c,stroke:#aa9066,color:#c4d0dc
+classDef backend fill:#253a33,stroke:#668b7d,color:#c4d0dc
+subgraph G0["保留原工作负载"]
+N00["Gateway Deployment / 原路由与代理 Service"]:::common
+N01["Scheduler Deployment + 内嵌 ControlPlugin"]:::common
+N02["原 node DaemonSet / headless / 心跳 / P2P / 探针"]:::common
+end
+subgraph G1["原 node Pod 的增量 sidecar"]
+N10["原 AgentENV 容器与 Firecracker / guest"]:::common
+N11["NodePlugin：loopback :9445 token；mTLS :9444"]:::adapter
+N12["SSF Node：mTLS :9443 / WAL；先启动后退出"]:::common
+end
+subgraph G2["独立公共基础设施与原生 CSI"]
+N20["SSF Guard / PostgreSQL / Kubernetes 管理面"]:::common
+N21["厂商 Controller + 官方 sidecars / 本机 Node UDS"]:::adapter
+N22["真实后端存储；无逐沙箱 HolderPod"]:::backend
+end
+subgraph G3["共享宿主资源与 standalone"]
+N30["host PID / dev / WAL；CSI・SSF 双向挂载传播"]:::backend
+N31["standalone：保留原 service，新增插件与 SSF Node"]:::common
+N32["同一消费库 + 固定本机 placement，无替代沙箱控制面"]:::adapter
+end

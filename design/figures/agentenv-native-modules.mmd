@@ -1,0 +1,27 @@
+%%{init: {"theme":"dark","themeVariables":{"background":"#111c27","primaryTextColor":"#d5e0ec","lineColor":"#91a9b9","clusterBkg":"#182633","clusterBorder":"#617d9b","actorBkg":"#44392c","actorBorder":"#aa9066","actorTextColor":"#e5d6bb","fontFamily":"Arial, PingFang SC, sans-serif"},"themeCSS":"rect.actor[name='C'],rect.actor[name='N']{fill:#244351!important;stroke:#739bad!important}rect.actor[name='K']{fill:#24364a!important;stroke:#617d9b!important}"}}%%
+flowchart TB
+  U[原有 AgentENV 客户端 / SDK] --> G[原有 Gateway<br/>鉴权、路由、反向代理]
+  subgraph S[原有 Scheduler 进程]
+    P[原生发现 / 策略 / 计算预留] --- A[AgentENV ControlPlugin]
+    A --> C[公共 SSF Consumption<br/>Resolve / DelayedBinding / Acquire / Attach / Plan]
+  end
+  G --> S
+  G --> R[原有 AgentENV 节点<br/>API / Orchestrator / StorageProvider hook]
+  R --> N[AgentENV NodePlugin<br/>外部设备 / guest / 证据]
+  N --> SN[公共 SSF Node Agent<br/>Stage / Publish / WAL]
+  C -.卷管理与绑定.-> K[Kubernetes API + 原生 CSI 管理组件]
+  C --> CD[厂商 CSI Controller<br/>Attach / Detach]
+  C -.使用权与保护.-> L[公共账本 / Guard]
+  SN --> ND[厂商 CSI Node<br/>本机 UDS]
+  R --> VM[原生 Firecracker / guest]
+  VM ==>|块设备业务 I/O| B[(实际存储后端)]
+  ND --> B
+  CD --> B
+  classDef common fill:#244351,stroke:#739bad,color:#d3e4eb;
+  classDef project fill:#44392c,stroke:#aa9066,color:#e5d6bb;
+  classDef backend fill:#253a33,stroke:#668b7d,color:#c4ddd1;
+  classDef native fill:#24364a,stroke:#617d9b,color:#d5e0ec;
+  class C,SN,L common;
+  class G,P,A,R,N,VM,CD,ND project;
+  class K,U native;
+  class B backend;

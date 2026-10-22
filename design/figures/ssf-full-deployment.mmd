@@ -1,0 +1,395 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"PingFang SC, Microsoft YaHei, sans-serif","fontSize":"18px","darkMode":true,"background":"#0f1822","textColor":"#c4d0dc","lineColor":"#8999aa"},"flowchart":{"htmlLabels":false,"curve":"linear"}}}%%
+flowchart TB
+    subgraph k8s["① 原生 K8S 基础设施：kubeadm 静态 Pod 示例；托管控制面可替换为等价服务"]
+        subgraph kube_apiserver["[K] 独立静态 Pod"]
+            subgraph kube_apiserver_pod["Pod：kube-apiserver"]
+                subgraph kube_apiserver_proc["容器 / 进程：kube-apiserver"]
+                    api_auth["[K] 认证 / RBAC / admission webhook"]
+                    api_storage["[K] 存储资源 REST / watch / UID 校验"]
+                end
+            end
+        end
+        subgraph kube_controller_manager["[K] 独立静态 Pod"]
+            subgraph kube_controller_manager_pod["Pod：kube-controller-manager"]
+                subgraph kube_controller_manager_proc["容器 / 进程：kube-controller-manager"]
+                    pv_controller["[K] PV Controller<br/>绑定 / 回收"]
+                    ad_controller["[K] Attach/Detach<br/>原生 Pod 协调"]
+                    protection["[K] PVC/PV<br/>protection / GC"]
+                end
+            end
+        end
+        subgraph kube_scheduler["[K] 独立静态 Pod"]
+            subgraph kube_scheduler_pod["Pod：kube-scheduler"]
+                subgraph kube_scheduler_proc["容器 / 进程：kube-scheduler"]
+                    volume_binding["[K] VolumeBinding 与卷相关过滤"]
+                    platform_schedule["[K] 调度平台 Pod；不调度独立 VM"]
+                end
+            end
+        end
+        subgraph etcd["[K] 独立静态 Pod / 可外部部署"]
+            subgraph etcd_pod["Pod：etcd"]
+                subgraph etcd_proc["容器 / 进程：etcd [I]"]
+                    etcd_kv["[I] K8S API 对象持久化；不同于 SSF 账本"]
+                end
+            end
+        end
+        api_objects["[K] API 对象（不是 Pod）：SC / PVC / PV / CSIDriver / CSINode / VolumeAttachment / Snapshot 对象 / Secret / Service / RBAC<br/>[N] SSF 登记配置及准入配置：ValidatingWebhookConfiguration → SSF Guard；绑定与保护字段由指定组件维护"]
+    end
+    subgraph cluster_services["② 原生 CSI 管理与独立保护/账本：集群级职责，不要求位于控制平面宿主"]
+        subgraph csi_controller["CSI Controller Deployment → ReplicaSet"]
+            subgraph csi_controller_pod["Pod：csi-controller-xxx；下列为独立容器"]
+                provisioner["[K] 容器 external-provisioner<br/>PVC/PV → Create/DeleteVolume"]
+                attacher["[K] 容器 external-attacher〔条件〕<br/>原生 Pod / VA Bridge；SSF Direct 卷禁并管"]
+                snapshotter["[K] 容器 external-snapshotter〔可选〕<br/>Content → Create/DeleteSnapshot"]
+                resizer["[K] 容器 external-resizer〔可选〕<br/>PVC → ControllerExpandVolume"]
+                subgraph controller_driver["[D] 厂商 Driver 容器 / 进程"]
+                    c_identity["[D] Identity：Info / Capabilities / Probe"]
+                    c_service["[D] Controller：卷、attach、snapshot 等<br/>后端管理适配 / SDK（实现相关）"]
+                end
+                subgraph controller_gateway["[N] 容器：CSI Controller Gateway〔条件〕"]
+                    gateway_policy["[N] mTLS / 探测 / 能力查询<br/>副作用仅 Attach-Detach"]
+                    gateway_uds["[N] 拒绝 Create/Delete/Snapshot/Expand<br/>消费 RPC → 本地 CSI UDS"]
+                end
+                c_liveness["[K] 独立容器 livenessprobe〔推荐〕：调用 Identity Probe<br/>共享 emptyDir：CSI UDS；所有 sidecar 各自调用 Driver，不串行互调"]
+            end
+        end
+        subgraph ssf_guard["[N] Guard Deployment → ReplicaSet"]
+            subgraph ssf_guard_pod["Pod：ssf-guard"]
+                subgraph ssf_guard_proc["容器 / 进程：ssf-guard"]
+                    guard["[N] Admission Guard<br/>校验删除 / 迁移许可<br/>拒绝冲突消费者"]
+                    guard_ledger["[N] 读取共享使用账本<br/>不在准入内执行副作用"]
+                    guard_config["[N] Service / TLS / RBAC<br/>failurePolicy Fail<br/>sideEffects None"]
+                end
+            end
+        end
+        subgraph ssf_metadata["[I] 使用账本〔可外部/复用DB〕"]
+            subgraph ssf_metadata_pod["Pod：ssf-metadata"]
+                subgraph ssf_metadata_proc["容器 / 进程：postgres〔自建〕"]
+                    ssf_sql["[I] 事务 / CAS / operation<br/>writer、Binding、node pin<br/>不是PV/PVC管理权威"]
+                    ssf_db_disk["[I] 独立原生 PVC / 外部存储<br/>可复用满足条件的项目DB<br/>不经沙箱卷路径引导"]
+                end
+            end
+        end
+        subgraph snapshot_controller["[K] Snapshot Deployment〔可选〕"]
+            subgraph snapshot_controller_pod["Pod：snapshot-controller"]
+                subgraph snapshot_controller_proc["容器：snapshot-controller"]
+                    snapshot_reconcile["[K] 原生 Snapshot / Content<br/>通过 API 与 snapshotter 协作"]
+                    snapshot_status["[K] 原生快照状态 / 绑定<br/>生命周期状态协调"]
+                end
+            end
+        end
+    end
+    subgraph support_services["③ 项目控制面：公共消费模块嵌入现有进程，属于新增代码，不是新增 Controller Pod"]
+        subgraph cube_master["[P] CubeMaster Deployment → ReplicaSet"]
+            subgraph cube_master_pod["Pod：cube-master"]
+                subgraph cube_master_proc["容器 / 进程：cube-master；P 项目入口 + N 公共消费库"]
+                    cube_volume_api["[P] 原API → 原生PVC facade<br/>legacy ID / PVC UID 映射"]
+                    cube_placement["[P] 项目计算调度 / lease<br/>原Create RPC携带卷计划"]
+                    cube_resolver["[N] PVC/PV Resolver<br/>身份 / 能力 / 保护"]
+                    cube_delayed["[N] DelayedBinding<br/>WFFC动态 / 静态桥"]
+                    cube_use["[N] Acquire / Drain / 账本<br/>writer、Binding、node pin"]
+                    cube_attach["[N] Attachment Coordinator<br/>直接Attach / BuildNodePlan"]
+                    cube_sessions["[N] Controller SessionManager<br/>身份 / 能力 / 长连接"]
+                    cube_steps["[N] Step Runner / Recovery<br/>请求直接执行、未知结果"]
+                    cube_native["[N] Native Lifecycle facade<br/>原生快照/克隆/回收"]
+                end
+            end
+        end
+        subgraph agentenv_control["[P] AgentENV：既有 gateway 与 scheduler 两个 Deployment"]
+            subgraph agentenv_gateway_pod["Pod → gateway 容器 / 进程 [P]：API 路由 / 卷引用与租户身份传递"]
+                agentenv_gateway_module["[P] 项目 Gateway，与 CSI Controller Gateway 不同；原有 API 不直接调用 CSI 管理 RPC"]
+            end
+            subgraph agentenv_scheduler_pod["Pod → scheduler 容器 / 进程 [P]；新增公共消费模块 [N]"]
+                agentenv_scheduler_module["[P] 项目选点 / PlacementLease<br/>权威创建编排入口适配"]
+                agentenv_resolver["[N] PVC/PV Resolver / facade<br/>原生资源及身份映射"]
+                agentenv_delayed["[N] DelayedBinding<br/>WFFC动态 / 静态桥"]
+                agentenv_use["[N] Acquire / Drain / 共享账本<br/>writer、Binding、node pin"]
+                agentenv_attach["[N] Attach / BuildNodePlan<br/>SessionManager / 长连接"]
+                agentenv_steps["[N] Step Runner / Recovery<br/>创建RPC前完成Attach"]
+            end
+        end
+    end
+    subgraph worker["④ Worker Node：下列 DaemonSet 在每个适用节点各有 Pod；独立 VM 不创建逐沙箱消费者 Pod"]
+        subgraph host_services["宿主服务进程：不是 Pod"]
+            subgraph kubelet_process["[K] kubelet 进程内部模块；原生 Pod 卷流程继续保留"]
+                plugin_manager["[K] Plugin Manager<br/>CSI 注册 / CSINode 发现"]
+                volume_manager["[K] Volume Manager<br/>原生 Pod 卷状态协调"]
+                operation_executor["[K] Operation Executor<br/>仅原生 Pod Node RPC"]
+            end
+            cri_process["[I] CRI runtime：containerd / CRI-O + shim / runc；负责平台 Pod 容器<br/>Cube 的运行时 containerd 是否独立，按项目 profile 配置"]
+        end
+        subgraph host_resources["宿主内核、持久路径与挂载可见域：不是 Pod"]
+            node_state["[N] /var/lib/ssf/node-state<br/>WAL / 本地 operation / Binding"]
+            stage_targets["[N] SSF staging / targets<br/>挂载身份、holder / pin"]
+            kernel_devices["[I] 内核 mount / block / ublk / KVM<br/>设备与文件系统真实数据路径"]
+            visibility["[N] 受控 hostPath / mount propagation<br/>UDS、设备权限、jailer 路径"]
+        end
+        subgraph node_agent["[N] SSF Node Agent DaemonSet"]
+            subgraph node_agent_pod["Pod：ssf-node-agent-xxx"]
+                subgraph node_agent_process["容器 / 进程：ssf-node-agent；以下均为新增公共内部模块"]
+                    node_api["[N] mTLS gRPC / 身份与票据校验"]
+                    node_sessions["[N] DriverRegistry / SessionManager<br/>NodeGetInfo / 能力 / revision"]
+                    prepare_executor["[N] Prepare / Release Executor<br/>可重入步骤与批量准备"]
+                    stage_manager["[N] Stage / Publish Manager<br/>每卷操作与多卷有界并行"]
+                    local_wal["[N] StateStore / WAL<br/>intent / outcome / pin"]
+                    runtime_bindings["[N] RuntimeBinding Registry<br/>设备身份、Ready / 停止回执"]
+                    node_recovery["[N] Recovery / GC<br/>观测、重试、安全释放"]
+                    node_telemetry["[N] 节点能力注册 / telemetry<br/>项目 Coordinator 协同与诊断"]
+                end
+            end
+        end
+        subgraph csi_node["CSI Node DaemonSet"]
+            subgraph csi_node_pod["Pod：csi-node-xxx；Driver 与 registrar 为不同容器"]
+                subgraph node_driver["[D] 厂商 Driver 容器 / 进程"]
+                    n_identity["[D] Identity：Info / Probe"]
+                    n_service["[D] Node Service：GetInfo / Capabilities<br/>Stage / Publish / 逆操作 / 按需 Expand"]
+                    n_backend["[D] 后端 / mount / device 适配<br/>存储实现相关模块"]
+                    checkpoint_extension["[D] CheckpointExtension〔可选定制〕<br/>分层引擎 seal / restack 协同"]
+                end
+                registrar["[K] 独立容器<br/>node-driver-registrar<br/>GetPluginInfo → Driver<br/>注册 socket → kubelet"]
+                n_liveness["[K] 独立容器 livenessprobe<br/>Identity Probe〔推荐〕"]
+                node_sockets["[I] CSI UDS 与注册 UDS 分开；Driver 挂载传播到宿主，Node Agent / Runtime 使用受控可见路径"]
+            end
+        end
+        subgraph cube_runtime_profile["CubeSandbox 接入分支：既有部署 + 项目定制"]
+            subgraph cube_node_pod["DaemonSet cube-node → Pod"]
+                subgraph cubelet_container["容器 / 进程：cubelet [P]"]
+                    cube_node_bridge["[P] VolumePlugin → SSF Prepare/Release<br/>现有 storage / legacy 映射"]
+                    cube_runtime_adapter["[P] Runtime Adapter / 实例观测<br/>文件路径、readonly、就绪与清理"]
+                    cube_restore["[P] snapshot / restore 集成<br/>外部卷 Reference/Share"]
+                end
+                cube_s3lvol["[P] 可选独立容器<br/>cube-s3lvol<br/>既有卷/根盘后端<br/>按迁移权威接入"]
+                cube_init["[P] initContainer<br/>wait-node-prep<br/>启动门槛"]
+            end
+            subgraph cube_vmm_processes["运行时子进程 / 宿主可见进程：不是新增 Pod"]
+                cube_shim["[P] Cube runtime containerd / CubeShim<br/>CubeRuntime：按既有 ns/profile 运行"]
+                cube_vmm["[I] VMM / 文件共享进程<br/>Cloud Hypervisor 等 / virtiofsd"]
+            end
+            subgraph cube_guest["独立沙箱 VM：不是 Pod，也不是上方容器进程"]
+                cube_guest_mount["[P] guest agent / 文件系统 / 业务进程或容器<br/>消费共享目录或新增块卷 adapter；确认 GuestReady"]
+            end
+        end
+        subgraph agentenv_runtime_profile["AgentENV 接入分支：现有 node Pod 承载 runtime"]
+            subgraph agentenv_node_pod["DaemonSet agentenv-node → Pod"]
+                subgraph agentenv_container["容器：agentenv；服务与下列子进程都属于此容器执行域"]
+                    subgraph agentenv_server["进程：AgentENV server [P]；下列为进程内部模块"]
+                        agentenv_volume["[P] VolumeManager facade / 委托<br/>exclusive / readonly / 发布状态"]
+                        agentenv_adapter["[P] Runtime Adapter / ManagedBlock<br/>SSF SDK、设备槽位与 Ready 回执"]
+                        agentenv_checkpoint["[P] checkpoint / fork / restore<br/>Capture / Clone / 层版本 pin"]
+                        agentenv_orchestrator["[P] 既有 orchestrator / 节点 API<br/>计算占用与失败清理协同"]
+                    end
+                    ublk_process["[P] 子进程 ublk-daemon / OverlayBD<br/>兼容阶段保留；交接后由 Driver 持有设备"]
+                    firecracker_process["[I] 子进程 jailer / Firecracker [I]<br/>配置真实设备、只读属性与恢复槽位"]
+                end
+            end
+            subgraph agentenv_guest["独立沙箱 VM：guest 位于上方 Firecracker 管理的虚机中"]
+                agentenv_guest_mount["[P] guest agent / envd / 文件系统 / 用户任务<br/>设备识别、挂载和 GuestReady；保留块卷语义"]
+            end
+        end
+        subgraph plain_vm["普通 VM 接入替代分支：独立宿主服务 / 进程，不要求 guest 内再套容器"]
+            plain_adapter["[P] 项目管理进程 + Runtime Adapter [P]<br/>Prepare → VMM 配置 → GuestReady / 停止确认"]
+            plain_vmm["[I] libvirtd / QEMU 或其他 VMM [I]<br/>文件 transport 或 virtio-blk / virtio-scsi"]
+            plain_guest["[P] 独立 guest 内核与文件系统 [P]<br/>普通业务进程使用目录或磁盘"]
+        end
+    end
+    subgraph conditional["⑤ 条件组件与原项目配套 Pod：按功能启用，不属于每次沙箱创建路径"]
+        subgraph cube_bootstrap["[P] cube-node-bootstrap DaemonSet"]
+            subgraph cube_bootstrap_pod["Pod：cube-bootstrap"]
+                subgraph cube_bootstrap_proc["容器组；下方每框为独立 init / run 容器"]
+                    cube_boot_invalidate["[P] invalidate-stale-node-prep<br/>init：清理过期准备标记"]
+                    cube_boot_wait["[P] wait-pvm-host<br/>init：PVM 条件门槛"]
+                    cube_boot_init["[P] cube-node-init<br/>init：宿主目录 / 设备检查"]
+                    cube_boot_hold["[P] write-node-prep-ready<br/>run：准备状态维护"]
+                end
+            end
+        end
+        subgraph cube_installer["[P] cube-node-installer DaemonSet"]
+            subgraph cube_installer_pod["Pod：cube-installer"]
+                subgraph cube_installer_proc["容器组；下方每框为一个独立 install 容器"]
+                    cube_install_shim["[P] cube-shim-install<br/>shim / runtime 制品"]
+                    cube_install_kernel["[P] cube-kernel-install<br/>内核制品"]
+                    cube_install_guest["[P] cube-guest-install<br/>guest 制品"]
+                    cube_install_agent["[P] cube-agent-install<br/>guest agent 制品"]
+                end
+            end
+        end
+        subgraph cube_pvm["[P] cube-node-pvm DaemonSet〔PVM 时〕"]
+            subgraph cube_pvm_pod["Pod：cube-pvm"]
+                subgraph cube_pvm_proc["容器组；下方每框为独立 init / run 容器"]
+                    cube_pvm_bootstrap["[P] pvm-host-bootstrap<br/>init：内核与重启准备"]
+                    cube_pvm_hold["[P] hold-pvm-ready<br/>run：PVM 准备门槛；不执行 CSI RPC"]
+                end
+            end
+        end
+        subgraph cube_mysql["[I/P] 项目数据库 StatefulSet〔可外部〕"]
+            subgraph cube_mysql_pod["Pod：cube-mysql"]
+                subgraph cube_mysql_proc["容器 / 进程：mysql（或外部项目 DB）"]
+                    cube_db_modules["[I] Cube 卷映射与项目元数据<br/>与 SSF 账本职责分开"]
+                    cube_db_pvc["[I] 原生 PVC / 独立存储<br/>不由 SSF 自管卷引导"]
+                end
+            end
+        end
+        subgraph cube_redis["[I/P] 项目 Redis StatefulSet〔可外部〕"]
+            subgraph cube_redis_pod["Pod：cube-redis"]
+                subgraph cube_redis_proc["容器 / 进程：redis"]
+                    cube_redis_modules["[I] 原项目缓存 / 状态用途<br/>不是 SSF writer 权威账本"]
+                end
+            end
+        end
+        subgraph cube_minio["[I/P] 项目 MinIO StatefulSet〔可外部〕"]
+            subgraph cube_minio_pod["Pod：cube-minio"]
+                subgraph cube_minio_proc["容器 / 进程：minio"]
+                    cube_minio_modules["[I] S3 制品 / snapshot / 层对象<br/>沿用项目原有 repository"]
+                    cube_minio_pvc["[I] 原生 PVC 或独立后端<br/>不经 SSF 控制面逐 I/O 转发"]
+                end
+            end
+        end
+        subgraph alternative_profiles["替代 / 兼容部署：均非默认创建路径"]
+            subgraph shared_coordinator_pod["[N] 替代：共享 Coordinator Deployment → Pod"]
+                shared_coordinator_process["[N] 容器/进程：公共消费协调服务<br/>替代项目内嵌模块，使用同一账本<br/>不新增卷生命周期管理权威"]
+            end
+            subgraph native_consumer_pod["[K/P] 原生消费者 / 显式 Holder Pod〔兼容〕"]
+                native_volume["[K] 原生消费者容器：kubelet 管理 volume<br/>[N] Holder Bridge 必须独立认证与交接<br/>同一卷不能同时由 SSF Direct 管理"]
+            end
+        end
+    end
+    subgraph backends["⑥ 实际存储服务 / 设备：可为外部托管或已有存储集群；其内部拓扑由后端管理"]
+        data_backend["[B] 卷数据：NFS / Ceph / 云盘 / 本地盘<br/>文件系统或虚拟设备 → 实际数据 I/O"]
+        artifact_backend["[B] 项目数据：S3 / COS / snapshot repository<br/>OverlayBD 层、rootfs / 内存制品及其原有缓存"]
+    end
+    api_storage -.->|原生状态 watch| cube_resolver
+    api_storage -.->|原生状态 watch| agentenv_resolver
+    api_auth -.->|admission| guard
+    guard_ledger -.->|校验使用/排空许可| ssf_sql
+    provisioner -->|CSI UDS Create / Delete| c_service
+    attacher -->|native / VA Bridge only| c_service
+    snapshot_reconcile -.->|Snapshot API| snapshotter
+    snapshotter -->|CSI UDS Snapshot| c_service
+    resizer -->|CSI UDS Expand| c_service
+    cube_attach -->|mTLS Attach/Detach| gateway_policy
+    agentenv_attach -->|mTLS Attach/Detach| gateway_policy
+    gateway_uds -->|CSI UDS Publish/Unpublish| c_service
+    cube_use -->|transaction / operation| ssf_sql
+    agentenv_use -->|transaction / operation| ssf_sql
+    cube_delayed -.->|selected-node / static bind| api_storage
+    agentenv_delayed -.->|selected-node / static bind| api_storage
+    cube_placement -->|创建RPC携带NodeVolumePlan| cube_node_bridge
+    agentenv_scheduler_module -->|创建RPC携带NodeVolumePlan| agentenv_adapter
+    cube_node_bridge -->|Prepare / Release mTLS| node_api
+    agentenv_adapter -->|Prepare / Release mTLS| node_api
+    stage_manager -->|CSI UDS| n_service
+    registrar -->|GetPluginInfo| n_identity
+    registrar -->|registration UDS| plugin_manager
+    operation_executor -->|native Pod only| n_service
+    n_service --> stage_targets
+    cube_guest_mount ==>|volume I/O| data_backend
+    agentenv_guest_mount ==>|volume I/O| data_backend
+    classDef originK fill:#24364a,stroke:#617d9b,color:#c3d0dd,stroke-width:1.5px;
+    class api_auth,api_storage,pv_controller,ad_controller,protection,volume_binding,platform_schedule,api_objects,provisioner,attacher,snapshotter,resizer,c_liveness,snapshot_reconcile,snapshot_status,plugin_manager,volume_manager,operation_executor,registrar,n_liveness,native_volume originK;
+    classDef originN fill:#244351,stroke:#739bad,color:#c8dee6,stroke-width:1.5px;
+    class gateway_policy,gateway_uds,guard,guard_ledger,guard_config,cube_resolver,cube_delayed,cube_use,cube_attach,cube_sessions,cube_steps,cube_native,agentenv_resolver,agentenv_delayed,agentenv_use,agentenv_attach,agentenv_steps,node_state,stage_targets,visibility,node_api,node_sessions,prepare_executor,stage_manager,local_wal,runtime_bindings,node_recovery,node_telemetry,shared_coordinator_process originN;
+    classDef originP fill:#44392c,stroke:#aa9066,color:#dfcfb2,stroke-width:1.5px;
+    class cube_volume_api,cube_placement,agentenv_gateway_module,agentenv_scheduler_module,cube_node_bridge,cube_runtime_adapter,cube_restore,cube_s3lvol,cube_init,cube_shim,cube_guest_mount,agentenv_volume,agentenv_adapter,agentenv_checkpoint,agentenv_orchestrator,ublk_process,agentenv_guest_mount,plain_adapter,plain_guest,cube_boot_invalidate,cube_boot_wait,cube_boot_init,cube_boot_hold,cube_install_shim,cube_install_kernel,cube_install_guest,cube_install_agent,cube_pvm_bootstrap,cube_pvm_hold originP;
+    classDef originD fill:#3d3328,stroke:#937b56,color:#d8c6a9,stroke-width:1.5px;
+    class c_identity,c_service,n_identity,n_service,n_backend,checkpoint_extension originD;
+    classDef originI fill:#2b323e,stroke:#7b8798,color:#c6ced9,stroke-width:1.5px;
+    class etcd_kv,ssf_sql,ssf_db_disk,cri_process,kernel_devices,node_sockets,cube_vmm,firecracker_process,plain_vmm,cube_db_modules,cube_db_pvc,cube_redis_modules,cube_minio_modules,cube_minio_pvc originI;
+    classDef originB fill:#253a33,stroke:#668b7d,color:#b4cfc3,stroke-width:1.5px;
+    class data_backend,artifact_backend originB;
+    style k8s fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style kube_apiserver fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style kube_apiserver_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style kube_apiserver_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style kube_controller_manager fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style kube_controller_manager_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style kube_controller_manager_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style kube_scheduler fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style kube_scheduler_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style kube_scheduler_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style etcd fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style etcd_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style etcd_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cluster_services fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style csi_controller fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style csi_controller_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style attacher stroke:#8793a3,stroke-dasharray:8 5
+    style snapshotter stroke:#8793a3,stroke-dasharray:8 5
+    style resizer stroke:#8793a3,stroke-dasharray:8 5
+    style controller_driver fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style controller_gateway fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style controller_gateway stroke:#8793a3,stroke-dasharray:8 5
+    style ssf_guard fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style ssf_guard_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style ssf_guard_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style ssf_metadata fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style ssf_metadata stroke:#8793a3,stroke-dasharray:8 5
+    style ssf_metadata_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style ssf_metadata_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style snapshot_controller fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style snapshot_controller stroke:#8793a3,stroke-dasharray:8 5
+    style snapshot_controller_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style snapshot_controller_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style support_services fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_master fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_master_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_master_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style agentenv_control fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style agentenv_gateway_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style agentenv_scheduler_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style worker fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style host_services fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style kubelet_process fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style host_resources fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style node_agent fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style node_agent_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style node_agent_process fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style csi_node fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style csi_node_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style node_driver fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style checkpoint_extension stroke:#8793a3,stroke-dasharray:8 5
+    style cube_runtime_profile fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_node_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cubelet_container fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_s3lvol stroke:#8793a3,stroke-dasharray:8 5
+    style cube_vmm_processes fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_guest fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style agentenv_runtime_profile fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style agentenv_node_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style agentenv_container fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style agentenv_server fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style agentenv_guest fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style plain_vm fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style plain_vm stroke:#8793a3,stroke-dasharray:8 5
+    style conditional fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style conditional stroke:#8793a3,stroke-dasharray:8 5
+    style cube_bootstrap fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_bootstrap stroke:#8793a3,stroke-dasharray:8 5
+    style cube_bootstrap_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_bootstrap_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_installer fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_installer stroke:#8793a3,stroke-dasharray:8 5
+    style cube_installer_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_installer_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_pvm fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_pvm stroke:#8793a3,stroke-dasharray:8 5
+    style cube_pvm_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_pvm_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_mysql fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_mysql stroke:#8793a3,stroke-dasharray:8 5
+    style cube_mysql_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_mysql_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_redis fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_redis stroke:#8793a3,stroke-dasharray:8 5
+    style cube_redis_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_redis_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_minio fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_minio stroke:#8793a3,stroke-dasharray:8 5
+    style cube_minio_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style cube_minio_proc fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style alternative_profiles fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style alternative_profiles stroke:#8793a3,stroke-dasharray:8 5
+    style shared_coordinator_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style shared_coordinator_pod stroke:#8793a3,stroke-dasharray:8 5
+    style native_consumer_pod fill:#111c27,stroke:#64798d,color:#c4d0dc
+    style native_consumer_pod stroke:#8793a3,stroke-dasharray:8 5
+    style backends fill:#111c27,stroke:#64798d,color:#c4d0dc

@@ -1,0 +1,62 @@
+%%{init: {"theme":"base","themeVariables":{"background":"#151b24","primaryTextColor":"#e5edf5","lineColor":"#91a4b7","clusterBkg":"#1c2531","clusterBorder":"#596b7c","actorBkg":"#203e58","actorTextColor":"#e5edf5","signalColor":"#91a4b7","signalTextColor":"#e5edf5","noteBkgColor":"#353e4a","noteTextColor":"#e5edf5"}}}%%
+flowchart TB
+  API["Kubernetes API Server / 原生控制器"]
+  subgraph CP["控制服务工作负载；不要求位于控制平面节点"]
+    GW["原 Gateway Deployment"]
+    SCH["原 Scheduler Deployment"]
+    CO["ssf-coordinator Deployment"]
+    G["独立 Guard Deployment"]
+    subgraph DCP["新增 OverlayBD CSI Controller Deployment / Pod"]
+      SID["provisioner / snapshotter / resizer"]
+      CTRL["OverlayBD CSI Controller 进程"]
+    end
+  end
+  DB[("PostgreSQL")]
+  subgraph NP["原 AgentENV Node DaemonSet：同一 Pod"]
+    NAT["原 AgentENV Node / Orchestrator 容器"]
+    AD["现有 agentenv-storage sidecar"]
+    SN["现有 ssf-node sidecar"]
+    OBN["新增 OverlayBD CSI Node 入口；可与 adapter 合并容器"]
+    WRK["存储 worker 逻辑：本地供卷 / 封存；非临时 Pod"]
+  end
+  subgraph HM["宿主机资源与受控持久目录"]
+    DAEMON["复用原 ublk daemon；精确隔离会话所有权"]
+    WAL["Node WAL / upper / 缓存 / publish 路径"]
+    VM["原 Firecracker / jailer / guest"]
+    DEV["/dev/ublkbN"]
+  end
+  REG["可选 node-driver-registrar；启用 kubelet 消费时配置"]
+  LOCAL[("本地 POSIX 存储")]
+  SHARED[("共享 POSIX 挂载或 OSS")]
+  GW --> SCH -->|"mTLS"| CO
+  CO --> DB
+  G -->|"受限权限"| DB
+  CTRL -->|"Driver 独立 schema"| DB
+  API -.-> SID
+  SID -->|"CSI / UDS"| CTRL
+  CO -->|"K8S API"| API
+  CO -->|"经原请求链下发计划"| NAT
+  NAT -->|"Pod loopback + 凭据"| AD
+  AD -->|"公共 Node API / mTLS"| SN
+  SN -->|"CSI Node / UDS"| OBN
+  AD -->|"受信会话扩展 / UDS"| OBN
+  OBN -->|"复用客户端 / UDS"| DAEMON
+  OBN --> WRK
+  WRK -.->|"持久 backend operation；不是 CSI Node RPC"| CTRL
+  OBN --> WAL
+  NAT --> VM
+  DAEMON --> DEV
+  VM ==>|"virtio-block"| DEV
+  DEV ==> LOCAL
+  DEV ==> SHARED
+  REG -.-> OBN
+  classDef common fill:#203e58,stroke:#72a6c9,color:#fff;
+  classDef custom fill:#594331,stroke:#c99c72,color:#fff;
+  classDef native fill:#353e4a,stroke:#9aaabd,color:#fff;
+  classDef data fill:#254d40,stroke:#7cbaa0,color:#fff;
+  classDef optional fill:#3c4149,stroke:#969ba5,color:#fff,stroke-dasharray:5 5;
+  class API,CO,G,SID,SN common;
+  class CTRL,AD,OBN,WRK custom;
+  class GW,SCH,NAT,DAEMON,VM,DEV native;
+  class DB,WAL,LOCAL,SHARED data;
+  class REG optional;

@@ -1,0 +1,43 @@
+flowchart TB
+  U["用户：kubectl 创建 PVC"] --> K["Kubernetes API / SC / PVC / PV"]
+  K -.供卷声明.-> E["原生 external-provisioner"]
+  E --> DC["厂商 CSI Controller：创建 / 删除"]
+  subgraph S["原 Scheduler 进程"]
+    M["公共 SSF VolumePreparation Coordinator"]
+    C["公共 SSF Consumption / DelayedBinding"]
+    A["AgentENV adapter：规格与内容计划"]
+    P["原发现 / 健康过滤 / 计算预留"]
+    M --> A
+    C --> P
+    C --> M
+  end
+  K -.对象 watch.-> M
+  M -.状态和保护.-> L["公共账本 / 独立 Guard"]
+  C -.使用权.-> L
+  M --> AT["公共 Attachment Manager"]
+  C --> AT
+  AT -->|"仅消费 Attach / Detach"| DC
+  subgraph W["原 agentenv-node Pod"]
+    N["公共 SSF Node Agent：Stage / Publish / WAL"]
+    V["AgentENV adapter：PrepareVolume / Inspect"]
+    R["AgentENV adapter：RuntimeMount / guest 证据"]
+    O["原 API / Orchestrator / Firecracker"]
+    N --> V
+    R --> N
+    O --> R
+  end
+  M -->|"签名准备计划，无 sandbox"| N
+  G["原 Gateway"] --> C
+  G -->|"原创建请求 + 完整计划"| O
+  N --> DN["厂商 CSI Node：本机 UDS"]
+  DC --> B[("实际存储后端")]
+  DN --> B
+  O ==>|guest 块设备 I/O| B
+  classDef common fill:#244351,stroke:#739bad,color:#d3e4eb;
+  classDef project fill:#44392c,stroke:#aa9066,color:#e5d6bb;
+  classDef native fill:#24364a,stroke:#617d9b,color:#d5e0ec;
+  classDef backend fill:#253a33,stroke:#668b7d,color:#c4ddd1;
+  class M,C,N,AT,L common;
+  class A,P,V,R,O,G,DC,DN project;
+  class K,E,U native;
+  class B backend;

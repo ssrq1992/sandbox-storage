@@ -1,0 +1,27 @@
+sequenceDiagram
+  participant U as 用户
+  participant K as Kubernetes/CSI provisioner
+  participant G as 原 Gateway
+  participant S as 原 Scheduler
+  participant C as SSF coordinator
+  participant N as 原 Node/Orchestrator
+  participant A as 节点 adapter + SSF Node
+  U->>K: 创建 PVC
+  C->>K: 周期观察 / profile / UID 固定
+  Note over C,A: Immediate 自动准备后释放临时使用；WFFC 等原 Scheduler 选点
+  U->>G: 原创建 API，volumeMounts 引用 PVC
+  G->>S: 签名原请求
+  S->>C: ResolveLaunch：固定模板/PVC，返回可行候选
+  C->>S: mTLS ObserveNodes：原生发现/健康状态
+  Note over S: 原策略选择节点
+  S->>C: PrepareLaunch：只提交选中的节点
+  C->>C: 唯一计算预留 / WFFC / 准备 / Acquire / Attach
+  C-->>S: 完整签名 dispatch
+  S-->>G: 节点 + dispatch
+  G->>N: 原请求 body + 内部签名计划
+  N->>A: Prepare / 原生启动 VMM / guest 验证
+  A->>C: Ready + 独立可信回执
+  C->>C: Commit
+  N-->>G: 原生 201
+  G-->>U: 原生 201 + native ID
+  Note over N,C: 暂停、恢复、Fork、快照及删除仍由原 Orchestrator 发起

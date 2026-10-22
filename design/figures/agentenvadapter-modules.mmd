@@ -1,0 +1,24 @@
+flowchart TB
+classDef common fill:#24364a,stroke:#617d9b,color:#c4d0dc
+classDef adapter fill:#44392c,stroke:#aa9066,color:#c4d0dc
+classDef backend fill:#253a33,stroke:#668b7d,color:#c4d0dc
+subgraph G0["原生请求与生命周期（保留）"]
+N00["Gateway：鉴权 / 路由 / HTTP・WS・流代理"]:::common
+N01["Scheduler：发现 / 健康 / 策略 / 计算准入"]:::common
+N02["AgentENV：SnapshotManager / Orchestrator / VMM"]:::common
+end
+subgraph G1["存储插件（定制）与公共消费能力"]
+N10["ControlPlugin：模板 pin / VolumeProviderMux / 生命周期命令"]:::adapter
+N11["SSF Coordinator：拓扑 / WFFC / owner・run・epoch / Attach"]:::common
+N12["NodePlugin：签名计划 / loopback hook / guest 与停止证据"]:::adapter
+end
+subgraph G2["原生卷管理与直接节点消费"]
+N20["Kubernetes：PVC / PV / Snapshot・Content / 原生 sidecars"]:::common
+N21["SSF Node / WAL / Guard / PostgreSQL：授权・保护・恢复"]:::common
+N22["厂商 CSI Controller・Node：管理 RPC / NodeStage・Publish"]:::adapter
+end
+subgraph G3["实际数据路径与持久性"]
+N30["Firecracker guest → virtio-block → host block（原 VMM 拥有）"]:::common
+N31["后端持久存储；业务 I/O 不经过控制插件"]:::backend
+N32["暂停保留 UseHold；真实 stop → Unpublish → Unstage → Detach"]:::backend
+end

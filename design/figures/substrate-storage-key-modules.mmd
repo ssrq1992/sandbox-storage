@@ -1,0 +1,48 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"PingFang SC, Microsoft YaHei, sans-serif","fontSize":"20px","background":"#0f1822","darkMode":true,"lineColor":"#8999aa","textColor":"#c4d0dc","edgeLabelBackground":"#111922"},"themeCSS":".edgeLabel text{fill:#c4d0dc!important}","flowchart":{"htmlLabels":false,"nodeSpacing":26,"rankSpacing":38,"padding":12,"wrappingWidth":340,"curve":"linear"}}}%%
+flowchart TB
+    subgraph CP[" "]
+        CT["① K8S 基础设施与 Substrate 控制面"]
+        K8S["K8S API 对象<br/>StorageClass / CSIDriverConfig<br/>WorkerPool / SandboxConfig"]
+        API["Substrate 公共 ateapi<br/>ActorWorkflow / Worker 调度<br/>VolumePluginControlPlane + CSI adapter"]
+        DB[("PostgreSQL<br/>Actor 卷 handle / context<br/>Actor lease / Worker assignment")]
+        DriverC["外部存储 Driver<br/>CSI Controller Service<br/>网络 endpoint 或 UDS 代理"]
+        CT ~~~ K8S
+        CT ~~~ API
+        K8S -.->|"配置发现；不生成 Actor PV/PVC"| API
+        API -.->|"Actor 生命周期<br/>与已知建卷进度"| DB
+        API -->|"直接 Create / Delete<br/>ControllerPublish / Unpublish"| DriverC
+    end
+
+    subgraph Node[" "]
+        NT["② Worker Node：已有 Worker Pod 内启动 Actor"]
+        Atelet["公共 atelet DaemonSet<br/>Run / Restore / Checkpoint / Terminate<br/>VolumePluginWorkerPlane + CSI adapter"]
+        DriverN["外部存储 Driver<br/>CSI Node Service<br/>Node DaemonSet 的本机 UDS"]
+        Target["宿主 Actor 卷目录<br/>/var/lib/ate/actors/UID/volumes/name<br/>CSI Mount target"]
+        Worker["运行时定制 ateworker<br/>gVisor：OCI bind / gofer<br/>microVM：共享树 / virtiofsd"]
+        Guest["Actor 沙箱<br/>gVisor 容器或 VM 内容器<br/>当前无公开纯 VM 工作负载入口"]
+        NT ~~~ Atelet
+        Atelet -->|"UDS：按能力 Stage / Publish<br/>及逆操作"| DriverN
+        DriverN -->|"宿主发布目录"| Target
+        Atelet -->|"Worker UDS：RunWorkload / Restore<br/>传 ActorDirs 与容器挂载声明"| Worker
+        Target -->|"目录接入"| Worker
+        Worker -->|"runsc；或 CH + kata-agent"| Guest
+    end
+
+    CSIBackend[("③ CSI 数据后端<br/>NFS / hostpath<br/>其他已验证 Driver 的后端")]
+    ObjectStore[("④ 对象存储<br/>Actor 快照 / 运行时资产<br/>不包含 CSI 卷内容快照")]
+    API -->|"选 Worker 后 attach<br/>携带 volumeContext / publishContext"| Atelet
+    DriverC -->|"后端管理 API"| CSIBackend
+    DriverN -->|"文件系统准备"| CSIBackend
+    Guest ==>|"业务 I/O 经 gofer 或 virtiofs / 宿主 FS<br/>不经 ateapi / atelet / CSI RPC 转发"| CSIBackend
+    Atelet -->|"worker 生成快照文件<br/>objectstore-plugin 上传 / 下载"| ObjectStore
+
+    classDef common fill:#24364a,stroke:#617d9b,stroke-width:1.5px,color:#c3d0dd;
+    classDef custom fill:#3d3328,stroke:#937b56,stroke-width:1.5px,color:#d8c6a9;
+    classDef backend fill:#253a33,stroke:#668b7d,stroke-width:1.5px,color:#b4cfc3;
+    classDef title fill:transparent,stroke-width:0px,color:#c4d0dc,font-weight:bold;
+    class K8S,API,DB,Atelet,Target common;
+    class DriverC,DriverN,Worker,Guest custom;
+    class CSIBackend,ObjectStore backend;
+    class CT,NT title;
+    style CP fill:#111922,stroke:#71869d,stroke-width:1.8px,color:#c4d0dc
+    style Node fill:#111922,stroke:#71869d,stroke-width:1.8px,color:#c4d0dc

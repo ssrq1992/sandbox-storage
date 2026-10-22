@@ -1,0 +1,60 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"PingFang SC, Microsoft YaHei, sans-serif","fontSize":"17px","background":"#0f1822","darkMode":true,"textColor":"#c4d0dc","lineColor":"#8999aa"},"markdownAutoWrap":false,"block":{"padding":16}}}%%
+block-beta
+    columns 3
+    KTitle["① Kubernetes 基础设施：此图以安装器 NFS profile 为例"]:3
+    KAPI["K8S API Server / 对象<br/>StorageClass / CSIDriverConfig<br/>WorkerPool / SandboxConfig"]
+    Controller["atecontroller Deployment → Pod<br/>WorkerPool reconciler 内部模块<br/>提前创建常驻 Worker Pod"]
+    Kubelet["各节点 kubelet<br/>维护平台 Pod / Driver 注册<br/>不执行 Actor 卷消费者流程"]
+    APITitle["② ateapi Deployment → ReplicaSet → Pod"]:3
+    API["ate-api-server 容器 / 进程<br/>内部：ActorWorkflow / 调度器<br/>公共 CSI Controller adapter"]:2
+    ControlObj["objectstore-plugin sidecar 容器<br/>独立控制 socket<br/>快照复制 / 清理"]
+    PG["独立 PostgreSQL 服务<br/>Actor / Template / 外部卷 handle / lease / Worker assignments<br/>不保存外部卷业务数据"]:3
+    CSICTitle["③ NFS CSI Controller Deployment → ReplicaSet → Pod"]:3
+    CDriver["外部 NFS Driver 容器<br/>CSI Controller / Identity<br/>本 Pod /csi/csi.sock"]
+    CProxy["安装器新增 socat 容器<br/>Service TCP → 本 Pod UDS<br/>当前 NFS profile 未启用 TLS"]
+    Sidecars["原生 CSI sidecar 容器<br/>provisioner / resizer / snapshotter<br/>不替 Actor 卷供给或捕获快照"]
+    NodeTitle["④ Worker Node：下面是三类独立 Pod，均由 kubelet 维护"]:3
+    AteletTitle["atelet DaemonSet → 本节点 Pod"]:3
+    Atelet["atelet 容器 / 进程<br/>Run / Restore / Checkpoint / Terminate<br/>内部 Node CSI adapter / 目录准备"]:2
+    NodeObj["objectstore-plugin sidecar 容器<br/>NodeProvider socket<br/>快照上传下载 / 资产获取"]
+    CSINT["CSI Node DaemonSet → 本节点独立 Pod"]:3
+    NDriver["NFS Driver 容器<br/>NodeStage / NodePublish<br/>/var/lib/ate 双向挂载传播"]:2
+    Registrar["registrar / liveness 容器<br/>共享 CSI UDS 与注册目录<br/>不是 Actor 挂载调用方"]
+    HostTarget["宿主共享目录 /var/lib/ate<br/>Actor publish target / staging / 镜像缓存 / 快照工作目录<br/>atelet 发 CSI RPC；Worker 以 HostToContainer 消费宿主挂载"]:3
+    WPTitle["WorkerPool → Deployment → ReplicaSet → 常驻 Worker Pod；每个 Pod 可承载多个 Actor"]:3
+    Worker["ateworker-microvm 容器 / 主进程<br/>内部：Actor 锁 / OCI shaping<br/>共享树准备 / snapshot / teardown"]
+    CH["同一容器内的子进程<br/>Cloud Hypervisor + virtiofsd<br/>不是新增 Kubernetes 容器"]
+    Other["替代 Worker profile<br/>ateworker-gvisor 容器<br/>runsc / gofer，直接消费 OCI bind"]
+    Guest["每个 Actor 一个 microVM / 独立 guest 内核<br/>guest 内 kata-agent → 多个业务容器<br/>共享一个 kataShared virtiofs 设备；公开 Actor API 要求容器列表"]:3
+    BackendTitle["⑤ 实际数据后端：两条独立生命周期"]:3
+    Backend["CSI 后端：NFS 服务端 / hostpath 或其他已验证存储<br/>Actor 外部卷业务数据，当前不随 Actor snapshot 回滚"]:2
+    Snapshot["快照对象存储<br/>内存 / rootfs upper / durable-dir<br/>非 CSI CreateSnapshot"]
+
+    style KAPI fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style Controller fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style Kubelet fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style API fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style ControlObj fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style PG fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style Sidecars fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style Atelet fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style NodeObj fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style Registrar fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style HostTarget fill:#24364a,stroke:#617d9b,stroke-width:1.4px,color:#c3d0dd
+    style CDriver fill:#3d3328,stroke:#937b56,stroke-width:1.4px,color:#d8c6a9
+    style CProxy fill:#3d3328,stroke:#937b56,stroke-width:1.4px,color:#d8c6a9
+    style NDriver fill:#3d3328,stroke:#937b56,stroke-width:1.4px,color:#d8c6a9
+    style Worker fill:#3d3328,stroke:#937b56,stroke-width:1.4px,color:#d8c6a9
+    style CH fill:#3d3328,stroke:#937b56,stroke-width:1.4px,color:#d8c6a9
+    style Guest fill:#3d3328,stroke:#937b56,stroke-width:1.4px,color:#d8c6a9
+    style Other fill:#2a3039,stroke:#707c8d,stroke-width:1.3px,stroke-dasharray:5 3,color:#b4bdc9
+    style Backend fill:#253a33,stroke:#668b7d,stroke-width:1.4px,color:#b4cfc3
+    style Snapshot fill:#253a33,stroke:#668b7d,stroke-width:1.4px,color:#b4cfc3
+    style KTitle fill:#172330,stroke:#50657b,stroke-width:1.2px,color:#c4d0dc,font-weight:bold
+    style APITitle fill:#172330,stroke:#50657b,stroke-width:1.2px,color:#c4d0dc,font-weight:bold
+    style CSICTitle fill:#172330,stroke:#50657b,stroke-width:1.2px,color:#c4d0dc,font-weight:bold
+    style NodeTitle fill:#172330,stroke:#50657b,stroke-width:1.2px,color:#c4d0dc,font-weight:bold
+    style AteletTitle fill:#172330,stroke:#50657b,stroke-width:1.2px,color:#c4d0dc,font-weight:bold
+    style CSINT fill:#172330,stroke:#50657b,stroke-width:1.2px,color:#c4d0dc,font-weight:bold
+    style WPTitle fill:#172330,stroke:#50657b,stroke-width:1.2px,color:#c4d0dc,font-weight:bold
+    style BackendTitle fill:#172330,stroke:#50657b,stroke-width:1.2px,color:#c4d0dc,font-weight:bold

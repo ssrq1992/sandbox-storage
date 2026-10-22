@@ -1,0 +1,756 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="6050" viewBox="0 0 2800 6050" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">SSF 存储完整部署图</title><desc id="diagram-desc">展开 K8S 原生组件、CSI Pod、SSF 新增组件、项目定制、宿主进程及各自内部模块。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#afc1d3"/></marker></defs>
+<style>text{font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif}text,tspan{dominant-baseline:auto}</style>
+<rect width="2800" height="6050" fill="#0f1822"/>
+<text x="48" y="48" font-size="30" fill="#c4d0dc" text-anchor="start"><tspan x="48" dy="0">SSF 存储完整部署图：工作负载 → Pod → 容器 / 进程 → 内部模块</tspan></text>
+<text x="48" y="85" font-size="20" fill="#c4d0dc" text-anchor="start"><tspan x="48" dy="0">默认部署；K8S 管理正式卷；公共消费模块嵌入项目控制面，默认无 ssf-controller Pod。每类 Pod 画一个实例。</tspan></text>
+<rect x="40" y="111" width="430" height="38" rx="4" fill="#24364a" stroke="#617d9b"/>
+<text x="52" y="137" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="52" dy="0">[K] 原生 K8S / 官方 CSI</tspan></text>
+<rect x="492" y="111" width="430" height="38" rx="4" fill="#244351" stroke="#739bad"/>
+<text x="504" y="137" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="504" dy="0">[N] SSF 新增公共实现</tspan></text>
+<rect x="944" y="111" width="430" height="38" rx="4" fill="#44392c" stroke="#aa9066"/>
+<text x="956" y="137" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="956" dy="0">[P] 项目定制 / 改造</tspan></text>
+<rect x="1396" y="111" width="430" height="38" rx="4" fill="#3d3328" stroke="#937b56"/>
+<text x="1408" y="137" font-size="19" fill="#d8c6a9" text-anchor="start"><tspan x="1408" dy="0">[D] 存储厂商 Driver</tspan></text>
+<rect x="1848" y="111" width="430" height="38" rx="4" fill="#2b323e" stroke="#7b8798"/>
+<text x="1860" y="137" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="1860" dy="0">[I] 复用基础软件</tspan></text>
+<rect x="2300" y="111" width="430" height="38" rx="4" fill="#253a33" stroke="#668b7d"/>
+<text x="2312" y="137" font-size="19" fill="#b4cfc3" text-anchor="start"><tspan x="2312" dy="0">[B] 实际存储后端</tspan></text>
+<text x="48" y="178" font-size="18" fill="#c4d0dc" text-anchor="start"><tspan x="48" dy="0">灰色虚线边框＝可选 / 条件部署；来源仍按 K/N/P/D/I 标签识别。框的包含关系表示部署归属，不表示串行调用。</tspan></text>
+<g id="k8s" data-parent="" data-origin="I">
+<rect x="32" y="204" width="2736" height="450" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="44" y="232" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="44" dy="0">① 原生 K8S 基础设施：kubeadm 静态 Pod 示例；托管控制面可替换为等价服务</tspan></text>
+</g>
+<g id="kube_apiserver" data-parent="k8s" data-origin="K">
+<rect x="52" y="260" width="650" height="285" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="64" y="287" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="64" dy="0">[K] 独立静态 Pod</tspan></text>
+</g>
+<g id="kube_apiserver_pod" data-parent="kube_apiserver" data-origin="K">
+<rect x="64" y="322" width="626" height="211" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="76" y="348" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="76" dy="0">Pod：kube-apiserver</tspan></text>
+</g>
+<g id="kube_apiserver_proc" data-parent="kube_apiserver_pod" data-origin="K">
+<rect x="76" y="363" width="602" height="158" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="88" y="389" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="88" dy="0">容器 / 进程：kube-apiserver</tspan></text>
+</g>
+<g id="api_auth" data-parent="kube_apiserver_proc" data-origin="K">
+<rect x="88.0" y="412.0" width="578.0" height="41.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="100.0" y="439.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="100.0" dy="0">[K] 认证 / RBAC / admission webhook</tspan></text>
+</g>
+<g id="api_storage" data-parent="kube_apiserver_proc" data-origin="K">
+<rect x="88.0" y="467.0" width="578.0" height="41.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="100.0" y="494.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="100.0" dy="0">[K] 存储资源 REST / watch / UID 校验</tspan></text>
+</g>
+<g id="kube_controller_manager" data-parent="k8s" data-origin="K">
+<rect x="722" y="260" width="650" height="285" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="734" y="287" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="734" dy="0">[K] 独立静态 Pod</tspan></text>
+</g>
+<g id="kube_controller_manager_pod" data-parent="kube_controller_manager" data-origin="K">
+<rect x="734" y="322" width="626" height="211" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="746" y="348" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="746" dy="0">Pod：kube-controller-manager</tspan></text>
+</g>
+<g id="kube_controller_manager_proc" data-parent="kube_controller_manager_pod" data-origin="K">
+<rect x="746" y="363" width="602" height="158" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="758" y="389" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="758" dy="0">容器 / 进程：kube-controller-manager</tspan></text>
+</g>
+<g id="pv_controller" data-parent="kube_controller_manager_proc" data-origin="K">
+<rect x="758.0" y="412.0" width="183.33333333333334" height="96.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="770.0" y="439.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="770.0" dy="0">[K] PV Controller</tspan><tspan x="770.0" dy="25.650000000000002">绑定 / 回收</tspan></text>
+</g>
+<g id="ad_controller" data-parent="kube_controller_manager_proc" data-origin="K">
+<rect x="955.3333333333334" y="412.0" width="183.33333333333334" height="96.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="967.3333333333334" y="439.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="967.3333333333334" dy="0">[K] Attach/Detach</tspan><tspan x="967.3333333333334" dy="25.650000000000002">原生 Pod 协调</tspan></text>
+</g>
+<g id="protection" data-parent="kube_controller_manager_proc" data-origin="K">
+<rect x="1152.6666666666667" y="412.0" width="183.33333333333334" height="96.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="1164.6666666666667" y="439.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="1164.6666666666667" dy="0">[K] PVC/PV</tspan><tspan x="1164.6666666666667" dy="25.650000000000002">protection / GC</tspan></text>
+</g>
+<g id="kube_scheduler" data-parent="k8s" data-origin="K">
+<rect x="1392" y="260" width="650" height="285" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1404" y="287" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="1404" dy="0">[K] 独立静态 Pod</tspan></text>
+</g>
+<g id="kube_scheduler_pod" data-parent="kube_scheduler" data-origin="K">
+<rect x="1404" y="322" width="626" height="211" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1416" y="348" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1416" dy="0">Pod：kube-scheduler</tspan></text>
+</g>
+<g id="kube_scheduler_proc" data-parent="kube_scheduler_pod" data-origin="K">
+<rect x="1416" y="363" width="602" height="158" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1428" y="389" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1428" dy="0">容器 / 进程：kube-scheduler</tspan></text>
+</g>
+<g id="volume_binding" data-parent="kube_scheduler_proc" data-origin="K">
+<rect x="1428.0" y="412.0" width="578.0" height="41.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="1440.0" y="439.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="1440.0" dy="0">[K] VolumeBinding 与卷相关过滤</tspan></text>
+</g>
+<g id="platform_schedule" data-parent="kube_scheduler_proc" data-origin="K">
+<rect x="1428.0" y="467.0" width="578.0" height="41.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="1440.0" y="494.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="1440.0" dy="0">[K] 调度平台 Pod；不调度独立 VM</tspan></text>
+</g>
+<g id="etcd" data-parent="k8s" data-origin="I">
+<rect x="2062" y="260" width="686" height="285" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="2074" y="287" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="2074" dy="0">[K] 独立静态 Pod / 可外部部署</tspan></text>
+</g>
+<g id="etcd_pod" data-parent="etcd" data-origin="I">
+<rect x="2074" y="322" width="662" height="211" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="2086" y="348" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="2086" dy="0">Pod：etcd</tspan></text>
+</g>
+<g id="etcd_proc" data-parent="etcd_pod" data-origin="I">
+<rect x="2086" y="363" width="638" height="158" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="2098" y="389" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="2098" dy="0">容器 / 进程：etcd [I]</tspan></text>
+</g>
+<g id="etcd_kv" data-parent="etcd_proc" data-origin="I">
+<rect x="2098.0" y="412.0" width="614.0" height="96.0" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="2110.0" y="439.0" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="2110.0" dy="0">[I] K8S API 对象持久化；不同于 SSF 账本</tspan></text>
+</g>
+<g id="api_objects" data-parent="k8s" data-origin="K">
+<rect x="52" y="562" width="2696" height="74" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="64" y="588" font-size="18" fill="#c3d0dd" text-anchor="start"><tspan x="64" dy="0">[K] API 对象（不是 Pod）：SC / PVC / PV / CSIDriver / CSINode / VolumeAttachment / Snapshot 对象 / Secret / Service / RBAC</tspan><tspan x="64" dy="24.3">[N] SSF 登记配置及准入配置：ValidatingWebhookConfiguration → SSF Guard；绑定与保护字段由指定组件维护</tspan></text>
+</g>
+<g id="cluster_services" data-parent="" data-origin="I">
+<rect x="32" y="700" width="2736" height="800" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="44" y="728" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="44" dy="0">② 原生 CSI 管理与独立保护/账本：集群级职责，不要求位于控制平面宿主</tspan></text>
+</g>
+<g id="csi_controller" data-parent="cluster_services" data-origin="I">
+<rect x="52" y="758" width="1288" height="720" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="64" y="786" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="64" dy="0">CSI Controller Deployment → ReplicaSet</tspan></text>
+</g>
+<g id="csi_controller_pod" data-parent="csi_controller" data-origin="I">
+<rect x="66" y="814" width="1260" height="650" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="78" y="842" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="78" dy="0">Pod：csi-controller-xxx；下列为独立容器</tspan></text>
+</g>
+<g id="provisioner" data-parent="csi_controller_pod" data-origin="K">
+<rect x="82.0" y="862.0" width="607.0" height="116.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="94.0" y="889.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="94.0" dy="0">[K] 容器 external-provisioner</tspan><tspan x="94.0" dy="25.650000000000002">PVC/PV → Create/DeleteVolume</tspan></text>
+</g>
+<g id="attacher" data-parent="csi_controller_pod" data-origin="K">
+<rect x="703.0" y="862.0" width="607.0" height="116.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5" stroke-dasharray="9 5"/>
+<text x="715.0" y="889.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="715.0" dy="0">[K] 容器 external-attacher〔条件〕</tspan><tspan x="715.0" dy="25.650000000000002">原生 Pod / VA Bridge；SSF Direct 卷禁并管</tspan></text>
+</g>
+<g id="snapshotter" data-parent="csi_controller_pod" data-origin="K">
+<rect x="82.0" y="992.0" width="607.0" height="116.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5" stroke-dasharray="9 5"/>
+<text x="94.0" y="1019.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="94.0" dy="0">[K] 容器 external-snapshotter〔可选〕</tspan><tspan x="94.0" dy="25.650000000000002">Content → Create/DeleteSnapshot</tspan></text>
+</g>
+<g id="resizer" data-parent="csi_controller_pod" data-origin="K">
+<rect x="703.0" y="992.0" width="607.0" height="116.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5" stroke-dasharray="9 5"/>
+<text x="715.0" y="1019.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="715.0" dy="0">[K] 容器 external-resizer〔可选〕</tspan><tspan x="715.0" dy="25.650000000000002">PVC → ControllerExpandVolume</tspan></text>
+</g>
+<g id="controller_driver" data-parent="csi_controller_pod" data-origin="D">
+<rect x="82" y="1124" width="605" height="218" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="94" y="1152" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="94" dy="0">[D] 厂商 Driver 容器 / 进程</tspan></text>
+</g>
+<g id="c_identity" data-parent="controller_driver" data-origin="D">
+<rect x="96.0" y="1175.0" width="577.0" height="68.5" rx="6" fill="#3d3328" stroke="#937b56" stroke-width="1.5"/>
+<text x="108.0" y="1202.0" font-size="19" fill="#d8c6a9" text-anchor="start"><tspan x="108.0" dy="0">[D] Identity：Info / Capabilities / Probe</tspan></text>
+</g>
+<g id="c_service" data-parent="controller_driver" data-origin="D">
+<rect x="96.0" y="1257.5" width="577.0" height="68.5" rx="6" fill="#3d3328" stroke="#937b56" stroke-width="1.5"/>
+<text x="108.0" y="1284.5" font-size="19" fill="#d8c6a9" text-anchor="start"><tspan x="108.0" dy="0">[D] Controller：卷、attach、snapshot 等</tspan><tspan x="108.0" dy="25.650000000000002">后端管理适配 / SDK（实现相关）</tspan></text>
+</g>
+<g id="controller_gateway" data-parent="csi_controller_pod" data-origin="N">
+<rect x="705" y="1124" width="605" height="218" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="717" y="1152" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="717" dy="0">[N] 容器：CSI Controller Gateway〔条件〕</tspan></text>
+</g>
+<g id="gateway_policy" data-parent="controller_gateway" data-origin="N">
+<rect x="719.0" y="1175.0" width="577.0" height="68.5" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="731.0" y="1202.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="731.0" dy="0">[N] mTLS / 探测 / 能力查询</tspan><tspan x="731.0" dy="25.650000000000002">副作用仅 Attach-Detach</tspan></text>
+</g>
+<g id="gateway_uds" data-parent="controller_gateway" data-origin="N">
+<rect x="719.0" y="1257.5" width="577.0" height="68.5" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="731.0" y="1284.5" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="731.0" dy="0">[N] 拒绝 Create/Delete/Snapshot/Expand</tspan><tspan x="731.0" dy="25.650000000000002">消费 RPC → 本地 CSI UDS</tspan></text>
+</g>
+<g id="c_liveness" data-parent="csi_controller_pod" data-origin="K">
+<rect x="82" y="1356" width="1228" height="84" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="94" y="1382" font-size="18" fill="#c3d0dd" text-anchor="start"><tspan x="94" dy="0">[K] 独立容器 livenessprobe〔推荐〕：调用 Identity Probe</tspan><tspan x="94" dy="24.3">共享 emptyDir：CSI UDS；所有 sidecar 各自调用 Driver，不串行互调</tspan></text>
+</g>
+<g id="ssf_guard" data-parent="cluster_services" data-origin="N">
+<rect x="1370" y="758" width="440" height="720" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1382" y="785" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="1382" dy="0">[N] Guard Deployment → ReplicaSet</tspan></text>
+</g>
+<g id="ssf_guard_pod" data-parent="ssf_guard" data-origin="N">
+<rect x="1382" y="820" width="416" height="646" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1394" y="846" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1394" dy="0">Pod：ssf-guard</tspan></text>
+</g>
+<g id="ssf_guard_proc" data-parent="ssf_guard_pod" data-origin="N">
+<rect x="1394" y="861" width="392" height="593" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1406" y="887" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1406" dy="0">容器 / 进程：ssf-guard</tspan></text>
+</g>
+<g id="guard" data-parent="ssf_guard_proc" data-origin="N">
+<rect x="1406.0" y="910.0" width="368.0" height="167.66666666666666" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="1418.0" y="937.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="1418.0" dy="0">[N] Admission Guard</tspan><tspan x="1418.0" dy="25.650000000000002">校验删除 / 迁移许可</tspan><tspan x="1418.0" dy="25.650000000000002">拒绝冲突消费者</tspan></text>
+</g>
+<g id="guard_ledger" data-parent="ssf_guard_proc" data-origin="N">
+<rect x="1406.0" y="1091.6666666666667" width="368.0" height="167.66666666666666" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="1418.0" y="1118.6666666666667" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="1418.0" dy="0">[N] 读取共享使用账本</tspan><tspan x="1418.0" dy="25.650000000000002">不在准入内执行副作用</tspan></text>
+</g>
+<g id="guard_config" data-parent="ssf_guard_proc" data-origin="N">
+<rect x="1406.0" y="1273.3333333333333" width="368.0" height="167.66666666666666" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="1418.0" y="1300.3333333333333" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="1418.0" dy="0">[N] Service / TLS / RBAC</tspan><tspan x="1418.0" dy="25.650000000000002">failurePolicy Fail</tspan><tspan x="1418.0" dy="25.650000000000002">sideEffects None</tspan></text>
+</g>
+<g id="ssf_metadata" data-parent="cluster_services" data-origin="I">
+<rect x="1828" y="758" width="440" height="720" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="1840" y="785" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="1840" dy="0">[I] 使用账本〔可外部/复用DB〕</tspan></text>
+</g>
+<g id="ssf_metadata_pod" data-parent="ssf_metadata" data-origin="I">
+<rect x="1840" y="820" width="416" height="646" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1852" y="846" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1852" dy="0">Pod：ssf-metadata</tspan></text>
+</g>
+<g id="ssf_metadata_proc" data-parent="ssf_metadata_pod" data-origin="I">
+<rect x="1852" y="861" width="392" height="593" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1864" y="887" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1864" dy="0">容器 / 进程：postgres〔自建〕</tspan></text>
+</g>
+<g id="ssf_sql" data-parent="ssf_metadata_proc" data-origin="I">
+<rect x="1864.0" y="910.0" width="368.0" height="258.5" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="1876.0" y="937.0" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="1876.0" dy="0">[I] 事务 / CAS / operation</tspan><tspan x="1876.0" dy="25.650000000000002">writer、Binding、node pin</tspan><tspan x="1876.0" dy="25.650000000000002">不是PV/PVC管理权威</tspan></text>
+</g>
+<g id="ssf_db_disk" data-parent="ssf_metadata_proc" data-origin="I">
+<rect x="1864.0" y="1182.5" width="368.0" height="258.5" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="1876.0" y="1209.5" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="1876.0" dy="0">[I] 独立原生 PVC / 外部存储</tspan><tspan x="1876.0" dy="25.650000000000002">可复用满足条件的项目DB</tspan><tspan x="1876.0" dy="25.650000000000002">不经沙箱卷路径引导</tspan></text>
+</g>
+<g id="snapshot_controller" data-parent="cluster_services" data-origin="K">
+<rect x="2286" y="758" width="462" height="720" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="2298" y="785" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="2298" dy="0">[K] Snapshot Deployment〔可选〕</tspan></text>
+</g>
+<g id="snapshot_controller_pod" data-parent="snapshot_controller" data-origin="K">
+<rect x="2298" y="820" width="438" height="646" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="2310" y="846" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="2310" dy="0">Pod：snapshot-controller</tspan></text>
+</g>
+<g id="snapshot_controller_proc" data-parent="snapshot_controller_pod" data-origin="K">
+<rect x="2310" y="861" width="414" height="593" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="2322" y="887" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="2322" dy="0">容器：snapshot-controller</tspan></text>
+</g>
+<g id="snapshot_reconcile" data-parent="snapshot_controller_proc" data-origin="K">
+<rect x="2322.0" y="910.0" width="390.0" height="258.5" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="2334.0" y="937.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="2334.0" dy="0">[K] 原生 Snapshot / Content</tspan><tspan x="2334.0" dy="25.650000000000002">通过 API 与 snapshotter 协作</tspan></text>
+</g>
+<g id="snapshot_status" data-parent="snapshot_controller_proc" data-origin="K">
+<rect x="2322.0" y="1182.5" width="390.0" height="258.5" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="2334.0" y="1209.5" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="2334.0" dy="0">[K] 原生快照状态 / 绑定</tspan><tspan x="2334.0" dy="25.650000000000002">生命周期状态协调</tspan></text>
+</g>
+<g id="support_services" data-parent="" data-origin="I">
+<rect x="32" y="1546" width="2736" height="512" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="44" y="1574" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="44" dy="0">③ 项目控制面：公共消费模块嵌入现有进程，属于新增代码，不是新增 Controller Pod</tspan></text>
+</g>
+<g id="cube_master" data-parent="support_services" data-origin="P">
+<rect x="52" y="1604" width="1310" height="430" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="64" y="1631" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="64" dy="0">[P] CubeMaster Deployment → ReplicaSet</tspan></text>
+</g>
+<g id="cube_master_pod" data-parent="cube_master" data-origin="P">
+<rect x="64" y="1666" width="1286" height="356" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="76" y="1692" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="76" dy="0">Pod：cube-master</tspan></text>
+</g>
+<g id="cube_master_proc" data-parent="cube_master_pod" data-origin="P">
+<rect x="76" y="1707" width="1262" height="303" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="88" y="1733" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="88" dy="0">容器 / 进程：cube-master；P 项目入口 + N 公共消费库</tspan></text>
+</g>
+<g id="cube_volume_api" data-parent="cube_master_proc" data-origin="P">
+<rect x="88.0" y="1756.0" width="403.3333333333333" height="71.0" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="100.0" y="1783.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="100.0" dy="0">[P] 原API → 原生PVC facade</tspan><tspan x="100.0" dy="25.650000000000002">legacy ID / PVC UID 映射</tspan></text>
+</g>
+<g id="cube_placement" data-parent="cube_master_proc" data-origin="P">
+<rect x="505.3333333333333" y="1756.0" width="403.3333333333333" height="71.0" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="517.3333333333333" y="1783.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="517.3333333333333" dy="0">[P] 项目计算调度 / lease</tspan><tspan x="517.3333333333333" dy="25.650000000000002">原Create RPC携带卷计划</tspan></text>
+</g>
+<g id="cube_resolver" data-parent="cube_master_proc" data-origin="N">
+<rect x="922.6666666666666" y="1756.0" width="403.3333333333333" height="71.0" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="934.6666666666666" y="1783.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="934.6666666666666" dy="0">[N] PVC/PV Resolver</tspan><tspan x="934.6666666666666" dy="25.650000000000002">身份 / 能力 / 保护</tspan></text>
+</g>
+<g id="cube_delayed" data-parent="cube_master_proc" data-origin="N">
+<rect x="88.0" y="1841.0" width="403.3333333333333" height="71.0" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="100.0" y="1868.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="100.0" dy="0">[N] DelayedBinding</tspan><tspan x="100.0" dy="25.650000000000002">WFFC动态 / 静态桥</tspan></text>
+</g>
+<g id="cube_use" data-parent="cube_master_proc" data-origin="N">
+<rect x="505.3333333333333" y="1841.0" width="403.3333333333333" height="71.0" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="517.3333333333333" y="1868.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="517.3333333333333" dy="0">[N] Acquire / Drain / 账本</tspan><tspan x="517.3333333333333" dy="25.650000000000002">writer、Binding、node pin</tspan></text>
+</g>
+<g id="cube_attach" data-parent="cube_master_proc" data-origin="N">
+<rect x="922.6666666666666" y="1841.0" width="403.3333333333333" height="71.0" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="934.6666666666666" y="1868.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="934.6666666666666" dy="0">[N] Attachment Coordinator</tspan><tspan x="934.6666666666666" dy="25.650000000000002">直接Attach / BuildNodePlan</tspan></text>
+</g>
+<g id="cube_sessions" data-parent="cube_master_proc" data-origin="N">
+<rect x="88.0" y="1926.0" width="403.3333333333333" height="71.0" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="100.0" y="1953.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="100.0" dy="0">[N] Controller SessionManager</tspan><tspan x="100.0" dy="25.650000000000002">身份 / 能力 / 长连接</tspan></text>
+</g>
+<g id="cube_steps" data-parent="cube_master_proc" data-origin="N">
+<rect x="505.3333333333333" y="1926.0" width="403.3333333333333" height="71.0" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="517.3333333333333" y="1953.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="517.3333333333333" dy="0">[N] Step Runner / Recovery</tspan><tspan x="517.3333333333333" dy="25.650000000000002">请求直接执行、未知结果</tspan></text>
+</g>
+<g id="cube_native" data-parent="cube_master_proc" data-origin="N">
+<rect x="922.6666666666666" y="1926.0" width="403.3333333333333" height="71.0" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="934.6666666666666" y="1953.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="934.6666666666666" dy="0">[N] Native Lifecycle facade</tspan><tspan x="934.6666666666666" dy="25.650000000000002">原生快照/克隆/回收</tspan></text>
+</g>
+<g id="agentenv_control" data-parent="support_services" data-origin="P">
+<rect x="1390" y="1604" width="1358" height="430" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1402" y="1632" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="1402" dy="0">[P] AgentENV：既有 gateway 与 scheduler 两个 Deployment</tspan></text>
+</g>
+<g id="agentenv_gateway_pod" data-parent="agentenv_control" data-origin="P">
+<rect x="1406" y="1658" width="1326" height="90" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1418" y="1684" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1418" dy="0">Pod → gateway 容器 / 进程 [P]：API 路由 / 卷引用与租户身份传递</tspan></text>
+</g>
+<g id="agentenv_gateway_module" data-parent="agentenv_gateway_pod" data-origin="P">
+<rect x="1420" y="1699" width="1298" height="36" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1432" y="1723" font-size="16" fill="#dfcfb2" text-anchor="start"><tspan x="1432" dy="0">[P] 项目 Gateway，与 CSI Controller Gateway 不同；原有 API 不直接调用 CSI 管理 RPC</tspan></text>
+</g>
+<g id="agentenv_scheduler_pod" data-parent="agentenv_control" data-origin="P">
+<rect x="1406" y="1760" width="1326" height="256" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1418" y="1786" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1418" dy="0">Pod → scheduler 容器 / 进程 [P]；新增公共消费模块 [N]</tspan></text>
+</g>
+<g id="agentenv_scheduler_module" data-parent="agentenv_scheduler_pod" data-origin="P">
+<rect x="1422.0" y="1811.0" width="422.0" height="87.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1434.0" y="1838.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="1434.0" dy="0">[P] 项目选点 / PlacementLease</tspan><tspan x="1434.0" dy="25.650000000000002">权威创建编排入口适配</tspan></text>
+</g>
+<g id="agentenv_resolver" data-parent="agentenv_scheduler_pod" data-origin="N">
+<rect x="1858.0" y="1811.0" width="422.0" height="87.5" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="1870.0" y="1838.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="1870.0" dy="0">[N] PVC/PV Resolver / facade</tspan><tspan x="1870.0" dy="25.650000000000002">原生资源及身份映射</tspan></text>
+</g>
+<g id="agentenv_delayed" data-parent="agentenv_scheduler_pod" data-origin="N">
+<rect x="2294.0" y="1811.0" width="422.0" height="87.5" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="2306.0" y="1838.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="2306.0" dy="0">[N] DelayedBinding</tspan><tspan x="2306.0" dy="25.650000000000002">WFFC动态 / 静态桥</tspan></text>
+</g>
+<g id="agentenv_use" data-parent="agentenv_scheduler_pod" data-origin="N">
+<rect x="1422.0" y="1912.5" width="422.0" height="87.5" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="1434.0" y="1939.5" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="1434.0" dy="0">[N] Acquire / Drain / 共享账本</tspan><tspan x="1434.0" dy="25.650000000000002">writer、Binding、node pin</tspan></text>
+</g>
+<g id="agentenv_attach" data-parent="agentenv_scheduler_pod" data-origin="N">
+<rect x="1858.0" y="1912.5" width="422.0" height="87.5" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="1870.0" y="1939.5" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="1870.0" dy="0">[N] Attach / BuildNodePlan</tspan><tspan x="1870.0" dy="25.650000000000002">SessionManager / 长连接</tspan></text>
+</g>
+<g id="agentenv_steps" data-parent="agentenv_scheduler_pod" data-origin="N">
+<rect x="2294.0" y="1912.5" width="422.0" height="87.5" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="2306.0" y="1939.5" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="2306.0" dy="0">[N] Step Runner / Recovery</tspan><tspan x="2306.0" dy="25.650000000000002">创建RPC前完成Attach</tspan></text>
+</g>
+<g id="worker" data-parent="" data-origin="I">
+<rect x="32" y="2106" width="2736" height="2330" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="44" y="2134" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="44" dy="0">④ Worker Node：下列 DaemonSet 在每个适用节点各有 Pod；独立 VM 不创建逐沙箱消费者 Pod</tspan></text>
+</g>
+<g id="host_services" data-parent="worker" data-origin="I">
+<rect x="52" y="2168" width="1310" height="330" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="64" y="2196" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="64" dy="0">宿主服务进程：不是 Pod</tspan></text>
+</g>
+<g id="kubelet_process" data-parent="host_services" data-origin="K">
+<rect x="68" y="2222" width="1278" height="165" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="80" y="2250" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="80" dy="0">[K] kubelet 进程内部模块；原生 Pod 卷流程继续保留</tspan></text>
+</g>
+<g id="plugin_manager" data-parent="kubelet_process" data-origin="K">
+<rect x="82.0" y="2276.0" width="407.3333333333333" height="95.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="94.0" y="2303.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="94.0" dy="0">[K] Plugin Manager</tspan><tspan x="94.0" dy="25.650000000000002">CSI 注册 / CSINode 发现</tspan></text>
+</g>
+<g id="volume_manager" data-parent="kubelet_process" data-origin="K">
+<rect x="503.3333333333333" y="2276.0" width="407.3333333333333" height="95.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="515.3333333333333" y="2303.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="515.3333333333333" dy="0">[K] Volume Manager</tspan><tspan x="515.3333333333333" dy="25.650000000000002">原生 Pod 卷状态协调</tspan></text>
+</g>
+<g id="operation_executor" data-parent="kubelet_process" data-origin="K">
+<rect x="924.6666666666666" y="2276.0" width="407.3333333333333" height="95.0" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="936.6666666666666" y="2303.0" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="936.6666666666666" dy="0">[K] Operation Executor</tspan><tspan x="936.6666666666666" dy="25.650000000000002">仅原生 Pod Node RPC</tspan></text>
+</g>
+<g id="cri_process" data-parent="host_services" data-origin="I">
+<rect x="68" y="2403" width="1278" height="73" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="80" y="2429" font-size="18" fill="#c6ced9" text-anchor="start"><tspan x="80" dy="0">[I] CRI runtime：containerd / CRI-O + shim / runc；负责平台 Pod 容器</tspan><tspan x="80" dy="24.3">Cube 的运行时 containerd 是否独立，按项目 profile 配置</tspan></text>
+</g>
+<g id="host_resources" data-parent="worker" data-origin="I">
+<rect x="1390" y="2168" width="1358" height="330" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1402" y="2196" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="1402" dy="0">宿主内核、持久路径与挂载可见域：不是 Pod</tspan></text>
+</g>
+<g id="node_state" data-parent="host_resources" data-origin="N">
+<rect x="1408.0" y="2230.0" width="654.0" height="116.0" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="1420.0" y="2257.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="1420.0" dy="0">[N] /var/lib/ssf/node-state</tspan><tspan x="1420.0" dy="25.650000000000002">WAL / 本地 operation / Binding</tspan></text>
+</g>
+<g id="stage_targets" data-parent="host_resources" data-origin="N">
+<rect x="2076.0" y="2230.0" width="654.0" height="116.0" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="2088.0" y="2257.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="2088.0" dy="0">[N] SSF staging / targets</tspan><tspan x="2088.0" dy="25.650000000000002">挂载身份、holder / pin</tspan></text>
+</g>
+<g id="kernel_devices" data-parent="host_resources" data-origin="I">
+<rect x="1408.0" y="2360.0" width="654.0" height="116.0" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="1420.0" y="2387.0" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="1420.0" dy="0">[I] 内核 mount / block / ublk / KVM</tspan><tspan x="1420.0" dy="25.650000000000002">设备与文件系统真实数据路径</tspan></text>
+</g>
+<g id="visibility" data-parent="host_resources" data-origin="N">
+<rect x="2076.0" y="2360.0" width="654.0" height="116.0" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="2088.0" y="2387.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="2088.0" dy="0">[N] 受控 hostPath / mount propagation</tspan><tspan x="2088.0" dy="25.650000000000002">UDS、设备权限、jailer 路径</tspan></text>
+</g>
+<g id="node_agent" data-parent="worker" data-origin="N">
+<rect x="52" y="2538" width="1310" height="620" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="64" y="2566" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="64" dy="0">[N] SSF Node Agent DaemonSet</tspan></text>
+</g>
+<g id="node_agent_pod" data-parent="node_agent" data-origin="N">
+<rect x="66" y="2594" width="1282" height="548" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="78" y="2622" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="78" dy="0">Pod：ssf-node-agent-xxx</tspan></text>
+</g>
+<g id="node_agent_process" data-parent="node_agent_pod" data-origin="N">
+<rect x="80" y="2641" width="1254" height="485" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="92" y="2669" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="92" dy="0">容器 / 进程：ssf-node-agent；以下均为新增公共内部模块</tspan></text>
+</g>
+<g id="node_api" data-parent="node_agent_process" data-origin="N">
+<rect x="96.0" y="2698.0" width="604.0" height="91.25" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="108.0" y="2725.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="108.0" dy="0">[N] mTLS gRPC / 身份与票据校验</tspan></text>
+</g>
+<g id="node_sessions" data-parent="node_agent_process" data-origin="N">
+<rect x="714.0" y="2698.0" width="604.0" height="91.25" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="726.0" y="2725.0" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="726.0" dy="0">[N] DriverRegistry / SessionManager</tspan><tspan x="726.0" dy="25.650000000000002">NodeGetInfo / 能力 / revision</tspan></text>
+</g>
+<g id="prepare_executor" data-parent="node_agent_process" data-origin="N">
+<rect x="96.0" y="2803.25" width="604.0" height="91.25" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="108.0" y="2830.25" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="108.0" dy="0">[N] Prepare / Release Executor</tspan><tspan x="108.0" dy="25.650000000000002">可重入步骤与批量准备</tspan></text>
+</g>
+<g id="stage_manager" data-parent="node_agent_process" data-origin="N">
+<rect x="714.0" y="2803.25" width="604.0" height="91.25" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="726.0" y="2830.25" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="726.0" dy="0">[N] Stage / Publish Manager</tspan><tspan x="726.0" dy="25.650000000000002">每卷操作与多卷有界并行</tspan></text>
+</g>
+<g id="local_wal" data-parent="node_agent_process" data-origin="N">
+<rect x="96.0" y="2908.5" width="604.0" height="91.25" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="108.0" y="2935.5" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="108.0" dy="0">[N] StateStore / WAL</tspan><tspan x="108.0" dy="25.650000000000002">intent / outcome / pin</tspan></text>
+</g>
+<g id="runtime_bindings" data-parent="node_agent_process" data-origin="N">
+<rect x="714.0" y="2908.5" width="604.0" height="91.25" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="726.0" y="2935.5" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="726.0" dy="0">[N] RuntimeBinding Registry</tspan><tspan x="726.0" dy="25.650000000000002">设备身份、Ready / 停止回执</tspan></text>
+</g>
+<g id="node_recovery" data-parent="node_agent_process" data-origin="N">
+<rect x="96.0" y="3013.75" width="604.0" height="91.25" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="108.0" y="3040.75" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="108.0" dy="0">[N] Recovery / GC</tspan><tspan x="108.0" dy="25.650000000000002">观测、重试、安全释放</tspan></text>
+</g>
+<g id="node_telemetry" data-parent="node_agent_process" data-origin="N">
+<rect x="714.0" y="3013.75" width="604.0" height="91.25" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="726.0" y="3040.75" font-size="19" fill="#c8dee6" text-anchor="start"><tspan x="726.0" dy="0">[N] 节点能力注册 / telemetry</tspan><tspan x="726.0" dy="25.650000000000002">项目 Coordinator 协同与诊断</tspan></text>
+</g>
+<g id="csi_node" data-parent="worker" data-origin="D">
+<rect x="1390" y="2538" width="1358" height="620" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1402" y="2566" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="1402" dy="0">CSI Node DaemonSet</tspan></text>
+</g>
+<g id="csi_node_pod" data-parent="csi_node" data-origin="D">
+<rect x="1404" y="2594" width="1330" height="548" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1416" y="2622" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="1416" dy="0">Pod：csi-node-xxx；Driver 与 registrar 为不同容器</tspan></text>
+</g>
+<g id="node_driver" data-parent="csi_node_pod" data-origin="D">
+<rect x="1420" y="2641" width="818" height="420" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1432" y="2669" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="1432" dy="0">[D] 厂商 Driver 容器 / 进程</tspan></text>
+</g>
+<g id="n_identity" data-parent="node_driver" data-origin="D">
+<rect x="1436.0" y="2698.0" width="786.0" height="76.25" rx="6" fill="#3d3328" stroke="#937b56" stroke-width="1.5"/>
+<text x="1448.0" y="2725.0" font-size="19" fill="#d8c6a9" text-anchor="start"><tspan x="1448.0" dy="0">[D] Identity：Info / Probe</tspan></text>
+</g>
+<g id="n_service" data-parent="node_driver" data-origin="D">
+<rect x="1436.0" y="2788.25" width="786.0" height="76.25" rx="6" fill="#3d3328" stroke="#937b56" stroke-width="1.5"/>
+<text x="1448.0" y="2815.25" font-size="19" fill="#d8c6a9" text-anchor="start"><tspan x="1448.0" dy="0">[D] Node Service：GetInfo / Capabilities</tspan><tspan x="1448.0" dy="25.650000000000002">Stage / Publish / 逆操作 / 按需 Expand</tspan></text>
+</g>
+<g id="n_backend" data-parent="node_driver" data-origin="D">
+<rect x="1436.0" y="2878.5" width="786.0" height="76.25" rx="6" fill="#3d3328" stroke="#937b56" stroke-width="1.5"/>
+<text x="1448.0" y="2905.5" font-size="19" fill="#d8c6a9" text-anchor="start"><tspan x="1448.0" dy="0">[D] 后端 / mount / device 适配</tspan><tspan x="1448.0" dy="25.650000000000002">存储实现相关模块</tspan></text>
+</g>
+<g id="checkpoint_extension" data-parent="node_driver" data-origin="D">
+<rect x="1436.0" y="2968.75" width="786.0" height="76.25" rx="6" fill="#3d3328" stroke="#937b56" stroke-width="1.5" stroke-dasharray="9 5"/>
+<text x="1448.0" y="2995.75" font-size="19" fill="#d8c6a9" text-anchor="start"><tspan x="1448.0" dy="0">[D] CheckpointExtension〔可选定制〕</tspan><tspan x="1448.0" dy="25.650000000000002">分层引擎 seal / restack 协同</tspan></text>
+</g>
+<g id="registrar" data-parent="csi_node_pod" data-origin="K">
+<rect x="2256" y="2641" width="460" height="193" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="2268" y="2668" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="2268" dy="0">[K] 独立容器</tspan><tspan x="2268" dy="25.650000000000002">node-driver-registrar</tspan><tspan x="2268" dy="25.650000000000002">GetPluginInfo → Driver</tspan><tspan x="2268" dy="25.650000000000002">注册 socket → kubelet</tspan></text>
+</g>
+<g id="n_liveness" data-parent="csi_node_pod" data-origin="K">
+<rect x="2256" y="2852" width="460" height="126" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="2268" y="2879" font-size="19" fill="#c3d0dd" text-anchor="start"><tspan x="2268" dy="0">[K] 独立容器 livenessprobe</tspan><tspan x="2268" dy="25.650000000000002">Identity Probe〔推荐〕</tspan></text>
+</g>
+<g id="node_sockets" data-parent="csi_node_pod" data-origin="I">
+<rect x="1420" y="3077" width="1296" height="47" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="1432" y="3102" font-size="17" fill="#c6ced9" text-anchor="start"><tspan x="1432" dy="0">[I] CSI UDS 与注册 UDS 分开；Driver 挂载传播到宿主，Node Agent / Runtime 使用受控可见路径</tspan></text>
+</g>
+<g id="cube_runtime_profile" data-parent="worker" data-origin="P">
+<rect x="52" y="3210" width="1310" height="936" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="64" y="3238" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="64" dy="0">CubeSandbox 接入分支：既有部署 + 项目定制</tspan></text>
+</g>
+<g id="cube_node_pod" data-parent="cube_runtime_profile" data-origin="P">
+<rect x="68" y="3266" width="1278" height="430" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="80" y="3294" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="80" dy="0">DaemonSet cube-node → Pod</tspan></text>
+</g>
+<g id="cubelet_container" data-parent="cube_node_pod" data-origin="P">
+<rect x="84" y="3317" width="844" height="360" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="96" y="3345" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="96" dy="0">容器 / 进程：cubelet [P]</tspan></text>
+</g>
+<g id="cube_node_bridge" data-parent="cubelet_container" data-origin="P">
+<rect x="100.0" y="3371.0" width="812.0" height="86.33333333333333" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="112.0" y="3398.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="112.0" dy="0">[P] VolumePlugin → SSF Prepare/Release</tspan><tspan x="112.0" dy="25.650000000000002">现有 storage / legacy 映射</tspan></text>
+</g>
+<g id="cube_runtime_adapter" data-parent="cubelet_container" data-origin="P">
+<rect x="100.0" y="3471.3333333333335" width="812.0" height="86.33333333333333" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="112.0" y="3498.3333333333335" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="112.0" dy="0">[P] Runtime Adapter / 实例观测</tspan><tspan x="112.0" dy="25.650000000000002">文件路径、readonly、就绪与清理</tspan></text>
+</g>
+<g id="cube_restore" data-parent="cubelet_container" data-origin="P">
+<rect x="100.0" y="3571.6666666666665" width="812.0" height="86.33333333333333" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="112.0" y="3598.6666666666665" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="112.0" dy="0">[P] snapshot / restore 集成</tspan><tspan x="112.0" dy="25.650000000000002">外部卷 Reference/Share</tspan></text>
+</g>
+<g id="cube_s3lvol" data-parent="cube_node_pod" data-origin="P">
+<rect x="946" y="3317" width="382" height="204" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5" stroke-dasharray="9 5"/>
+<text x="958" y="3344" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="958" dy="0">[P] 可选独立容器</tspan><tspan x="958" dy="25.650000000000002">cube-s3lvol</tspan><tspan x="958" dy="25.650000000000002">既有卷/根盘后端</tspan><tspan x="958" dy="25.650000000000002">按迁移权威接入</tspan></text>
+</g>
+<g id="cube_init" data-parent="cube_node_pod" data-origin="P">
+<rect x="946" y="3539" width="382" height="138" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="958" y="3566" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="958" dy="0">[P] initContainer</tspan><tspan x="958" dy="25.650000000000002">wait-node-prep</tspan><tspan x="958" dy="25.650000000000002">启动门槛</tspan></text>
+</g>
+<g id="cube_vmm_processes" data-parent="cube_runtime_profile" data-origin="I">
+<rect x="68" y="3714" width="1278" height="217" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="80" y="3742" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="80" dy="0">运行时子进程 / 宿主可见进程：不是新增 Pod</tspan></text>
+</g>
+<g id="cube_shim" data-parent="cube_vmm_processes" data-origin="P">
+<rect x="84.0" y="3770.0" width="616.0" height="143.0" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="96.0" y="3797.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="96.0" dy="0">[P] Cube runtime containerd / CubeShim</tspan><tspan x="96.0" dy="25.650000000000002">CubeRuntime：按既有 ns/profile 运行</tspan></text>
+</g>
+<g id="cube_vmm" data-parent="cube_vmm_processes" data-origin="I">
+<rect x="714.0" y="3770.0" width="616.0" height="143.0" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="726.0" y="3797.0" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="726.0" dy="0">[I] VMM / 文件共享进程</tspan><tspan x="726.0" dy="25.650000000000002">Cloud Hypervisor 等 / virtiofsd</tspan></text>
+</g>
+<g id="cube_guest" data-parent="cube_runtime_profile" data-origin="P">
+<rect x="68" y="3949" width="1278" height="177" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="80" y="3977" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="80" dy="0">独立沙箱 VM：不是 Pod，也不是上方容器进程</tspan></text>
+</g>
+<g id="cube_guest_mount" data-parent="cube_guest" data-origin="P">
+<rect x="84" y="4001" width="1246" height="105" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="96" y="4029" font-size="20" fill="#dfcfb2" text-anchor="start"><tspan x="96" dy="0">[P] guest agent / 文件系统 / 业务进程或容器</tspan><tspan x="96" dy="27.0">消费共享目录或新增块卷 adapter；确认 GuestReady</tspan></text>
+</g>
+<g id="agentenv_runtime_profile" data-parent="worker" data-origin="P">
+<rect x="1390" y="3210" width="1358" height="936" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1402" y="3238" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="1402" dy="0">AgentENV 接入分支：现有 node Pod 承载 runtime</tspan></text>
+</g>
+<g id="agentenv_node_pod" data-parent="agentenv_runtime_profile" data-origin="P">
+<rect x="1406" y="3266" width="1326" height="665" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1418" y="3294" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="1418" dy="0">DaemonSet agentenv-node → Pod</tspan></text>
+</g>
+<g id="agentenv_container" data-parent="agentenv_node_pod" data-origin="P">
+<rect x="1422" y="3317" width="1294" height="596" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1434" y="3345" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="1434" dy="0">容器：agentenv；服务与下列子进程都属于此容器执行域</tspan></text>
+</g>
+<g id="agentenv_server" data-parent="agentenv_container" data-origin="P">
+<rect x="1438" y="3370" width="1262" height="292" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1450" y="3398" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="1450" dy="0">进程：AgentENV server [P]；下列为进程内部模块</tspan></text>
+</g>
+<g id="agentenv_volume" data-parent="agentenv_server" data-origin="P">
+<rect x="1454.0" y="3424.0" width="608.0" height="103.0" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1466.0" y="3451.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="1466.0" dy="0">[P] VolumeManager facade / 委托</tspan><tspan x="1466.0" dy="25.650000000000002">exclusive / readonly / 发布状态</tspan></text>
+</g>
+<g id="agentenv_adapter" data-parent="agentenv_server" data-origin="P">
+<rect x="2076.0" y="3424.0" width="608.0" height="103.0" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="2088.0" y="3451.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="2088.0" dy="0">[P] Runtime Adapter / ManagedBlock</tspan><tspan x="2088.0" dy="25.650000000000002">SSF SDK、设备槽位与 Ready 回执</tspan></text>
+</g>
+<g id="agentenv_checkpoint" data-parent="agentenv_server" data-origin="P">
+<rect x="1454.0" y="3541.0" width="608.0" height="103.0" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1466.0" y="3568.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="1466.0" dy="0">[P] checkpoint / fork / restore</tspan><tspan x="1466.0" dy="25.650000000000002">Capture / Clone / 层版本 pin</tspan></text>
+</g>
+<g id="agentenv_orchestrator" data-parent="agentenv_server" data-origin="P">
+<rect x="2076.0" y="3541.0" width="608.0" height="103.0" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="2088.0" y="3568.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="2088.0" dy="0">[P] 既有 orchestrator / 节点 API</tspan><tspan x="2088.0" dy="25.650000000000002">计算占用与失败清理协同</tspan></text>
+</g>
+<g id="ublk_process" data-parent="agentenv_container" data-origin="P">
+<rect x="1438.0" y="3680.0" width="624.0" height="212.0" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1450.0" y="3707.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="1450.0" dy="0">[P] 子进程 ublk-daemon / OverlayBD</tspan><tspan x="1450.0" dy="25.650000000000002">兼容阶段保留；交接后由 Driver 持有设备</tspan></text>
+</g>
+<g id="firecracker_process" data-parent="agentenv_container" data-origin="I">
+<rect x="2076.0" y="3680.0" width="624.0" height="212.0" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="2088.0" y="3707.0" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="2088.0" dy="0">[I] 子进程 jailer / Firecracker [I]</tspan><tspan x="2088.0" dy="25.650000000000002">配置真实设备、只读属性与恢复槽位</tspan></text>
+</g>
+<g id="agentenv_guest" data-parent="agentenv_runtime_profile" data-origin="P">
+<rect x="1406" y="3949" width="1326" height="177" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1418" y="3977" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="1418" dy="0">独立沙箱 VM：guest 位于上方 Firecracker 管理的虚机中</tspan></text>
+</g>
+<g id="agentenv_guest_mount" data-parent="agentenv_guest" data-origin="P">
+<rect x="1422" y="4001" width="1294" height="105" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1434" y="4029" font-size="20" fill="#dfcfb2" text-anchor="start"><tspan x="1434" dy="0">[P] guest agent / envd / 文件系统 / 用户任务</tspan><tspan x="1434" dy="27.0">设备识别、挂载和 GuestReady；保留块卷语义</tspan></text>
+</g>
+<g id="plain_vm" data-parent="worker" data-origin="P">
+<rect x="52" y="4184" width="2696" height="228" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="64" y="4212" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="64" dy="0">普通 VM 接入替代分支：独立宿主服务 / 进程，不要求 guest 内再套容器</tspan></text>
+</g>
+<g id="plain_adapter" data-parent="plain_vm" data-origin="P">
+<rect x="70.0" y="4244.0" width="877.3333333333334" height="148.0" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="82.0" y="4271.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="82.0" dy="0">[P] 项目管理进程 + Runtime Adapter [P]</tspan><tspan x="82.0" dy="25.650000000000002">Prepare → VMM 配置 → GuestReady / 停止确认</tspan></text>
+</g>
+<g id="plain_vmm" data-parent="plain_vm" data-origin="I">
+<rect x="961.3333333333334" y="4244.0" width="877.3333333333334" height="148.0" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="973.3333333333334" y="4271.0" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="973.3333333333334" dy="0">[I] libvirtd / QEMU 或其他 VMM [I]</tspan><tspan x="973.3333333333334" dy="25.650000000000002">文件 transport 或 virtio-blk / virtio-scsi</tspan></text>
+</g>
+<g id="plain_guest" data-parent="plain_vm" data-origin="P">
+<rect x="1852.6666666666667" y="4244.0" width="877.3333333333334" height="148.0" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1864.6666666666667" y="4271.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="1864.6666666666667" dy="0">[P] 独立 guest 内核与文件系统 [P]</tspan><tspan x="1864.6666666666667" dy="25.650000000000002">普通业务进程使用目录或磁盘</tspan></text>
+</g>
+<g id="conditional" data-parent="" data-origin="I">
+<rect x="32" y="4480" width="2736" height="990" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="44" y="4508" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="44" dy="0">⑤ 条件组件与原项目配套 Pod：按功能启用，不属于每次沙箱创建路径</tspan></text>
+</g>
+<g id="cube_bootstrap" data-parent="conditional" data-origin="P">
+<rect x="52" y="4538" width="876" height="390" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="64" y="4565" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="64" dy="0">[P] cube-node-bootstrap DaemonSet</tspan></text>
+</g>
+<g id="cube_bootstrap_pod" data-parent="cube_bootstrap" data-origin="P">
+<rect x="64" y="4600" width="852" height="316" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="76" y="4626" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="76" dy="0">Pod：cube-bootstrap</tspan></text>
+</g>
+<g id="cube_bootstrap_proc" data-parent="cube_bootstrap_pod" data-origin="P">
+<rect x="76" y="4641" width="828" height="263" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="88" y="4667" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="88" dy="0">容器组；下方每框为独立 init / run 容器</tspan></text>
+</g>
+<g id="cube_boot_invalidate" data-parent="cube_bootstrap_proc" data-origin="P">
+<rect x="88.0" y="4690.0" width="395.0" height="93.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="100.0" y="4717.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="100.0" dy="0">[P] invalidate-stale-node-prep</tspan><tspan x="100.0" dy="25.650000000000002">init：清理过期准备标记</tspan></text>
+</g>
+<g id="cube_boot_wait" data-parent="cube_bootstrap_proc" data-origin="P">
+<rect x="497.0" y="4690.0" width="395.0" height="93.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="509.0" y="4717.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="509.0" dy="0">[P] wait-pvm-host</tspan><tspan x="509.0" dy="25.650000000000002">init：PVM 条件门槛</tspan></text>
+</g>
+<g id="cube_boot_init" data-parent="cube_bootstrap_proc" data-origin="P">
+<rect x="88.0" y="4797.5" width="395.0" height="93.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="100.0" y="4824.5" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="100.0" dy="0">[P] cube-node-init</tspan><tspan x="100.0" dy="25.650000000000002">init：宿主目录 / 设备检查</tspan></text>
+</g>
+<g id="cube_boot_hold" data-parent="cube_bootstrap_proc" data-origin="P">
+<rect x="497.0" y="4797.5" width="395.0" height="93.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="509.0" y="4824.5" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="509.0" dy="0">[P] write-node-prep-ready</tspan><tspan x="509.0" dy="25.650000000000002">run：准备状态维护</tspan></text>
+</g>
+<g id="cube_installer" data-parent="conditional" data-origin="P">
+<rect x="948" y="4538" width="876" height="390" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="960" y="4565" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="960" dy="0">[P] cube-node-installer DaemonSet</tspan></text>
+</g>
+<g id="cube_installer_pod" data-parent="cube_installer" data-origin="P">
+<rect x="960" y="4600" width="852" height="316" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="972" y="4626" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="972" dy="0">Pod：cube-installer</tspan></text>
+</g>
+<g id="cube_installer_proc" data-parent="cube_installer_pod" data-origin="P">
+<rect x="972" y="4641" width="828" height="263" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="984" y="4667" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="984" dy="0">容器组；下方每框为一个独立 install 容器</tspan></text>
+</g>
+<g id="cube_install_shim" data-parent="cube_installer_proc" data-origin="P">
+<rect x="984.0" y="4690.0" width="395.0" height="93.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="996.0" y="4717.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="996.0" dy="0">[P] cube-shim-install</tspan><tspan x="996.0" dy="25.650000000000002">shim / runtime 制品</tspan></text>
+</g>
+<g id="cube_install_kernel" data-parent="cube_installer_proc" data-origin="P">
+<rect x="1393.0" y="4690.0" width="395.0" height="93.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1405.0" y="4717.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="1405.0" dy="0">[P] cube-kernel-install</tspan><tspan x="1405.0" dy="25.650000000000002">内核制品</tspan></text>
+</g>
+<g id="cube_install_guest" data-parent="cube_installer_proc" data-origin="P">
+<rect x="984.0" y="4797.5" width="395.0" height="93.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="996.0" y="4824.5" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="996.0" dy="0">[P] cube-guest-install</tspan><tspan x="996.0" dy="25.650000000000002">guest 制品</tspan></text>
+</g>
+<g id="cube_install_agent" data-parent="cube_installer_proc" data-origin="P">
+<rect x="1393.0" y="4797.5" width="395.0" height="93.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1405.0" y="4824.5" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="1405.0" dy="0">[P] cube-agent-install</tspan><tspan x="1405.0" dy="25.650000000000002">guest agent 制品</tspan></text>
+</g>
+<g id="cube_pvm" data-parent="conditional" data-origin="P">
+<rect x="1844" y="4538" width="904" height="390" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="1856" y="4565" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="1856" dy="0">[P] cube-node-pvm DaemonSet〔PVM 时〕</tspan></text>
+</g>
+<g id="cube_pvm_pod" data-parent="cube_pvm" data-origin="P">
+<rect x="1856" y="4600" width="880" height="316" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1868" y="4626" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1868" dy="0">Pod：cube-pvm</tspan></text>
+</g>
+<g id="cube_pvm_proc" data-parent="cube_pvm_pod" data-origin="P">
+<rect x="1868" y="4641" width="856" height="263" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1880" y="4667" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1880" dy="0">容器组；下方每框为独立 init / run 容器</tspan></text>
+</g>
+<g id="cube_pvm_bootstrap" data-parent="cube_pvm_proc" data-origin="P">
+<rect x="1880.0" y="4690.0" width="832.0" height="93.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1892.0" y="4717.0" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="1892.0" dy="0">[P] pvm-host-bootstrap</tspan><tspan x="1892.0" dy="25.650000000000002">init：内核与重启准备</tspan></text>
+</g>
+<g id="cube_pvm_hold" data-parent="cube_pvm_proc" data-origin="P">
+<rect x="1880.0" y="4797.5" width="832.0" height="93.5" rx="6" fill="#44392c" stroke="#aa9066" stroke-width="1.5"/>
+<text x="1892.0" y="4824.5" font-size="19" fill="#dfcfb2" text-anchor="start"><tspan x="1892.0" dy="0">[P] hold-pvm-ready</tspan><tspan x="1892.0" dy="25.650000000000002">run：PVM 准备门槛；不执行 CSI RPC</tspan></text>
+</g>
+<g id="cube_mysql" data-parent="conditional" data-origin="I">
+<rect x="52" y="4950" width="650" height="490" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="64" y="4977" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="64" dy="0">[I/P] 项目数据库 StatefulSet〔可外部〕</tspan></text>
+</g>
+<g id="cube_mysql_pod" data-parent="cube_mysql" data-origin="I">
+<rect x="64" y="5012" width="626" height="416" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="76" y="5038" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="76" dy="0">Pod：cube-mysql</tspan></text>
+</g>
+<g id="cube_mysql_proc" data-parent="cube_mysql_pod" data-origin="I">
+<rect x="76" y="5053" width="602" height="363" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="88" y="5079" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="88" dy="0">容器 / 进程：mysql（或外部项目 DB）</tspan></text>
+</g>
+<g id="cube_db_modules" data-parent="cube_mysql_proc" data-origin="I">
+<rect x="88.0" y="5102.0" width="578.0" height="143.5" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="100.0" y="5129.0" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="100.0" dy="0">[I] Cube 卷映射与项目元数据</tspan><tspan x="100.0" dy="25.650000000000002">与 SSF 账本职责分开</tspan></text>
+</g>
+<g id="cube_db_pvc" data-parent="cube_mysql_proc" data-origin="I">
+<rect x="88.0" y="5259.5" width="578.0" height="143.5" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="100.0" y="5286.5" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="100.0" dy="0">[I] 原生 PVC / 独立存储</tspan><tspan x="100.0" dy="25.650000000000002">不由 SSF 自管卷引导</tspan></text>
+</g>
+<g id="cube_redis" data-parent="conditional" data-origin="I">
+<rect x="722" y="4950" width="650" height="490" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="734" y="4977" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="734" dy="0">[I/P] 项目 Redis StatefulSet〔可外部〕</tspan></text>
+</g>
+<g id="cube_redis_pod" data-parent="cube_redis" data-origin="I">
+<rect x="734" y="5012" width="626" height="416" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="746" y="5038" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="746" dy="0">Pod：cube-redis</tspan></text>
+</g>
+<g id="cube_redis_proc" data-parent="cube_redis_pod" data-origin="I">
+<rect x="746" y="5053" width="602" height="363" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="758" y="5079" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="758" dy="0">容器 / 进程：redis</tspan></text>
+</g>
+<g id="cube_redis_modules" data-parent="cube_redis_proc" data-origin="I">
+<rect x="758.0" y="5102.0" width="578.0" height="301.0" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="770.0" y="5129.0" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="770.0" dy="0">[I] 原项目缓存 / 状态用途</tspan><tspan x="770.0" dy="25.650000000000002">不是 SSF writer 权威账本</tspan></text>
+</g>
+<g id="cube_minio" data-parent="conditional" data-origin="I">
+<rect x="1392" y="4950" width="650" height="490" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="1404" y="4977" font-size="19" fill="#d2dce6" text-anchor="start"><tspan x="1404" dy="0">[I/P] 项目 MinIO StatefulSet〔可外部〕</tspan></text>
+</g>
+<g id="cube_minio_pod" data-parent="cube_minio" data-origin="I">
+<rect x="1404" y="5012" width="626" height="416" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1416" y="5038" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1416" dy="0">Pod：cube-minio</tspan></text>
+</g>
+<g id="cube_minio_proc" data-parent="cube_minio_pod" data-origin="I">
+<rect x="1416" y="5053" width="602" height="363" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="1428" y="5079" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="1428" dy="0">容器 / 进程：minio</tspan></text>
+</g>
+<g id="cube_minio_modules" data-parent="cube_minio_proc" data-origin="I">
+<rect x="1428.0" y="5102.0" width="578.0" height="143.5" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="1440.0" y="5129.0" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="1440.0" dy="0">[I] S3 制品 / snapshot / 层对象</tspan><tspan x="1440.0" dy="25.650000000000002">沿用项目原有 repository</tspan></text>
+</g>
+<g id="cube_minio_pvc" data-parent="cube_minio_proc" data-origin="I">
+<rect x="1428.0" y="5259.5" width="578.0" height="143.5" rx="6" fill="#2b323e" stroke="#7b8798" stroke-width="1.5"/>
+<text x="1440.0" y="5286.5" font-size="19" fill="#c6ced9" text-anchor="start"><tspan x="1440.0" dy="0">[I] 原生 PVC 或独立后端</tspan><tspan x="1440.0" dy="25.650000000000002">不经 SSF 控制面逐 I/O 转发</tspan></text>
+</g>
+<g id="alternative_profiles" data-parent="conditional" data-origin="I">
+<rect x="2062" y="4950" width="686" height="490" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="2074" y="4976" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="2074" dy="0">替代 / 兼容部署：均非默认创建路径</tspan></text>
+</g>
+<g id="shared_coordinator_pod" data-parent="alternative_profiles" data-origin="N">
+<rect x="2076" y="5005" width="658" height="186" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="2088" y="5031" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="2088" dy="0">[N] 替代：共享 Coordinator Deployment → Pod</tspan></text>
+</g>
+<g id="shared_coordinator_process" data-parent="shared_coordinator_pod" data-origin="N">
+<rect x="2090" y="5055" width="630" height="116" rx="6" fill="#244351" stroke="#739bad" stroke-width="1.5"/>
+<text x="2102" y="5081" font-size="18" fill="#c8dee6" text-anchor="start"><tspan x="2102" dy="0">[N] 容器/进程：公共消费协调服务</tspan><tspan x="2102" dy="24.3">替代项目内嵌模块，使用同一账本</tspan><tspan x="2102" dy="24.3">不新增卷生命周期管理权威</tspan></text>
+</g>
+<g id="native_consumer_pod" data-parent="alternative_profiles" data-origin="K">
+<rect x="2076" y="5206" width="658" height="218" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2" stroke-dasharray="9 5"/>
+<text x="2088" y="5232" font-size="18" fill="#d2dce6" text-anchor="start"><tspan x="2088" dy="0">[K/P] 原生消费者 / 显式 Holder Pod〔兼容〕</tspan></text>
+</g>
+<g id="native_volume" data-parent="native_consumer_pod" data-origin="K">
+<rect x="2090" y="5260" width="630" height="148" rx="6" fill="#24364a" stroke="#617d9b" stroke-width="1.5"/>
+<text x="2102" y="5286" font-size="18" fill="#c3d0dd" text-anchor="start"><tspan x="2102" dy="0">[K] 原生消费者容器：kubelet 管理 volume</tspan><tspan x="2102" dy="24.3">[N] Holder Bridge 必须独立认证与交接</tspan><tspan x="2102" dy="24.3">同一卷不能同时由 SSF Direct 管理</tspan></text>
+</g>
+<g id="backends" data-parent="" data-origin="B">
+<rect x="32" y="5510" width="2736" height="280" rx="6" fill="#111c27" stroke="#64798d" stroke-width="2"/>
+<text x="44" y="5538" font-size="20" fill="#d2dce6" text-anchor="start"><tspan x="44" dy="0">⑥ 实际存储服务 / 设备：可为外部托管或已有存储集群；其内部拓扑由后端管理</tspan></text>
+</g>
+<g id="data_backend" data-parent="backends" data-origin="B">
+<rect x="52.0" y="5580.0" width="1341.0" height="184.0" rx="6" fill="#253a33" stroke="#668b7d" stroke-width="1.5"/>
+<text x="64.0" y="5607.0" font-size="19" fill="#b4cfc3" text-anchor="start"><tspan x="64.0" dy="0">[B] 卷数据：NFS / Ceph / 云盘 / 本地盘</tspan><tspan x="64.0" dy="25.650000000000002">文件系统或虚拟设备 → 实际数据 I/O</tspan></text>
+</g>
+<g id="artifact_backend" data-parent="backends" data-origin="B">
+<rect x="1407.0" y="5580.0" width="1341.0" height="184.0" rx="6" fill="#253a33" stroke="#668b7d" stroke-width="1.5"/>
+<text x="1419.0" y="5607.0" font-size="19" fill="#b4cfc3" text-anchor="start"><tspan x="1419.0" dy="0">[B] 项目数据：S3 / COS / snapshot repository</tspan><tspan x="1419.0" dy="25.650000000000002">OverlayBD 层、rootfs / 内存制品及其原有缓存</tspan></text>
+</g>
+<text x="52" y="5850" font-size="22" fill="#c4d0dc" text-anchor="start"><tspan x="52" dy="0">部署与调用边界：Controller Service 不调用 Node Service；SSF / CSI 管理 RPC 不转发业务数据。</tspan></text>
+<text x="52" y="5892" font-size="20" fill="#c4d0dc" text-anchor="start"><tspan x="52" dy="0">Independent VM：卷声明/绑定 → 嵌入式消费授权 / Attach → Node Agent / CSI Node → Runtime Adapter → guest。</tspan></text>
+<text x="52" y="5930" font-size="20" fill="#c4d0dc" text-anchor="start"><tspan x="52" dy="0">平台 Pod 的原生卷仍由 kubelet 管理；SSF / 项目数据库等基础设施不能依赖尚未启动的 SSF 自管卷。</tspan></text>
+<text x="52" y="5970" font-size="19" fill="#c4d0dc" text-anchor="start"><tspan x="52" dy="0">项目分支按实际部署选用；服务式 Coordinator 仅替代嵌入模式；Cube runtime namespace 按既有 profile。非存储容器省略。</tspan></text>
+<polyline points="215,654 215,700" fill="none" stroke="#afc1d3" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<rect x="250" y="664" width="290" height="32" fill="#0f1822"/>
+<text x="262" y="686" font-size="18" fill="#afc1d3" text-anchor="start"><tspan x="262" dy="0">① API / watch</tspan></text>
+<polyline points="2120,1546 2120,1500" fill="none" stroke="#afc1d3" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1600" y="1511" width="500" height="32" fill="#0f1822"/>
+<text x="1612" y="1533" font-size="18" fill="#afc1d3" text-anchor="start"><tspan x="1612" dy="0">② 使用账本 / 准入保护协作</tspan></text>
+<polyline points="1362,2820 1390,2820" fill="none" stroke="#afc1d3" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1170" y="2496" width="360" height="32" fill="#0f1822"/>
+<text x="1182" y="2518" font-size="18" fill="#afc1d3" text-anchor="start"><tspan x="1182" dy="0">③ Node CSI UDS</tspan></text>
+<polyline points="68,4075 14,4075 14,5550 32,5550" fill="none" stroke="#9fbeae" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="60" y="5477" width="900" height="32" fill="#0f1822"/>
+<text x="72" y="5499" font-size="18" fill="#9fbeae" text-anchor="start"><tspan x="72" dy="0">④ VM 实际 I/O 经文件共享或虚拟磁盘到后端</tspan></text>
+<polyline points="2732,4075 2786,4075 2786,5550 2768,5550" fill="none" stroke="#9fbeae" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="2040" y="5477" width="650" height="32" fill="#0f1822"/>
+<text x="2052" y="5499" font-size="18" fill="#9fbeae" text-anchor="start"><tspan x="2052" dy="0">⑤ 实际业务 I/O（非管理 RPC）</tspan></text>
+</svg>

@@ -1,0 +1,36 @@
+%%{init: {"theme":"dark","themeVariables":{"background":"#111c27","primaryTextColor":"#d5e0ec","lineColor":"#91a9b9","clusterBkg":"#182633","clusterBorder":"#617d9b","actorBkg":"#44392c","actorBorder":"#aa9066","actorTextColor":"#e5d6bb","fontFamily":"Arial, PingFang SC, sans-serif"},"themeCSS":"rect.actor[name='C'],rect.actor[name='N']{fill:#244351!important;stroke:#739bad!important}rect.actor[name='K']{fill:#24364a!important;stroke:#617d9b!important}"}}%%
+sequenceDiagram
+  participant G as 原 Gateway
+  participant S as 原 Scheduler + ControlPlugin
+  participant C as 公共 SSF Consumption
+  participant K as K8S API / 原生卷管理
+  participant D as CSI Controller
+  participant A as 原生节点 / Orchestrator
+  participant P as AgentENV NodePlugin
+  participant N as SSF Node Agent
+  participant V as CSI Node
+  G->>S: 原 Schedule + 可信 launch intent
+  S->>A: ResolveLaunchMetadata（只读，按需）
+  A-->>S: 不可变源 / 资源 / 有效挂载
+  S->>C: Prepare(owner,run,mounts,PlacementProvider)
+  C->>S: Reserve / Validate / Renew
+  C->>K: 必要时 WFFC / 确认 Bound、UID、保护
+  C->>D: ControllerPublishVolume（能力要求时）
+  C-->>S: 完整签名 NodeVolumePlan
+  S-->>G: 原 Node + 私有存储上下文
+  G->>A: 原创建 HTTP RPC + 完整计划
+  A->>A: 分配 native ID / 绑定 launchUID / 写启动意图
+  A->>P: PrepareExternal（当前 run，完整计划）
+  P->>N: PrepareVolumes
+  N->>V: NodeStageVolume / NodePublishVolume（按能力）
+  N-->>P: 受约束块设备 Endpoint
+  P-->>A: PreparedExternalDrives
+  A->>A: 原 VMM 启动 / guest 核验 / 持久 ready 证据
+  A->>P: OnGuestReady
+  P->>N: MarkRuntimeReady（可信证据）
+  P->>S: CommitStorageRun（可重放）
+  S->>C: 验证 Node Ready 后 Commit
+  C->>S: Commit 计算 reservation
+  P-->>A: 已持久确认的提交结果
+  A-->>G: 原生 201 + Sandbox + sandbox-id header
+  G->>S: 原 RecordAssignment；心跳/事件继续修复路由
