@@ -1,5 +1,7 @@
 # AgentENV + 独立 SSF coordinator 部署
 
+原生 OverlayBD CSI 的完整新环境安装步骤见 [30 — 完整安装部署](30-overlaybd-csi-installation-and-deployment.md)，包含数据库、证书、Guard、Controller/Gateway、原 Node overlay 和存储类。本篇保留通用 SSF 接入说明。
+
 更新：2026-10-21。仅用于新测试环境。本文给出操作者执行步骤；本轮未自动部署。原 Gateway、Scheduler、Node DaemonSet、headless Service、心跳、P2P、探针和优雅退出继续使用原 base。
 
 ## 1. 目录和构建

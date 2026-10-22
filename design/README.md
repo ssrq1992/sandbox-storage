@@ -12,7 +12,9 @@
 | [23 当前实现架构](23-current-implementation-architecture.md) | 独立协调服务、原生薄客户端、节点插件的实际调用和部署图 |
 | [24 公共模块与扩展点](24-ssf-framework-architecture-and-extension-points.md) | 公共能力归属与必要原生边界 |
 | [26 本次实现与侵入量对照](26-independent-coordinator-implementation.md) | 版本化协议、Rust 抽离、安全时序、测试结果及改动统计 |
-| [27 原生 OverlayBD CSI 复用设计](27-agentenv-overlaybd-csi-reuse-design.md) | **新设计，尚未实施**：Controller/Node/Runtime adapter 分工，复用原生卷、ublk 与 VM 接盘，设备唯一所有权、完整生命周期及验收 |
+| [27 原生 OverlayBD CSI 复用设计](27-agentenv-overlaybd-csi-reuse-design.md) | 目标设计（实施进度见 28）：Controller/Node/Runtime adapter 分工，复用原生卷、ublk 与 VM 接盘，设备唯一所有权、完整生命周期及验收 |
+| [30 OverlayBD 完整安装部署](30-overlaybd-csi-installation-and-deployment.md) | 新环境依赖、六个镜像、数据库、证书、Guard、Controller/Gateway、节点、存储类与验收 |
+| [29 OverlayBD PVC 手动验证](29-overlaybd-pvc-manual-validation.md) | 原生 OverlayBD 两沙箱数据保留主场景 |
 | [13 安装部署](13-agentenvadapter-installation-and-deployment.md) | 双仓联合构建、凭据、框架 overlay、standalone |
 | [14 完整回归与故障验收](14-agentenvadapter-real-environment-test-plan.md) | 原生功能、完整生命周期、服务故障和真实环境测试入口 |
 | [20 PVC 手动端到端场景](20-kubernetes-pvc-agentenv-mount-validation.md) | A 写笔记 → 删除 A → B 挂同一 PVC 读回 |
@@ -51,6 +53,6 @@
 | [25 需求与偏差汇总](25-requirements-and-open-questions-summary.md) | 原生 OverlayBD 接入诉求与此前实现的差异；其中待决策项由 26 的独立服务实现及 27 的新设计分别承接 |
 | [用户指定 K8S CSI 参考](assets/K8S-CSI架构分析.md) | 架构表达参考，原文未改 |
 
-当前已交付接入仍为通用 CSI Block/ext4，legacy OverlayBD 保留，尚无新增 OverlayBD CSI Driver。最新设计 27 将新增复用原生实现的 OverlayBD CSI Driver，继续采用 Block/ext4 接口并保留既有能力；不新增 FileTree 或跨节点内存迁移。2026-10-22 本轮仅新增设计及图源、更新本索引，未修改软件、提交、推送或部署，也未清理环境资源。
+当前已增加原生 OverlayBD CSI Driver、共享库和生命周期主链路，但完整恢复与真机验收尚未完成，实际状态见 28。通用 CSI Block/ext4 和 legacy OverlayBD 路径继续保留；不新增 FileTree 或跨节点内存迁移。安装入口使用 30，不能以目标设计图或离线渲染结果代替端到端验证。
 
 - [28 — OverlayBD CSI 实施状态与验证记录](28-overlaybd-csi-implementation-status.md)：共享库、协议、操作日志的实际进度；完整 Driver 与生命周期尚未完成。

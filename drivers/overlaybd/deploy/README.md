@@ -1,5 +1,7 @@
 # OverlayBD 原生节点与 Controller 部署材料
 
+从零部署入口：[30 — AgentENV + SSF + OverlayBD CSI 完整安装部署](../../../../design/30-overlaybd-csi-installation-and-deployment.md)。包含公共依赖、凭据、Gateway socket 接线、Guard 提取及安装顺序；本篇作为 Driver 细节补充。
+
 这些材料在本机完成离线渲染；未在 Kubernetes/Linux/ublk 执行。完整设计 27 尚有设备创建/未知 restack 和维护设备恢复等实现缺项，当前不能作为完整端到端验收结果。
 
 故障测试入口 `scripts/native_fault_e2e.py` 使用 `--driver-kind native-overlaybd`
