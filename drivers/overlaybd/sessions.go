@@ -68,6 +68,13 @@ type Sessions struct{ db *bolt.DB }
 
 var sessionsBucket = []byte("overlaybd-sessions-v1")
 
+// sessionsLockTimeout bounds how long a starting node waits for the session
+// WAL flock. During pod replacement the previous overlaybd-csi process may
+// still hold the lock until its termination grace period expires; the kernel
+// releases the flock when that process exits, so waiting recovers the
+// replacement without operator intervention.
+const sessionsLockTimeout = 120 * time.Second
+
 func OpenSessions(path string) (*Sessions, error) {
 	if !filepath.IsAbs(path) {
 		return nil, errors.New("absolute session WAL path required")
@@ -75,8 +82,11 @@ func OpenSessions(path string) (*Sessions, error) {
 	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
 		return nil, err
 	}
-	db, err := bolt.Open(path, 0600, &bolt.Options{Timeout: time.Second})
+	db, err := bolt.Open(path, 0600, &bolt.Options{Timeout: sessionsLockTimeout})
 	if err != nil {
+		if errors.Is(err, bolt.ErrTimeout) {
+			return nil, fmt.Errorf("session WAL %s stayed locked for %s; a previous overlaybd-csi process may still be running: %w", path, sessionsLockTimeout, err)
+		}
 		return nil, err
 	}
 	if err = db.Update(func(tx *bolt.Tx) error { _, err := tx.CreateBucketIfNotExists(sessionsBucket); return err }); err != nil {
