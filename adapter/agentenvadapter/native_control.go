@@ -11,6 +11,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	api "ssf.dev/ssf/api/ssf/v1"
 	"ssf.dev/ssf/consume"
 	"ssf.dev/ssf/core"
@@ -834,14 +836,28 @@ func (c *NativeControl) BeginDelete(ctx context.Context, requestID, nodeID strin
 }
 
 // A replacement Pod may finish a stopped run only on the same physical K8s
-// node after a host boot fence. Never rewrite the original signed run plan.
+// node once the previous Pod's runtimes provably exited. Never rewrite the
+// original signed run plan.
 func (c *NativeControl) stopCandidate(ctx context.Context, previous NativeCandidate, nodeID string) (NativeCandidate, error) {
 	current, err := c.physicalCandidate(ctx, previous, nodeID)
 	if err != nil {
 		return current, err
 	}
 	if nodeID != previous.ID && current.BootID == previous.BootID {
-		return NativeCandidate{}, core.ErrConflict
+		// Without a host reboot the old Pod's runtimes are only provably gone
+		// once the previous Pod object itself no longer exists: its processes
+		// were terminated at the latest by the Pod deletion grace period, and
+		// the reporting node plugin reports such a stop only after verifying
+		// the old PID namespace has no live member process. While the previous
+		// Pod object still exists its runtimes may keep running.
+		if c.Kube == nil || c.Kube.API == nil || c.DefaultNamespace == "" {
+			return NativeCandidate{}, core.ErrConflict
+		}
+		if _, e := c.Kube.API.CoreV1().Pods(c.DefaultNamespace).Get(ctx, previous.ID, metav1.GetOptions{}); e == nil {
+			return NativeCandidate{}, core.ErrConflict
+		} else if !apierrors.IsNotFound(e) {
+			return NativeCandidate{}, e
+		}
 	}
 	return current, nil
 }
