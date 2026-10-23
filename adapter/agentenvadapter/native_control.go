@@ -154,6 +154,9 @@ func (c *NativeControl) prepareLaunch(ctx context.Context, q NativeIntent, candi
 		var resolved nativeResolved
 		err = c.Ledger.Step(ctx, "agentenv/resolved/"+q.RequestID, core.Digest(q), func(ctx context.Context) (any, error) { return c.resolveNative(ctx, q, owner, run, candidates) }, &resolved)
 		if err != nil {
+			if errors.Is(err, core.ErrConflict) {
+				err = errors.Join(err, c.compensateUndispatched(ctx, q, owner, run))
+			}
 			return err
 		}
 		out = resolved.Dispatch
@@ -172,10 +175,21 @@ func (c *NativeControl) prepareLaunch(ctx context.Context, q NativeIntent, candi
 			candidates = filtered
 		}
 		admission := &NativeAdmission{Ledger: c.Ledger, Kube: c.Kube, Candidates: candidates, Resources: out.Resources, Choose: choose, Refresh: c.Refresh}
+		// A permanent conflict must not leave an undischarged operation, an
+		// active run row or an acquired binding behind: this run was never
+		// dispatched, so no node can have started it and immediate
+		// compensation is always safe. Transient errors keep their retry
+		// semantics through the recovery loop.
+		conflict := func(err error) error {
+			if !errors.Is(err, core.ErrConflict) {
+				return err
+			}
+			return errors.Join(err, c.compensateUndispatched(ctx, q, owner, run))
+		}
 		if len(coreMounts) > 0 {
 			out.Result, err = c.coordinator(admission, "").Prepare(ctx, consume.Request{ID: q.RequestID, Tenant: q.Tenant, Sandbox: run, OwnerUID: owner, RunUID: run, Mounts: coreMounts})
 			if err != nil {
-				return err
+				return conflict(err)
 			}
 			out.Reservation = out.Result.Placement
 			for _, b := range out.Result.Plan.Bindings {
@@ -187,7 +201,7 @@ func (c *NativeControl) prepareLaunch(ctx context.Context, q NativeIntent, candi
 					}
 				}
 				if boundVolume.Name == "" {
-					return core.ErrConflict
+					return conflict(core.ErrConflict)
 				}
 				var initialize bool
 				var e error
@@ -195,12 +209,12 @@ func (c *NativeControl) prepareLaunch(ctx context.Context, q NativeIntent, candi
 					initialize, e = c.Volumes.AuthorizeInitialization(ctx, q.Tenant, boundVolume.Name, out.Result.Operation)
 				}
 				if e != nil {
-					return e
+					return conflict(e)
 				}
 				out.Initialize[b.ID] = initialize
 				current, e := c.Volumes.Get(ctx, q.Tenant, boundVolume.Name)
 				if e != nil {
-					return e
+					return conflict(e)
 				}
 				if current.PVC != boundVolume.PVC || current.State == "Expanding" {
 					return core.ErrPending
@@ -243,6 +257,49 @@ func (c *NativeControl) prepareLaunch(ctx context.Context, q NativeIntent, candi
 		return err
 	})
 	return out, err
+}
+
+// compensateUndispatched reclaims a run whose preparation ended in a permanent
+// conflict before any dispatch was persisted. The caller must hold the
+// native-run lock and the run must still be in its pre-dispatch state, so no
+// node can have started this run and immediate compensation is safe. It
+// mirrors abortNativeUnpublished for the conflict path: bindings acquired by
+// the operation are released, the run is stopped, the placement reservation
+// is returned and the run is revoked (or reset for a resume intent).
+func (c *NativeControl) compensateUndispatched(ctx context.Context, q NativeIntent, owner, run string) error {
+	op := core.Hash(q.Tenant + "\x00" + run + "\x00" + q.RequestID)
+	if err := c.coordinator(nil, "").AbortUnpublished(ctx, op, func(ctx context.Context) error {
+		var state string
+		if err := c.Ledger.Session(ctx).QueryRow(ctx, `SELECT state FROM agentenv_native_runs WHERE id=$1`, q.RequestID).Scan(&state); err != nil {
+			return err
+		}
+		if state != "Intent" {
+			return core.ErrConflict
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+	if err := c.Ledger.StopRun(ctx, owner, run); err != nil {
+		return err
+	}
+	admission := NativeAdmission{Ledger: c.Ledger}
+	if reservation, err := admission.load(ctx, op); err == nil {
+		if err = admission.Release(ctx, reservation.Placement); err != nil {
+			return err
+		}
+	} else if !errors.Is(err, pgx.ErrNoRows) {
+		return err
+	}
+	next := "Unstarted"
+	if q.ResumeOf == "" {
+		if err := c.Ledger.ReleaseUse(ctx, owner); err != nil {
+			return err
+		}
+		next = "Revoked"
+	}
+	_, err := c.Ledger.Session(ctx).Exec(ctx, `UPDATE agentenv_native_runs SET state=$2,updated=now() WHERE id=$1 AND state='Intent'`, q.RequestID, next)
+	return err
 }
 
 // Immutable resolution is persisted separately from compute admission. Both RPC
