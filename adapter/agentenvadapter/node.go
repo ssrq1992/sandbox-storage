@@ -188,6 +188,30 @@ func (n *Node) Recover(ctx context.Context) {
 		}
 	}
 }
+
+// pidNamespaceDead reports whether no live process on this host remains in the
+// given PID namespace. A PID namespace is destroyed when its last member
+// process exits, and a destroyed namespace cannot be re-entered, so an empty
+// membership proves that every runtime that namespace hosted — including a VMM
+// whose stop evidence was lost with the replaced Pod — has already exited.
+func pidNamespaceDead(ns string) bool {
+	if ns == "" {
+		return false
+	}
+	entries, err := os.ReadDir("/proc")
+	if err != nil {
+		return false
+	}
+	for _, e := range entries {
+		if !e.IsDir() {
+			continue
+		}
+		if target, err := os.Readlink(filepath.Join("/proc", e.Name(), "ns", "pid")); err == nil && target == ns {
+			return false
+		}
+	}
+	return true
+}
 func (n *Node) Work(ctx context.Context, id string) error {
 	lock, _ := n.workLocks.LoadOrStore(id, &sync.Mutex{})
 	lock.(*sync.Mutex).Lock()
@@ -212,7 +236,21 @@ func (n *Node) Work(ctx context.Context, id string) error {
 		return e
 	}
 	if r.PIDNamespace != n.PIDNamespace {
-		return errors.New("Pod PID namespace replaced without host reboot; old VMM absence requires host fencing")
+		// A replaced Pod's PID namespace without a host reboot cannot prove
+		// the old VMM exited while any of its member processes may still run.
+		// Once that namespace has no live member at all, though, every runtime
+		// it hosted has exited and the namespace can never be re-entered: the
+		// fence is complete and the record may be stopped and released.
+		if r.NodeUID != n.Config.NodeUID || !pidNamespaceDead(r.PIDNamespace) {
+			return errors.New("Pod PID namespace replaced without host reboot; old VMM absence requires host fencing")
+		}
+		_, e = n.Journal.Update(id, func(x *NodeRecord) error {
+			x.Stop = true
+			x.State = "Stopped"
+			x.Reason = "old runtime terminated by pod replacement"
+			return nil
+		})
+		return e
 	}
 	if r.Dispatched && r.Runtime.InstanceID == "" {
 		ev, found, err := n.discover(r.Ticket)
@@ -409,6 +447,9 @@ func (n *Node) verifyRuntime(r NodeRecord, action string) error {
 		return errors.New("stale node incarnation")
 	}
 	if r.PIDNamespace != n.PIDNamespace {
+		if action == "detached" && r.Stop && r.NodeUID == n.Config.NodeUID && pidNamespaceDead(r.PIDNamespace) {
+			return nil
+		}
 		return errors.New("PID namespace changed; retain old process references")
 	}
 	if action == "detached" && !r.Dispatched && r.Runtime.InstanceID == "" && r.Stop {
