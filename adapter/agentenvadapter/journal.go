@@ -3,6 +3,7 @@ package agentenvadapter
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	bolt "go.etcd.io/bbolt"
 	"os"
 	"path/filepath"
@@ -12,14 +13,23 @@ import (
 
 var ErrNotFound = errors.New("node operation not found")
 
+// journalLockTimeout bounds the wait for the adapter.db flock. A replaced Pod's
+// plugin process can outlive its container runtime bookkeeping for a while and
+// keep holding the file lock; the kernel releases it once that process exits,
+// so waiting recovers a Pod replacement instead of failing it.
+const journalLockTimeout = 120 * time.Second
+
 type Journal struct{ DB *bolt.DB }
 
 func OpenJournal(root string) (*Journal, error) {
 	if e := os.MkdirAll(root, 0700); e != nil {
 		return nil, e
 	}
-	db, e := bolt.Open(filepath.Join(root, "adapter.db"), 0600, &bolt.Options{Timeout: time.Second})
+	db, e := bolt.Open(filepath.Join(root, "adapter.db"), 0600, &bolt.Options{Timeout: journalLockTimeout})
 	if e != nil {
+		if errors.Is(e, bolt.ErrTimeout) {
+			return nil, fmt.Errorf("adapter journal %s stayed locked by another process for %s; a previous node plugin process may still be exiting", filepath.Join(root, "adapter.db"), journalLockTimeout)
+		}
 		return nil, e
 	}
 	e = db.Update(func(tx *bolt.Tx) error {
