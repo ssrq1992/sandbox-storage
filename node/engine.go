@@ -415,7 +415,11 @@ func (e *Engine) release(ctx context.Context, r Record) (Record, error) {
 				return r, err
 			}
 		}
-		if r.Steps["publish/"+b.ID] != "" {
+		// A publish RPC may have created the target mount and then lost its
+		// reply or WAL step save; the step key is then missing while the mount
+		// exists. NodeUnpublishVolume is idempotent for absent claims, so
+		// attempt the unpublish whenever the binding reached the node at all.
+		if r.Steps["publish/"+b.ID] != "" || r.Steps["stage/"+b.ID] != "" {
 			err = e.step(&r, "unpublish/"+b.ID, func() error {
 				_, err := s.Node.NodeUnpublishVolume(ctx, &csi.NodeUnpublishVolumeRequest{VolumeId: b.Volume.Handle, TargetPath: target})
 				return err

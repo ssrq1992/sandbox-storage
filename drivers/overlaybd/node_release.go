@@ -8,6 +8,25 @@ import (
 	api "ssf.dev/ssf/api/overlaybd/v1"
 )
 
+// releaseSwept first removes any residual publication mount of this session's
+// device. A publish whose WAL update was lost leaves the kernel bind-mount
+// behind while the publication record is gone; the native device stop would
+// then fail with EBUSY forever. Only a session whose release was already
+// authorized (ReleaseStarted) is swept, and only its own device's mounts;
+// publishers without sweep support keep their original behavior.
+func (n *CSINode) releaseSwept(ctx context.Context, s Session, intent ReleaseIntent) (Session, error) {
+	if s.Evidence != nil && s.ReleaseStarted {
+		if sweeper, ok := n.Mounts.(interface {
+			SweepDevice(context.Context, DeviceEvidence) error
+		}); ok {
+			if err := sweeper.SweepDevice(ctx, *s.Evidence); err != nil {
+				return Session{}, err
+			}
+		}
+	}
+	return n.Operations.Release(ctx, s.Intent.ID, intent)
+}
+
 // Release resumes only an already fenced and verified local cleanup. The CSI
 // boundary must first unpublish actual mounts, return borrowed descriptors and
 // invoke BeginRelease/BeginPreparationRelease with authenticated evidence.

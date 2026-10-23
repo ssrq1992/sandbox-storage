@@ -60,7 +60,7 @@ func (n *CSINode) Reconcile(ctx context.Context) error {
 		if ctx.Err() != nil {
 			return errors.Join(append(failures, ctx.Err())...)
 		}
-		if _, err = n.Operations.Release(ctx, s.Intent.ID, *s.ReleaseIntent); err != nil {
+		if _, err = n.releaseSwept(ctx, s, *s.ReleaseIntent); err != nil {
 			failures = append(failures, fmt.Errorf("release session %s: %w", s.Intent.ID, err))
 		}
 	}

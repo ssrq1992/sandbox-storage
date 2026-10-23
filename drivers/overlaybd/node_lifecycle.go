@@ -151,6 +151,6 @@ func (n *CSINode) finishPreparation(ctx context.Context, s Session) error {
 			return err
 		}
 	}
-	_, err = n.Operations.Release(ctx, s.Intent.ID, ReleaseIntent{PreparationDigest: s.PreparationRelease.Digest})
+	_, err = n.releaseSwept(ctx, s, ReleaseIntent{PreparationDigest: s.PreparationRelease.Digest})
 	return err
 }

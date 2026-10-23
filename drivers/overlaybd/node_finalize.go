@@ -166,6 +166,6 @@ func (n *CSINode) finishStopped(ctx context.Context, s Session) error {
 			return err
 		}
 	}
-	_, err = n.Operations.Release(ctx, s.Intent.ID, ReleaseIntent{StopDigest: f.StopDigest, BorrowedRefsDigest: f.BorrowedRefsDigest, CaptureID: f.CaptureID, PublishedHead: f.PublishedHead})
+	_, err = n.releaseSwept(ctx, s, ReleaseIntent{StopDigest: f.StopDigest, BorrowedRefsDigest: f.BorrowedRefsDigest, CaptureID: f.CaptureID, PublishedHead: f.PublishedHead})
 	return err
 }

@@ -189,3 +189,61 @@ func (m LinuxBlockPublisher) Unpublish(ctx context.Context, e DeviceEvidence, pa
 	// No lazy unmount: a busy native FD/mount remains a visible cleanup failure.
 	return unix.Unmount(fmt.Sprintf("/proc/self/fd/%d", target.Fd()), 0)
 }
+
+// deviceMounts lists direct publication mount points under the private publish
+// root whose mounted block identity matches the evidence. Mounts belonging to
+// other devices (other sessions) are never included.
+func (m LinuxBlockPublisher) deviceMounts(e DeviceEvidence) ([]string, error) {
+	f, err := os.Open("/proc/self/mountinfo")
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	var targets []string
+	scan := bufio.NewScanner(f)
+	for scan.Scan() {
+		fields := strings.Fields(scan.Text())
+		if len(fields) < 6 {
+			continue
+		}
+		decoded := strings.NewReplacer("\\040", " ", "\\011", "\t", "\\012", "\n", "\\134", "\\").Replace(fields[4])
+		if filepath.Dir(decoded) != m.Root || decoded == m.Root {
+			continue
+		}
+		actual, err := openBlock(decoded, e)
+		if err != nil {
+			continue
+		}
+		actual.Close()
+		targets = append(targets, decoded)
+	}
+	return targets, scan.Err()
+}
+
+// SweepDevice removes residual publication bind-mounts of one device under
+// the private publish root. A publish whose WAL update was lost can leave the
+// kernel mount behind while its publication record is gone; the native device
+// stop would then fail with EBUSY forever. Release authorization for the
+// device was already pinned by BeginRelease, so only this device's own stale
+// mounts are unmounted; the loop is bounded against stacked mounts.
+func (m LinuxBlockPublisher) SweepDevice(ctx context.Context, e DeviceEvidence) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if !filepath.IsAbs(m.Root) || filepath.Clean(m.Root) != m.Root {
+		return errors.New("private publish root required")
+	}
+	for range 16 {
+		targets, err := m.deviceMounts(e)
+		if err != nil {
+			return err
+		}
+		if len(targets) == 0 {
+			return nil
+		}
+		if err = m.Unpublish(ctx, e, targets[0]); err != nil {
+			return err
+		}
+	}
+	return errors.New("residual publication mounts did not drain")
+}
