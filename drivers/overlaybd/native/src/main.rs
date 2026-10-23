@@ -86,6 +86,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
     private_directory(&config.state_root)?;
+    // The dedicated daemon claims each managed runtime dir non-recursively
+    // ("it must not already exist"), so a fresh deployment must already
+    // provide their shared parent or every device prepare fails with ENOENT.
+    private_directory(&config.state_root.join("devices").join("runtime"))?;
     let parent = config.socket.parent().ok_or("socket parent required")?;
     private_directory(parent)?;
     // The lock survives for the entire listener lifetime. Only its holder may

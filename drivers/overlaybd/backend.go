@@ -66,7 +66,7 @@ func DialBackend(ctx context.Context, socket string, required ...string) (*grpc.
 	if !filepath.IsAbs(socket) || filepath.Clean(socket) != socket || strings.ContainsRune(socket, 0) {
 		return nil, errors.New("canonical absolute backend Unix socket required")
 	}
-	connection, err := grpc.NewClient("passthrough:///"+socket,
+	connection, err := grpc.NewClient("unix://"+socket,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) {
 			return (&net.Dialer{}).DialContext(ctx, "unix", socket)

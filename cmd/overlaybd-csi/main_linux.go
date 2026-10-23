@@ -339,7 +339,7 @@ func probe(ctx context.Context, c configuration) error {
 	if c.Role == "worker" {
 		return errors.New("CSI probe requires controller or node role")
 	}
-	connection, err := grpc.NewClient("passthrough:///"+c.Socket,
+	connection, err := grpc.NewClient("unix://"+c.Socket,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) {
 			return (&net.Dialer{}).DialContext(ctx, "unix", c.Socket)
