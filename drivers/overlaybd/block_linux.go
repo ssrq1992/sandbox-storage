@@ -174,6 +174,13 @@ func (m LinuxBlockPublisher) Unpublish(ctx context.Context, e DeviceEvidence, pa
 		return nil
 	}
 	if err != nil {
+		// A publication mount whose backing device node was deleted while the
+		// mount stayed behind can no longer be opened: the removed block
+		// device fails opens with ENXIO. The mount entry itself is the kernel
+		// truth, so verify identity from it and umount(2) by path.
+		if errors.Is(err, unix.ENXIO) {
+			return m.unmountDangling(e, path)
+		}
 		return err
 	}
 	defer target.Close()
@@ -183,11 +190,86 @@ func (m LinuxBlockPublisher) Unpublish(ctx context.Context, e DeviceEvidence, pa
 	}
 	actual, err := openBlock(path, e)
 	if err != nil {
+		if errors.Is(err, unix.ENXIO) {
+			return m.unmountDangling(e, path)
+		}
 		return err
 	}
 	actual.Close()
 	// No lazy unmount: a busy native FD/mount remains a visible cleanup failure.
 	return unix.Unmount(fmt.Sprintf("/proc/self/fd/%d", target.Fd()), 0)
+}
+
+// mountEntry describes one kernel mount entry.
+type mountEntry struct {
+	root   string // path of the mounted source within its filesystem
+	fstype string
+	source string
+}
+
+// mountsDevice reports whether this devtmpfs entry binds the device node named
+// by the evidence. It is the identity fallback for a mount whose device node
+// was deleted and can no longer be opened: the kernel reports the deleted
+// dentry with a "//deleted" suffix in the root field.
+func (entry mountEntry) mountsDevice(e DeviceEvidence) bool {
+	if entry.fstype != "devtmpfs" || entry.source != "devtmpfs" || e.Path == "" {
+		return false
+	}
+	name := "/" + filepath.Base(e.Path)
+	return entry.root == name || entry.root == name+"//deleted"
+}
+
+// parseMountLine decodes one mountinfo line into its mount point and entry
+// description. ok is false for malformed lines.
+func parseMountLine(line string) (string, mountEntry, bool) {
+	fields := strings.Fields(line)
+	if len(fields) < 6 {
+		return "", mountEntry{}, false
+	}
+	decoded := strings.NewReplacer("\\040", " ", "\\011", "\t", "\\012", "\n", "\\134", "\\").Replace(fields[4])
+	sep := -1
+	for i, v := range fields {
+		if v == "-" {
+			sep = i
+			break
+		}
+	}
+	if sep < 0 || len(fields) < sep+3 {
+		return decoded, mountEntry{}, false
+	}
+	return decoded, mountEntry{root: fields[3], fstype: fields[sep+1], source: fields[sep+2]}, true
+}
+
+// mountEntryAt returns the kernel mount entry mounted at exactly one path.
+func mountEntryAt(path string) (mountEntry, error) {
+	f, err := os.Open("/proc/self/mountinfo")
+	if err != nil {
+		return mountEntry{}, err
+	}
+	defer f.Close()
+	scan := bufio.NewScanner(f)
+	for scan.Scan() {
+		decoded, entry, ok := parseMountLine(scan.Text())
+		if ok && decoded == path {
+			return entry, nil
+		}
+	}
+	return mountEntry{}, scan.Err()
+}
+
+// unmountDangling removes a publication mount whose backing device node was
+// deleted while the mount stayed behind. Such a mount cannot be opened
+// (ENXIO from the removed block device), so device identity is verified from
+// the mount entry itself and umount(2) is issued by path.
+func (m LinuxBlockPublisher) unmountDangling(e DeviceEvidence, path string) error {
+	entry, err := mountEntryAt(path)
+	if err != nil {
+		return err
+	}
+	if !entry.mountsDevice(e) {
+		return errors.New("dangling mount does not belong to the session device")
+	}
+	return unix.Unmount(path, 0)
 }
 
 // deviceMounts lists direct publication mount points under the private publish
@@ -202,20 +284,21 @@ func (m LinuxBlockPublisher) deviceMounts(e DeviceEvidence) ([]string, error) {
 	var targets []string
 	scan := bufio.NewScanner(f)
 	for scan.Scan() {
-		fields := strings.Fields(scan.Text())
-		if len(fields) < 6 {
-			continue
-		}
-		decoded := strings.NewReplacer("\\040", " ", "\\011", "\t", "\\012", "\n", "\\134", "\\").Replace(fields[4])
-		if filepath.Dir(decoded) != m.Root || decoded == m.Root {
+		decoded, entry, ok := parseMountLine(scan.Text())
+		if !ok || filepath.Dir(decoded) != m.Root || decoded == m.Root {
 			continue
 		}
 		actual, err := openBlock(decoded, e)
-		if err != nil {
+		if err == nil {
+			actual.Close()
+			targets = append(targets, decoded)
 			continue
 		}
-		actual.Close()
-		targets = append(targets, decoded)
+		// A mount whose device node was deleted cannot be opened; verify it
+		// from its own entry so the sweep still drains it.
+		if errors.Is(err, unix.ENXIO) && entry.mountsDevice(e) {
+			targets = append(targets, decoded)
+		}
 	}
 	return targets, scan.Err()
 }
