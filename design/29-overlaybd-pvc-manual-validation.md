@@ -224,3 +224,25 @@ aenv exec "$SANDBOX_C" sh -c 'cat /data/notes.txt && df -B1 /data'
 测试完成后先通过原 API 删除仍在运行的测试沙箱，再删除**本次创建且已核对 UID 的**
 PVC。StorageClass 的 Retain 表示后端可能保留；不要删除 finalizer、WAL 或直接删除
 repository 目录。后端回收另按管理员批准的测试资源清单处理。
+
+## 8. 已知问题与修复记录（2026-10-23）
+
+以下问题在本次联调中实际观察到并已修复，全部合入 `sandbox-storage-v1.0` 分支：
+
+| 问题 | 根因 | 修复 |
+| --- | --- | --- |
+| 删除沙箱后释放链永久 EBUSY 死锁 | `LinuxBlockPublisher.Unpublish` 持有目标 O_PATH 描述符并通过 `/proc/self/fd` umount：该描述符本身给挂载记一次引用，内核 umount 忙检查把它计入，导致即使无任何其他进程占用也永远返回 EBUSY（发布挂载以 shared 传播复制到各容器 namespace，症状一致） | `da7e17b`：先验证身份、关闭描述符，再按路径 umount；ENXIO 悬空路径同样先关描述符。`TestLinuxBlockPublicationFixture`（需 `SSF_TEST_LINUX_MOUNTS=1` 显式开启）可稳定复现旧缺陷，现通过 |
+| 悬空发布挂载（后端设备已删）无法清理 | 设备节点删除后打开挂载点返回 ENXIO，身份验证路径失效 | `8e71a12`：从 devtmpfs mountinfo 条目自身（root 字段 `/ublkbNNN`）验证身份后按路径 umount |
+| Pod 替换后释放链被围栏永久阻塞 | 节点/协调器两侧的围栏都假设运行时所在 Pod 不变 | `f700772` 节点侧：被替换的 PID namespace 无存活成员即证明其承载的运行时全部退出；`f43c976` 协调器侧：旧 Pod 对象从 K8s API 消失即允许 stopCandidate 通过（无宿主机重启前提） |
+| adapter.db bbolt 锁竞争短等失败 | 锁等待仅 1s，Pod 滚动时易 EAGAIN | `b51400f`：有界等待提升至 120s |
+
+运维备注：释放链卡住时 agentenv-node Pod 的终止（drain）也会死锁——agentenv-storage
+持有未完成工作、overlaybd-csi 等待非终态会话。等价于宽限期到期的处置是对处于
+Terminating 的 Pod 内容器进程 SIGKILL（按 Pod UID 匹配 cgroup）；杀死容器 init 进程
+不影响 containerd shim，新 Pod 数十秒内即可 8/8 就绪。上述围栏修复（`f700772`/
+`f43c976`）保证 Pod 替换后滞留记录能被自动续驱释放。
+
+部署标签：当前 `v10-20261023c`（overlaybd）；回滚序列 `v10-20261023b` →
+`v10-20261023` → `v10-20261022`。修复验证（2026-10-23，PVC `overlaybd-notes`）：
+冷启动创建 → 5s Running → /data 挂载且四个历史沙箱标记均在 → 写入新标记 → 删除 →
+账本（run/binding/hold）与宿主机发布挂载约 2 秒内全量自动清零 → PVC 保持 Bound。
