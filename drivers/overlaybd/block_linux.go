@@ -183,21 +183,34 @@ func (m LinuxBlockPublisher) Unpublish(ctx context.Context, e DeviceEvidence, pa
 		}
 		return err
 	}
-	defer target.Close()
 	mounted, _, err := mountedBlock(path)
 	if err != nil || !mounted {
+		target.Close()
 		return err
 	}
 	actual, err := openBlock(path, e)
 	if err != nil {
+		// Close the target descriptor first: unmountDangling umounts by path
+		// and a descriptor open on the mount would pin it (EBUSY).
+		target.Close()
 		if errors.Is(err, unix.ENXIO) {
 			return m.unmountDangling(e, path)
 		}
 		return err
 	}
 	actual.Close()
+	// An open descriptor on the mount pins a mount reference: the kernel's
+	// busy check counts the descriptor itself, so umount(2) by /proc/self/fd
+	// would fail with EBUSY even though no other process uses the mount.
+	// Release the target descriptor and umount by path instead. The publish
+	// root is private to this process and every publication mutation holds
+	// CSINode.mu, so the verified path cannot be swapped between the
+	// identity check and the umount.
+	if err = target.Close(); err != nil {
+		return err
+	}
 	// No lazy unmount: a busy native FD/mount remains a visible cleanup failure.
-	return unix.Unmount(fmt.Sprintf("/proc/self/fd/%d", target.Fd()), 0)
+	return unix.Unmount(path, 0)
 }
 
 // mountEntry describes one kernel mount entry.
