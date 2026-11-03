@@ -86,7 +86,11 @@ func (c *Coordinator) prepare(ctx context.Context, q Request) (Result, error) {
 	if err := c.Ledger.Step(ctx, "request/"+op, core.Digest(q), func(ctx context.Context) (any, error) { return q, nil }, nil); err != nil {
 		return result, err
 	}
-	pinned := q.Mounts
+	// Copy the mounts: the resolve step unmarshals its recorded result
+	// (with pinned PVC identities) into `pinned`; aliasing q.Mounts here
+	// would mutate the caller's request and change core.Digest(q) between
+	// Begin and Acquire, breaking retry identity.
+	pinned := append([]core.Mount(nil), q.Mounts...)
 	err := c.Ledger.Step(ctx, "resolve/"+op, core.Digest(q), func(ctx context.Context) (any, error) {
 		out := append([]core.Mount(nil), q.Mounts...)
 		for i, m := range out {

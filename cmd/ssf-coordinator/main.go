@@ -11,20 +11,22 @@ import (
 	"os/signal"
 	control "ssf.dev/control"
 	adapter "ssf.dev/ssf/adapter/agentenvadapter"
+	sandboxsched "ssf.dev/ssf/adapter/sandboxschedadapter"
 	"ssf.dev/ssf/coordinator"
 	"syscall"
 	"time"
 )
 
 type config struct {
-	Listen         string         `json:"listen"`
-	HealthListen   string         `json:"health_listen"`
-	TLS            control.Config `json:"tls"`
-	SchedulerPeers []string       `json:"scheduler_peers"`
-	NodePeers      []string       `json:"node_peers"`
-	StoragePeers   []string       `json:"storage_peers"`
-	Observer       control.Config `json:"observer"`
-	RuntimeConfig  string         `json:"runtime_config"`
+	Listen                   string         `json:"listen"`
+	HealthListen             string         `json:"health_listen"`
+	TLS                      control.Config `json:"tls"`
+	SchedulerPeers           []string       `json:"scheduler_peers"`
+	NodePeers                 []string       `json:"node_peers"`
+	StoragePeers             []string       `json:"storage_peers"`
+	Observer                 control.Config `json:"observer"`
+	RuntimeConfig            string         `json:"runtime_config"`
+	SandboxSchedRuntimeConfig string        `json:"sandboxsched_runtime_config"`
 }
 
 func run(ctx context.Context, path string) error {
@@ -100,7 +102,22 @@ func run(ctx context.Context, path string) error {
 		}
 		return c, errors.New("native node heartbeat is not ready")
 	}
-	service := &coordinator.Service{Runtimes: map[string]coordinator.Runtime{"agentenv": plugin}, SchedulerPeers: cfg.SchedulerPeers, NodePeers: cfg.NodePeers, StoragePeers: cfg.StoragePeers}
+	runtimes := map[string]coordinator.Runtime{"agentenv": plugin}
+	// The SandboxSched runtime plugin is optional: without a config the
+	// coordinator keeps its previous agentenv-only behaviour.
+	if cfg.SandboxSchedRuntimeConfig != "" {
+		schedConfig, e := sandboxsched.LoadControlConfig(cfg.SandboxSchedRuntimeConfig)
+		if e != nil {
+			return e
+		}
+		schedHost, closeSched, e := sandboxsched.OpenSandboxSchedControl(ctx, schedConfig)
+		if e != nil {
+			return e
+		}
+		defer closeSched()
+		runtimes["sandboxsched"] = &sandboxsched.ControlService{Control: schedHost, Config: schedConfig}
+	}
+	service := &coordinator.Service{Runtimes: runtimes, SchedulerPeers: cfg.SchedulerPeers, NodePeers: cfg.NodePeers, StoragePeers: cfg.StoragePeers}
 	plugin.AdmissionAllowed = func() bool { return !service.Draining.Load() }
 	server := &http.Server{Addr: cfg.Listen, Handler: service, TLSConfig: serverTLS, ReadHeaderTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second}
 	health := http.NewServeMux()
