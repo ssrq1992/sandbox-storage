@@ -15,30 +15,24 @@ import (
 	"sync"
 	"time"
 
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
 	control "ssf.dev/control"
-	v1 "ssf.dev/ssf/api/ssf/v1"
 	"ssf.dev/ssf/config"
 	"ssf.dev/ssf/core"
-	"ssf.dev/ssf/runtime"
 )
 
 // Node is the SandboxSched node-local storage service.
 type Node struct {
-	Config           NodeConfig
-	NodeUID          string
-	BootID           string
-	Journal          *Journal
-	SSF              v1.RuntimeStorageNodeClient
-	Control          *control.Client
-	Call             func(ctx context.Context, method string, envelope []byte) (json.RawMessage, error)
-	APIKey           string
-	contentMu        sync.Mutex
-	mu               sync.Mutex
+	Config   NodeConfig
+	NodeUID  string
+	BootID   string
+	Journal  *Journal
+	Control  *control.Client
+	Call     func(ctx context.Context, method string, envelope []byte) (json.RawMessage, error)
+	APIKey   string
+	mu       sync.Mutex
 }
 
 // Run starts the node service until the context is cancelled.
@@ -47,8 +41,9 @@ func Run(ctx context.Context, c NodeConfig) error {
 	if err != nil {
 		return err
 	}
-	// The agent-facing API authenticates with an API key, while the SSF node
-	// stack verifies itself with mTLS: accept both on one listener.
+	// The agent-facing API authenticates with an API key; optional client
+	// certificates are still accepted on the same listener for callers
+	// that present mTLS identities.
 	pool := x509.NewCertPool()
 	if raw, e := os.ReadFile(c.CA); e == nil {
 		pool.AppendCertsFromPEM(raw)
@@ -77,32 +72,20 @@ func Run(ctx context.Context, c NodeConfig) error {
 		return err
 	}
 	defer j.Close()
-	clientTLS, err := authTLSVariant(c.Cert, c.Key, c.CA)
-	if err != nil {
-		return err
-	}
-	grpcTLS := clientTLS.Clone()
-	grpcTLS.ServerName = c.SSFServerName
-	conn, err := grpc.NewClient(c.SSFEndpoint, grpc.WithTransportCredentials(credentials.NewTLS(grpcTLS)))
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
 	controlClient, err := control.New(control.Config{Endpoint: c.Coordinator.Endpoint, Cert: c.Coordinator.Cert, Key: c.Coordinator.Key, CA: c.Coordinator.CA, Peer: c.Coordinator.Peer, ServerName: c.Coordinator.ServerName})
 	if err != nil {
 		return err
 	}
 	n := &Node{
-		Config:           c,
-		NodeUID:          string(node.UID),
-		BootID:           strings.TrimSpace(string(boot)),
-		Journal:          j,
-		SSF:              v1.NewRuntimeStorageNodeClient(conn),
-		Control:          controlClient,
-		APIKey:           strings.TrimSpace(string(key)),
+		Config:  c,
+		NodeUID: string(node.UID),
+		BootID:  strings.TrimSpace(string(boot)),
+		Journal: j,
+		Control: controlClient,
+		APIKey:  strings.TrimSpace(string(key)),
 	}
 	n.Call = func(ctx context.Context, method string, envelope []byte) (json.RawMessage, error) {
-		reply, err := n.Control.Call(ctx, method, control.Request{Runtime: n.Config.PreparationRuntime, Envelope: envelope})
+		reply, err := n.Control.Call(ctx, method, control.Request{Runtime: n.Config.Runtime, Envelope: envelope})
 		if err != nil {
 			return nil, err
 		}
@@ -110,13 +93,6 @@ func Run(ctx context.Context, c NodeConfig) error {
 	}
 	go n.recoverLoop(ctx)
 	handler := &http.Server{Addr: c.Listen, Handler: n, TLSConfig: serverTLS, ReadHeaderTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second}
-	hook := &http.Server{Addr: c.HookListen, Handler: http.HandlerFunc(n.preparationHook), ReadHeaderTimeout: 10 * time.Second}
-	defer hook.Close()
-	go func() {
-		if err := hook.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			fmt.Fprintln(os.Stderr, "hook listener:", err)
-		}
-	}()
 	health := &http.Server{Addr: c.HealthListen, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200) })}
 	defer health.Close()
 	go func() {
@@ -129,7 +105,6 @@ func Run(ctx context.Context, c NodeConfig) error {
 		shutdown, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		_ = handler.Shutdown(shutdown)
-		_ = hook.Shutdown(shutdown)
 	}()
 	err = handler.ListenAndServeTLS("", "")
 	if errors.Is(err, http.ErrServerClosed) {
@@ -137,8 +112,6 @@ func Run(ctx context.Context, c NodeConfig) error {
 	}
 	return err
 }
-
-func rejectRedirect(*http.Request, []*http.Request) error { return errors.New("redirect forbidden") }
 
 // authTLSVariant loads a TLS client configuration.
 func authTLSVariant(cert, key, ca string) (*tls.Config, error) {
@@ -189,8 +162,8 @@ func decodeBody(w http.ResponseWriter, r *http.Request, v any) error {
 // ServeHTTP routes the node service API.
 func (n *Node) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.URL.Path {
-	case "/v1/bind", "/v1/ready", "/v1/release":
-		if r.Method != "POST" {
+	case "/v1/bind", "/v1/ready", "/v1/release", "/v1/info":
+		if r.URL.Path != "/v1/info" && r.Method != "POST" {
 			problem(w, 405, errors.New("POST required"))
 			return
 		}
@@ -199,28 +172,6 @@ func (n *Node) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		n.sandboxAPI(w, r)
-	case "/v1/info":
-		if !n.authorizeAPIKey(r) && !n.authorizeEvidencePeer(r) {
-			problem(w, 403, errors.New("sandboxsched API key or control peer required"))
-			return
-		}
-		n.sandboxAPI(w, r)
-	case "/v1/evidence":
-		if r.Method != "POST" {
-			problem(w, 405, errors.New("POST required"))
-			return
-		}
-		if !n.authorizeEvidencePeer(r) {
-			problem(w, 403, errors.New("evidence peer forbidden"))
-			return
-		}
-		n.evidence(w, r)
-	case "/v1/node-released":
-		if !n.authorizeEvidencePeer(r) {
-			problem(w, 403, errors.New("control peer forbidden"))
-			return
-		}
-		n.nodeReleased(w, r)
 	default:
 		problem(w, 404, errors.New("not found"))
 	}
@@ -241,24 +192,6 @@ func subtleEqual(a, b string) bool {
 	return v == 0
 }
 
-func hasPeer(state *tls.ConnectionState, peers []string) bool {
-	if state == nil || len(state.VerifiedChains) == 0 {
-		return false
-	}
-	for _, u := range state.VerifiedChains[0][0].URIs {
-		for _, p := range peers {
-			if p != "" && u.String() == p {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-func (n *Node) authorizeEvidencePeer(r *http.Request) bool {
-	return hasPeer(r.TLS, n.Config.EvidencePeers)
-}
-
 func (n *Node) sandboxAPI(w http.ResponseWriter, r *http.Request) {
 	switch r.URL.Path {
 	case "/v1/bind":
@@ -268,7 +201,7 @@ func (n *Node) sandboxAPI(w http.ResponseWriter, r *http.Request) {
 	case "/v1/release":
 		n.release(w, r)
 	case "/v1/info":
-		respondJSON(w, 200, map[string]any{"name": n.Config.NodeName, "uid": n.NodeUID, "boot_id": n.BootID, "ready": true, "runtime": n.Config.PreparationRuntime})
+		respondJSON(w, 200, map[string]any{"name": n.Config.NodeName, "uid": n.NodeUID, "boot_id": n.BootID, "ready": true, "runtime": n.Config.Runtime})
 	}
 }
 
@@ -366,13 +299,13 @@ func (n *Node) reconcileExisting(record BindRecord, q BindRequest) (bindResponse
 		if _, ok := selfMountEntry(m.HostPath); ok {
 			continue
 		}
-		if m.Kind == "nfs" {
-			if err := mountNFS(m.Source, m.HostPath, m.ReadOnly); err != nil {
-				return out, err
-			}
-			continue
+		if m.Kind != "nfs" {
+			// Legacy engine-backed record: cannot be reconciled without
+			// the storage engine. Release it and let a fresh NFS bind be
+			// planned instead.
+			return out, errors.New("unsupported legacy bind record")
 		}
-		if err := mountFilesystem(m.Device, m.HostPath, m.ReadOnly); err != nil {
+		if err := mountNFS(m.Source, m.HostPath, m.ReadOnly); err != nil {
 			return out, err
 		}
 	}
@@ -404,16 +337,15 @@ func (n *Node) bindNew(ctx context.Context, q BindRequest) (bindResponse, error)
 	if err = json.Unmarshal(raw, &dispatch); err != nil {
 		return out, err
 	}
+	if dispatch.Kind != "nfs" {
+		return out, errors.New("unsupported dispatch kind")
+	}
 	ticket, err := newTicket()
 	if err != nil {
 		return out, err
 	}
 	record := BindRecord{Sandbox: q.Sandbox, Ticket: ticket, BootID: n.BootID, Operation: dispatch.Operation, Plan: dispatch.Plan, RunUID: dispatch.RunUID, Kind: dispatch.Kind, State: "Prepared", CreatedAt: time.Now().UTC()}
-	if dispatch.Kind == "nfs" {
-		if err = n.mountNFSBindings(&record, dispatch.Bindings); err != nil {
-			return out, err
-		}
-	} else if err = n.publishBlockBindings(ctx, &record, dispatch); err != nil {
+	if err = n.mountNFSBindings(&record, dispatch.Bindings); err != nil {
 		return out, err
 	}
 	if err = n.Journal.PutBind(record); err != nil {
@@ -454,47 +386,6 @@ func (n *Node) mountNFSBindings(record *BindRecord, bindings []DispatchBinding) 
 	return nil
 }
 
-// publishBlockBindings runs the engine node publish for a dispatch and mounts
-// the ext4 filesystem of every published block device.
-func (n *Node) publishBlockBindings(ctx context.Context, record *BindRecord, dispatch Dispatch) error {
-	publishCtx, cancel := context.WithTimeout(ctx, 10*time.Minute)
-	defer cancel()
-	endpoints, err := n.SSF.PrepareVolumes(publishCtx, &v1.PrepareRequest{RequestId: dispatch.Operation, SignedNodePlan: dispatch.Plan})
-	if err != nil {
-		return fmt.Errorf("node publish failed: %w", err)
-	}
-	if len(endpoints.Endpoints) != len(dispatch.Bindings) {
-		return errors.New("endpoint count differs from bindings")
-	}
-	byGuest := map[string]DispatchBinding{}
-	for _, b := range dispatch.Bindings {
-		byGuest[b.GuestPath] = b
-	}
-	for _, ep := range endpoints.Endpoints {
-		block := ep.GetBlockDevice()
-		if block == nil {
-			return errors.New("only block device endpoints are supported")
-		}
-		binding, ok := byGuest[ep.GuestPath]
-		if !ok {
-			return errors.New("endpoint guest path mismatch")
-		}
-		if err = verifyDevice(block.ManagedTarget, block.Major, block.Minor, n.Config.DeviceRoot); err != nil {
-			return err
-		}
-		host := filepath.Join(n.Config.Root, "mounts", binding.BindingID)
-		if err = mountFilesystem(block.ManagedTarget, host, binding.ReadOnly); err != nil {
-			return err
-		}
-		dev, err := statDevice(host)
-		if err != nil {
-			return err
-		}
-		record.Mounts = append(record.Mounts, BindMount{BindingID: binding.BindingID, GuestPath: binding.GuestPath, HostPath: host, Device: block.ManagedTarget, Dev: dev, ReadOnly: binding.ReadOnly})
-	}
-	return nil
-}
-
 // proof computes the evidence proof for a subject and action.
 func (n *Node) proof(record BindRecord, subject, action string) string {
 	return core.Hash(record.Ticket + "\x00" + subject + "\x00" + record.BootID + "\x00" + action)
@@ -527,14 +418,11 @@ func (n *Node) ready(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for _, m := range record.Mounts {
-		if m.Kind == "nfs" {
-			if !pidHasNFSMount(q.PID, m.Source, m.GuestPath) {
-				problem(w, 409, fmt.Errorf("sandbox lacks mount at %s", m.GuestPath))
-				return
-			}
-			continue
+		if m.Kind != "nfs" {
+			problem(w, 409, errors.New("unsupported legacy bind record"))
+			return
 		}
-		if !pidHasMount(q.PID, m.Dev, m.GuestPath) {
+		if !pidHasNFSMount(q.PID, m.Source, m.GuestPath) {
 			problem(w, 409, fmt.Errorf("sandbox lacks mount at %s", m.GuestPath))
 			return
 		}
@@ -546,16 +434,9 @@ func (n *Node) ready(w http.ResponseWriter, r *http.Request) {
 		problem(w, 500, err)
 		return
 	}
-	// The storage subject is the per-incarnation launch ID: the engine
-	// requires SandboxInstanceUid == Plan.Sandbox and the driver verifies
-	// b.RunUID, both of which carry the launch ID (not the business ID).
+	// The storage subject is the per-incarnation launch ID (not the
+	// business ID); the coordinator verifies it against the dispatch.
 	instance := record.RunUID
-	if record.Kind != "nfs" {
-		if _, err = n.SSF.MarkRuntimeReady(r.Context(), &v1.RuntimeRequest{OperationId: record.Operation, SandboxInstanceUid: instance, Evidence: n.proof(record, instance, "ready")}); err != nil {
-			problem(w, 409, fmt.Errorf("runtime ready rejected: %w", err))
-			return
-		}
-	}
 	readyCtx, cancel := context.WithTimeout(r.Context(), time.Minute)
 	defer cancel()
 	envelope, err := json.Marshal(ReadyRequest{Action: "ready", Sandbox: q.Sandbox, Instance: instance, PID: q.PID, Proof: n.proof(record, instance, "ready")})
@@ -607,8 +488,7 @@ func (n *Node) releaseLocked(ctx context.Context, sandbox string) error {
 	default:
 		return errors.New("bind state does not allow release")
 	}
-	// The sandbox must be gone: no live process and no namespace still
-	// referencing any managed filesystem.
+	// The sandbox must be gone: no live process.
 	if record.PID > 0 && pidAlive(record.PID) {
 		return errors.New("sandbox process still runs")
 	}
@@ -620,25 +500,6 @@ func (n *Node) releaseLocked(ctx context.Context, sandbox string) error {
 	subject := record.RunUID
 	releaseCtx, cancel := context.WithTimeout(ctx, 5*time.Minute)
 	defer cancel()
-	if record.Kind != "nfs" {
-		for _, m := range record.Mounts {
-			holders, err := devHolders(m.Dev)
-			if err != nil {
-				return err
-			}
-			if holders > 0 {
-				return fmt.Errorf("filesystem of %s is still referenced by %d processes", m.GuestPath, holders)
-			}
-		}
-		if _, err = n.SSF.ReleaseVolumes(releaseCtx, &v1.RuntimeRequest{OperationId: record.Operation, SandboxInstanceUid: subject, Evidence: n.proof(record, subject, "detached"), SignedNodePlan: record.Plan}); err != nil {
-			return fmt.Errorf("node release rejected: %w", err)
-		}
-		// Detached attests the engine-side release: the control plane's Release
-		// callback (/v1/node-released) accepts this state as node confirmation.
-		if _, err := n.Journal.UpdateBind(sandbox, func(x *BindRecord) error { x.State = "Detached"; return nil }); err != nil {
-			return err
-		}
-	}
 	envelope, err := json.Marshal(ReleaseRequest{Action: "release", Sandbox: sandbox, Proof: n.proof(record, subject, "detached")})
 	if err != nil {
 		return err
@@ -648,187 +509,6 @@ func (n *Node) releaseLocked(ctx context.Context, sandbox string) error {
 	}
 	_, err = n.Journal.UpdateBind(sandbox, func(x *BindRecord) error { x.State = "Released"; return nil })
 	return err
-}
-
-// evidence verifies SandboxSched runtime evidence.
-func (n *Node) evidence(w http.ResponseWriter, r *http.Request) {
-	var q struct {
-		Sandbox  string `json:"sandbox"`
-		Action   string `json:"action"`
-		Evidence string `json:"evidence"`
-	}
-	if err := decodeBody(w, r, &q); err != nil {
-		problem(w, 400, err)
-		return
-	}
-	// No n.mu here: the engine and the control plane call this endpoint
-	// from inside bind/ready/release, which hold n.mu across those RPCs.
-	// The journal (bbolt) is safe for concurrent readers on its own.
-	record, err := n.Journal.Bind(q.Sandbox)
-	if err != nil {
-		// SSF callers verify with the storage subject (the launch ID), not
-		// the business sandbox ID the journal is keyed by.
-		if records, listErr := n.Journal.Binds(); listErr == nil {
-			for _, rec := range records {
-				if rec.RunUID == q.Sandbox || rec.Instance == q.Sandbox {
-					record, err = rec, nil
-					break
-				}
-			}
-		}
-	}
-	if err != nil || (record.Sandbox != q.Sandbox && record.Instance != q.Sandbox && record.RunUID != q.Sandbox) {
-		// Not a SandboxSched sandbox: no other runtime is hosted by this
-		// service, so the subject is unknown.
-		problem(w, 404, errors.New("unknown sandbox"))
-		return
-	}
-	if n.proof(record, q.Sandbox, q.Action) != q.Evidence {
-		problem(w, 403, errors.New("unknown evidence"))
-		return
-	}
-	if err := n.verifyLive(record, q.Action); err != nil {
-		problem(w, 409, err)
-		return
-	}
-	w.WriteHeader(204)
-}
-
-// verifyLive re-observes kernel state for the requested transition.
-func (n *Node) verifyLive(record BindRecord, action string) error {
-	if record.BootID != n.BootID {
-		if action == "detached" {
-			return nil
-		}
-		return errors.New("stale node incarnation")
-	}
-	switch action {
-	case "ready":
-		if !pidAlive(record.PID) {
-			return errors.New("sandbox process is not running")
-		}
-		for _, m := range record.Mounts {
-			verified := m.Kind == "nfs" && pidHasNFSMount(record.PID, m.Source, m.GuestPath)
-			if m.Kind != "nfs" {
-				verified = pidHasMount(record.PID, m.Dev, m.GuestPath)
-			}
-			if !verified {
-				return fmt.Errorf("sandbox lacks mount at %s", m.GuestPath)
-			}
-		}
-		return nil
-	case "detached":
-		if pidAlive(record.PID) {
-			return errors.New("sandbox process still runs")
-		}
-		for _, m := range record.Mounts {
-			if m.Kind == "nfs" {
-				continue // no device identity: unmount success is the evidence
-			}
-			holders, err := devHolders(m.Dev)
-			if err != nil {
-				return err
-			}
-			if holders > 0 {
-				return fmt.Errorf("filesystem of %s is still referenced by %d processes", m.GuestPath, holders)
-			}
-		}
-		return nil
-	default:
-		return errors.New("unsupported evidence action")
-	}
-}
-
-// nodeReleased answers the control plugin's release fence: the node-side
-// operation must already be released through the SSF node agent.
-func (n *Node) nodeReleased(w http.ResponseWriter, r *http.Request) {
-	var q struct {
-		Operation string `json:"operation"`
-	}
-	if err := decodeBody(w, r, &q); err != nil {
-		problem(w, 400, err)
-		return
-	}
-	// No n.mu: the control plane calls this from Release while the node
-	// service holds n.mu across the release RPCs. Journal reads are safe.
-	records, err := n.Journal.Binds()
-	if err != nil {
-		problem(w, 500, err)
-		return
-	}
-	for _, record := range records {
-		if record.Operation == q.Operation {
-			if record.State == "Released" || record.State == "Detached" {
-				w.WriteHeader(204)
-				return
-			}
-			problem(w, 409, errors.New("node operation not released"))
-			return
-		}
-	}
-	w.WriteHeader(204)
-}
-
-// preparationHook serves the SSF node preparation forward. SandboxSched
-// volumes are initialized locally; other runtimes are not hosted.
-func (n *Node) preparationHook(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/storage/volume-preparation" || r.Method != "POST" {
-		problem(w, 404, errors.New("not found"))
-		return
-	}
-	if r.Header.Get("Authorization") != "Bearer "+n.hookToken() {
-		problem(w, 403, errors.New("storage hook authentication required"))
-		return
-	}
-	body, err := io.ReadAll(io.LimitReader(r.Body, 1<<20))
-	defer r.Body.Close()
-	if err != nil {
-		problem(w, 400, err)
-		return
-	}
-	var request preparationEnvelope
-	if err := json.Unmarshal(body, &request); err != nil {
-		problem(w, 400, err)
-		return
-	}
-	if request.Request.Spec.Profile.Runtime == n.Config.PreparationRuntime {
-		n.volumePreparationHook(w, request)
-		return
-	}
-	problem(w, 404, errors.New("unsupported preparation runtime"))
-}
-
-type preparationEnvelope struct {
-	Action  string                     `json:"action"`
-	Request runtime.PreparationRequest `json:"request"`
-}
-
-func (n *Node) volumePreparationHook(w http.ResponseWriter, q preparationEnvelope) {
-	var receipt core.PreparationReceipt
-	var err error
-	switch q.Action {
-	case "prepare":
-		receipt, err = n.PrepareVolume(context.Background(), q.Request)
-	case "inspect":
-		receipt, err = n.InspectVolumePreparation(context.Background(), q.Request)
-	case "release":
-		receipt, err = n.ReleaseVolumePreparation(context.Background(), q.Request)
-	default:
-		err = errors.New("unknown volume preparation action")
-	}
-	if err != nil {
-		problem(w, 409, err)
-		return
-	}
-	respondJSON(w, 200, receipt)
-}
-
-func (n *Node) hookToken() string {
-	raw, err := os.ReadFile(n.Config.HookTokenFile)
-	if err != nil {
-		return ""
-	}
-	return strings.TrimSpace(string(raw))
 }
 
 // recoverLoop reconciles journal state with actual sandbox state.

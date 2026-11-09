@@ -1,68 +1,38 @@
-# SandboxSched standalone storage deployment.
+# SandboxSched standalone NFS storage deployment.
 #
-# This manifest deploys the SandboxSched storage stack independently of any
-# other runtime scenario:
+# This manifest deploys the SandboxSched NFS storage stack independently of
+# any other runtime scenario:
 #   - DaemonSet sandboxsched-storage-node: one pod per storage node running
-#     the public SSF node agent (ssf-node) and the SandboxSched node storage
-#     adapter side by side.
+#     the SandboxSched node storage adapter (single container).
 #   - Deployment ssf-coordinator: the control-plane coordinator hosting the
 #     "sandboxsched" runtime plugin.
 #
+# Storage scope: NFS only. Every requested PVC must resolve to an NFS export
+# (in-tree nfs or nfs.csi.k8s.io CSI source); anything else is rejected at
+# bind time. There is no storage engine, no CSI driver and no block volume
+# support in this stack.
+#
 # Required separately installed dependencies (not included here):
 #   - Secrets copied into this namespace before applying:
-#       sandboxsched-node-tls      (tls.crt/tls.key/ca.crt, SAN: the storage
-#                                   node service name; the adapter both serves
-#                                   and authenticates with this identity)
-#       ssf-node-tls               (tls.crt/tls.key/ca.crt for the node agent)
+#       sandboxsched-node-tls        (tls.crt/tls.key/ca.crt, SAN: the storage
+#                                    node service name; the adapter both serves
+#                                    and authenticates with this identity)
 #       sandboxsched-coordinator-tls (coordinator server identity)
-#       sandboxsched-node-keys     (hook-token, plan.pub)
-#       sandboxsched-control-keys  (plan.key)
-#       sandboxsched-auth          (api-key)
-#       sandboxsched-ledger        (url: PostgreSQL connection string)
-#   - The shared engine: overlaybd CSI driver/controller, ssf-csi-gateway and
-#     ssf-guard remain in their own namespaces; the control config points at
-#     the gateway service.
-#   - Guard must authorize this coordinator's service account in
-#     CoordinatorUsers.
+#       sandboxsched-auth            (api-key)
+#       sandboxsched-ledger          (url: PostgreSQL connection string)
+#   - An NFS provisioner (e.g. nfs-subdir-external-provisioner) serving the
+#     namespaces listed in the control plugin principal.
 #
 # TLS note: the coordinator client verifies the coordinator certificate
 # against the DNS SAN of the issuing deployment. When reusing certificates
 # minted for another namespace, set coordinator.server_name in
 # sandboxsched-node.json to a SAN entry of the coordinator certificate.
 #
-# State note: the node agent keeps its WAL at <Root>/node-state. Sharing
-# /var/lib/ssf with another ssf-node instance on the same host requires
-# shadow-mounting a private directory at /var/lib/ssf/node-state (see the
-# sandboxsched-node-state volume below) so the two WALs never collide while
-# stage/publish paths remain visible to the CSI driver.
-# CAUTION: the shadow mount must only exist inside this pod (volumeMounts).
-# Never bind-mount the private directory over /var/lib/ssf/node-state on the
-# host itself: hostPath mounts would propagate it into every other pod that
-# mounts /var/lib/ssf, and a co-located ssf-node would then fight over the
-# same WAL lock (observed as "service stopped role=node error=timeout"
-# crash-loops after its pod restarts).
-#
-# Engine driver note: the shared overlaybd driver verifies release evidence
-# by POSTing to the evidence URL in its node config (ssf-overlaybd-node-config
-# inventory.json, keys node.evidenceURL/captureEvidenceURL). When the adapter
-# moves out of the driver's pod, that URL must be repointed at this stack.
-# Use a DNS name whose ServerName matches a SAN entry of sandboxsched-node-tls,
-# e.g. an ExternalName service bridge in the driver's namespace:
-#
-#   apiVersion: v1
-#   kind: Service
-#   metadata:
-#     name: agentenv-storage-node      # SAN of the reused TLS certificate
-#     namespace: agentenv-system       # where the overlaybd driver runs
-#   spec:
-#     type: ExternalName
-#     externalName: sandboxsched-storage-node.sandboxsched-storage.svc.cluster.local
-#
-# (the FQDN form matters: Go resolvers do not apply the search path to CNAME
-# targets, a bare svc name stays unresolved), then set node.evidenceURL to
-# https://agentenv-storage-node.agentenv-system.svc:9447/v1/evidence.
-# agentenv-specific captureEvidenceURL stays pointed at the agentenv adapter
-# (127.0.0.1:9444) in the driver's own pod.
+# State note: the adapter keeps its bbolt journal at <Root>/journal and
+# mounts NFS exports under <Root>/mounts. Root lives inside the host
+# /var/lib/ssf directory: the sandbox agent pods bind-mount published
+# exports from that same host path, so it is mounted with Bidirectional
+# propagation and must stay identical inside and outside the container.
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -81,13 +51,25 @@ metadata:
   namespace: sandboxsched-storage
 ---
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sandboxsched-storage
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes", "nodes"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: sandboxsched-ssf-node
+  name: sandboxsched-storage-node
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: ssf-node
+  name: sandboxsched-storage
 subjects:
   - kind: ServiceAccount
     name: sandboxsched-storage-node
@@ -96,11 +78,11 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: sandboxsched-ssf-consumption
+  name: sandboxsched-ssf-coordinator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: ssf-consumption
+  name: sandboxsched-storage
 subjects:
   - kind: ServiceAccount
     name: ssf-coordinator
@@ -126,52 +108,21 @@ data:
       "node_peers": [
         "spiffe://ssf/agentenv/node"
       ],
-      "storage_peers": [
-        "spiffe://ssf/overlaybd-controller"
-      ],
       "sandboxsched_runtime_config": "/etc/sandboxsched-ssf/sandboxsched-control.json"
     }
   sandboxsched-control.json: |-
     {
-      "namespace": "sandboxsched-storage",
       "principal": {
         "tenant": "sandboxsched",
         "namespaces": [
           "flux-sandbox-test"
         ]
-      },
-      "drivers": [
-        {
-          "name": "overlaybd.csi.ssf.dev",
-          "controllerEndpoint": "ssf-csi-gateway.agentenv-system.svc:9443",
-          "revision": "1"
-        }
-      ],
-      "signing_key": "/etc/sandboxsched-control/plan.key",
-      "cert": "/etc/sandboxsched-tls/tls.crt",
-      "key": "/etc/sandboxsched-tls/tls.key",
-      "ca": "/etc/sandboxsched-tls/ca.crt",
-      "preparation_node_port": "9443",
-      "preparation_server_name": "agentenv-ssf-node.agentenv-system.svc",
-      "node_service_port": "9447",
-      "node_service_label": "app.kubernetes.io/name=sandboxsched-storage-node",
-      "node_server_name": "agentenv-storage-node.agentenv-system.svc",
-      "volume_profiles": [
-        {
-          "name": "sandboxsched-block-ext4-v1",
-          "runtime": "sandboxsched",
-          "version": "volume-preparation-v1",
-          "volumeMode": "Block",
-          "filesystem": "ext4",
-          "initializeBlank": false
-        }
-      ]
+      }
     }
   sandboxsched-node.json: |-
     {
       "listen": ":9447",
       "health_listen": ":9095",
-      "hook_listen": "127.0.0.1:9449",
       "cert": "/etc/sandboxsched-tls/tls.crt",
       "key": "/etc/sandboxsched-tls/tls.key",
       "ca": "/etc/sandboxsched-tls/ca.crt",
@@ -183,42 +134,9 @@ data:
         "peer": "spiffe://ssf/agentenv/coordinator",
         "server_name": "ssf-coordinator.agentenv-system.svc"
       },
-      "ssf_endpoint": "127.0.0.1:9443",
+      "runtime": "sandboxsched",
       "api_key_file": "/etc/sandboxsched-auth/api-key",
-      "root": "/var/lib/ssf/sandboxschedadapter",
-      "device_root": "/var/lib/ssf",
-      "evidence_peers": [
-        "spiffe://ssf/agentenv/coordinator",
-        "spiffe://ssf/agentenv/ssf-node",
-        "spiffe://ssf/overlaybd-node",
-        "spiffe://ssf/agentenv/node"
-      ],
-      "hook_token_file": "/etc/sandboxsched-keys/hook-token",
-      "preparation_runtime": "sandboxsched"
-    }
-  ssf-node.json: |-
-    {
-      "Listen": ":9443",
-      "HealthListen": ":9093",
-      "Root": "/var/lib/ssf",
-      "PlanPublicKey": "/etc/sandboxsched-keys/plan.pub",
-      "Cert": "/etc/ssf-node-tls/tls.crt",
-      "Key": "/etc/ssf-node-tls/tls.key",
-      "CA": "/etc/ssf-node-tls/ca.crt",
-      "AllowedPeers": [
-        "spiffe://ssf/agentenv/node",
-        "spiffe://ssf/agentenv/coordinator"
-      ],
-      "EvidenceEndpoint": "https://127.0.0.1:9447/v1/evidence",
-      "Drivers": [
-        {
-          "Name": "overlaybd.csi.ssf.dev",
-          "NodeEndpoint": "unix:///var/lib/kubelet/plugins/overlaybd.csi.ssf.dev/csi.sock",
-          "Revision": "1"
-        }
-      ],
-      "PreparationEndpoint": "http://127.0.0.1:9449/storage/volume-preparation",
-      "PreparationTokenFile": "/etc/sandboxsched-keys/hook-token"
+      "root": "/var/lib/ssf/sandboxschedadapter"
     }
 ---
 apiVersion: apps/v1
@@ -240,58 +158,11 @@ spec:
       serviceAccountName: sandboxsched-storage-node
       nodeSelector:
         kubernetes.io/os: linux
-        ssf.dev/overlaybd-test: "true"
+        ssf.dev/storage-test: "true"
       terminationGracePeriodSeconds: 120
-      initContainers:
-        - name: ssf-node
-          image: localhost:5001/ssf-v10/ssf:v10-20261109a
-          imagePullPolicy: Always
-          command: ["ssf-node"]
-          args: ["-config", "/etc/sandboxsched-ssf/ssf-node.json"]
-          env:
-            - name: SSF_NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-          ports:
-            - containerPort: 9443
-              name: ssf-grpc
-            - containerPort: 9093
-              name: ssf-health
-          readinessProbe:
-            httpGet:
-              path: /livez
-              port: ssf-health
-          restartPolicy: Always
-          securityContext:
-            privileged: true
-            runAsUser: 0
-          volumeMounts:
-            - mountPath: /etc/sandboxsched-ssf
-              name: config
-              readOnly: true
-            - mountPath: /etc/sandboxsched-keys
-              name: node-keys
-              readOnly: true
-            - mountPath: /etc/ssf-node-tls
-              name: ssf-node-tls
-              readOnly: true
-            # /var/lib/ssf is shared with the CSI driver (stage/publish paths
-            # must stay mutually visible); the WAL directory below is shadowed
-            # by a private volume so multiple ssf-node instances on one host
-            # never contend on the same bbolt file.
-            - mountPath: /var/lib/ssf
-              mountPropagation: Bidirectional
-              name: ssf-state
-            - mountPath: /var/lib/ssf/node-state
-              name: node-state
-            - mountPath: /var/lib/kubelet/plugins
-              name: csi-plugins
-            - mountPath: /dev
-              name: host-dev
       containers:
         - name: sandboxsched-storage
-          image: localhost:5001/ssf-v10/sandboxschedadapter:v10-20261109a
+          image: localhost:5001/ssf-v10/sandboxschedadapter:v10-20261109b
           imagePullPolicy: Always
           command: ["sandboxschedadapter"]
           args: ["node", "-config", "/etc/sandboxsched-ssf/sandboxsched-node.json"]
@@ -317,30 +188,27 @@ spec:
               readOnly: true
             - mountPath: /etc/sandboxsched-ssf
               name: config
+              readOnly: true
             - mountPath: /etc/sandboxsched-tls
               name: node-tls
-            - mountPath: /etc/sandboxsched-keys
-              name: node-keys
+              readOnly: true
             - mountPath: /etc/sandboxsched-auth
               name: auth
+              readOnly: true
+            # /var/lib/ssf must stay identical inside and outside this
+            # container: the journal lives under <root>/journal and published
+            # NFS exports under <root>/mounts are bind-mounted into sandboxes
+            # by the agent pods from the same host path.
             - mountPath: /var/lib/ssf
               mountPropagation: Bidirectional
               name: ssf-state
-            - mountPath: /dev
-              name: host-dev
       volumes:
         - name: config
           configMap:
             name: sandboxsched-ssf-config
-        - name: node-keys
-          secret:
-            secretName: sandboxsched-node-keys
         - name: node-tls
           secret:
             secretName: sandboxsched-node-tls
-        - name: ssf-node-tls
-          secret:
-            secretName: ssf-node-tls
         - name: auth
           secret:
             secretName: sandboxsched-auth
@@ -348,21 +216,9 @@ spec:
           hostPath:
             path: /var/lib/ssf
             type: DirectoryOrCreate
-        - name: node-state
-          hostPath:
-            path: /var/lib/ssf-sandboxsched-node-state
-            type: DirectoryOrCreate
         - name: host-proc
           hostPath:
             path: /proc
-            type: Directory
-        - name: csi-plugins
-          hostPath:
-            path: /var/lib/kubelet/plugins
-            type: Directory
-        - name: host-dev
-          hostPath:
-            path: /dev
             type: Directory
 ---
 apiVersion: v1
@@ -402,7 +258,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
         - name: coordinator
-          image: localhost:5001/ssf-v10/ssf:v10-20261109a
+          image: localhost:5001/ssf-v10/ssf:v10-20261109b
           imagePullPolicy: Always
           command: ["ssf-coordinator"]
           args: ["-config", "/etc/sandboxsched-ssf/coordinator.json"]
@@ -429,9 +285,6 @@ spec:
             - mountPath: /etc/sandboxsched-ssf
               name: config
               readOnly: true
-            - mountPath: /etc/sandboxsched-control
-              name: control-keys
-              readOnly: true
             - mountPath: /etc/sandboxsched-tls
               name: tls
               readOnly: true
@@ -439,9 +292,6 @@ spec:
         - name: config
           configMap:
             name: sandboxsched-ssf-config
-        - name: control-keys
-          secret:
-            secretName: sandboxsched-control-keys
         - name: tls
           secret:
             secretName: sandboxsched-coordinator-tls

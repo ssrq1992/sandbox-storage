@@ -10,8 +10,6 @@ import (
 	"time"
 
 	bolt "go.etcd.io/bbolt"
-	"ssf.dev/ssf/core"
-	"ssf.dev/ssf/runtime"
 )
 
 // BindMount is one published volume mount of a sandbox bind.
@@ -20,10 +18,11 @@ type BindMount struct {
 	GuestPath string `json:"guestPath"`
 	HostPath  string `json:"hostPath"`
 	Device    string `json:"device"`
-	Dev       uint64 `json:"dev"` // ext4 device id (stat.Dev) for kernel evidence
+	Dev       uint64 `json:"dev"` // device id (stat.Dev) for kernel evidence
 	ReadOnly  bool   `json:"readOnly"`
-	// Kind "" is the default ext4 filesystem of a published block device;
-	// "nfs" is a directly mounted NFS export (Device/Dev unused).
+	// Kind is always "nfs": a directly mounted NFS export (Device/Dev
+	// unused). The field stays so legacy engine-backed rows remain
+	// parseable and are rejected explicitly.
 	Kind string `json:"kind,omitempty"`
 	// Source is the resolved NFS export ("ip:/path") of an nfs mount.
 	Source string `json:"source,omitempty"`
@@ -37,8 +36,7 @@ type BindRecord struct {
 	Operation string      `json:"operation"`
 	Plan      string      `json:"plan"`
 	RunUID    string      `json:"runUID"`
-	// Kind "" is the default engine-backed launch; "nfs" skips every SSF
-	// engine interaction (MarkRuntimeReady/ReleaseVolumes) on this record.
+	// Kind is always "nfs"; legacy engine-backed rows are rejected.
 	Kind      string      `json:"kind,omitempty"`
 	Instance  string      `json:"instance"`
 	PID       int         `json:"pid"`
@@ -48,18 +46,7 @@ type BindRecord struct {
 	UpdatedAt time.Time   `json:"updatedAt"`
 }
 
-// contentRecord is the crash-safe format intent for locally initialized
-// volumes.
-type contentRecord struct {
-	Request      runtime.PreparationRequest `json:"request"`
-	FormatIntent string                     `json:"formatIntent"`
-	Receipt      core.PreparationReceipt    `json:"receipt"`
-}
-
-var (
-	bucketBinds = []byte("binds")
-	bucketPrep  = []byte("preparations")
-)
+var bucketBinds = []byte("binds")
 
 // Journal is the node-local durable state store.
 type Journal struct{ DB *bolt.DB }
@@ -74,12 +61,8 @@ func OpenJournal(root string) (*Journal, error) {
 		return nil, err
 	}
 	err = db.Update(func(tx *bolt.Tx) error {
-		for _, b := range [][]byte{bucketBinds, bucketPrep} {
-			if _, e := tx.CreateBucketIfNotExists(b); e != nil {
-				return e
-			}
-		}
-		return nil
+		_, e := tx.CreateBucketIfNotExists(bucketBinds)
+		return e
 	})
 	if err != nil {
 		db.Close()
@@ -164,39 +147,4 @@ func newTicket() (string, error) {
 		return "", err
 	}
 	return hex.EncodeToString(b), nil
-}
-
-// Preparation journal operations.
-func (j *Journal) prep(id string) (contentRecord, error) {
-	var r contentRecord
-	err := j.DB.View(func(tx *bolt.Tx) error {
-		raw := tx.Bucket(bucketPrep).Get([]byte(id))
-		if raw == nil {
-			return ErrNotFound
-		}
-		return json.Unmarshal(raw, &r)
-	})
-	return r, err
-}
-
-func (j *Journal) updatePrep(id string, change func(*contentRecord) error) (contentRecord, error) {
-	var r contentRecord
-	err := j.DB.Update(func(tx *bolt.Tx) error {
-		key := []byte(id)
-		raw := tx.Bucket(bucketPrep).Get(key)
-		if raw != nil {
-			if e := json.Unmarshal(raw, &r); e != nil {
-				return e
-			}
-		}
-		if e := change(&r); e != nil {
-			return e
-		}
-		out, e := json.Marshal(r)
-		if e != nil {
-			return e
-		}
-		return tx.Bucket(bucketPrep).Put(key, out)
-	})
-	return r, err
 }

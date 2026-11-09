@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"syscall"
 	"time"
 
 	"golang.org/x/sys/unix"
@@ -127,22 +126,6 @@ func selfMountEntry(target string) (mountEntry, bool) {
 	return mountEntry{}, false
 }
 
-// pidHasMount verifies that the process at pid has the device dev mounted at
-// guestPath, which is the kernel evidence that the sandbox really carries the
-// volume mount.
-func pidHasMount(pid int, dev uint64, guestPath string) bool {
-	entries, err := readMountinfo(procPath(strconv.Itoa(pid) + "/mountinfo"))
-	if err != nil {
-		return false
-	}
-	for _, e := range entries {
-		if e.Dev == dev && e.MountPoint == guestPath {
-			return true
-		}
-	}
-	return false
-}
-
 // pidHasNFSMount verifies that the process at pid has an NFS filesystem at
 // guestPath carrying the expected export source: the kernel evidence used
 // for direct-mount NFS bindings, where no device identity exists.
@@ -162,97 +145,9 @@ func pidHasNFSMount(pid int, source, guestPath string) bool {
 	return false
 }
 
-// devHolders counts processes whose mount namespace still references the
-// device, excluding the current process (the node service itself).
-func devHolders(dev uint64) (int, error) {
-	entries, err := os.ReadDir("/proc")
-	if err != nil {
-		return 0, err
-	}
-	self := os.Getpid()
-	holders := 0
-	for _, e := range entries {
-		if !e.IsDir() {
-			continue
-		}
-		pid, err := strconv.Atoi(e.Name())
-		if err != nil || pid == self {
-			continue
-		}
-		list, err := readMountinfo(filepath.Join("/proc", e.Name(), "mountinfo"))
-		if err != nil {
-			continue
-		}
-		for _, m := range list {
-			if m.Dev == dev {
-				holders++
-				break
-			}
-		}
-	}
-	return holders, nil
-}
-
-// statDevice returns the device id of a path in the same encoding the
-// mountinfo parser produces (devID(major, minor)), so recorded values
-// compare equal against a sandbox's mount table.
-func statDevice(path string) (uint64, error) {
-	var st syscall.Stat_t
-	if err := syscall.Stat(path, &st); err != nil {
-		return 0, err
-	}
-	return devID(unix.Major(st.Dev), unix.Minor(st.Dev)), nil
-}
-
-// verifyDevice checks that path is a block device node with the expected
-// major/minor, rooted under deviceRoot.
-func verifyDevice(path string, major, minor uint32, deviceRoot string) error {
-	if !filepath.IsAbs(path) || filepath.Clean(path) != path {
-		return errors.New("device path must be canonical")
-	}
-	root, err := filepath.Abs(deviceRoot)
-	if err != nil {
-		return err
-	}
-	if !strings.HasPrefix(path, root+string(filepath.Separator)) {
-		return errors.New("device path escapes device root")
-	}
-	var st syscall.Stat_t
-	if err := syscall.Stat(path, &st); err != nil {
-		return err
-	}
-	if st.Mode&unix.S_IFMT != unix.S_IFBLK {
-		return errors.New("published endpoint is not a block device")
-	}
-	rdev := uint64(st.Rdev)
-	if unix.Major(rdev) != major || unix.Minor(rdev) != minor {
-		return fmt.Errorf("device identity mismatch: want %d:%d got %d:%d", major, minor, unix.Major(rdev), unix.Minor(rdev))
-	}
-	return nil
-}
-
-// mountFilesystem mounts the ext4 filesystem of a published device at target.
-func mountFilesystem(device, target string, readonly bool) error {
-	if err := os.MkdirAll(target, 0o755); err != nil {
-		return err
-	}
-	if _, ok := selfMountEntry(target); ok {
-		return nil // idempotent after recovery
-	}
-	flags := uintptr(0)
-	if readonly {
-		flags = unix.MS_RDONLY
-	}
-	if err := unix.Mount(device, target, "ext4", flags, ""); err != nil {
-		return fmt.Errorf("mount ext4 %s at %s: %w", device, target, err)
-	}
-	return nil
-}
-
 // unmountFilesystem flushes and unmounts a managed filesystem mount. Plain
 // unmount is attempted first; a lazy detach is only used when the mount
-// namespace of this service itself cannot release it, and callers verify
-// absence of any holders afterwards.
+// namespace of this service itself cannot release it.
 func unmountFilesystem(target string) error {
 	if _, ok := selfMountEntry(target); !ok {
 		return nil

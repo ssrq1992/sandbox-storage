@@ -1,19 +1,20 @@
 // Package sandboxschedadapter integrates SandboxSched (containerd + runc
-// sandboxes) as an SSF runtime. The control plugin hosts launch planning
-// inside the shared coordinator process; the node service runs next to the
-// public SSF node agent, publishes volumes on the node, mounts the block
-// device filesystems and verifies sandbox mounts through kernel state.
+// sandboxes) as an NFS-only storage service. The control plugin plans every
+// launch inside the shared coordinator process: it resolves each requested
+// claim to an NFS export and rejects anything that is not NFS. The node
+// service mounts the resolved exports on the node and verifies sandbox mounts
+// through kernel state.
 //
 // Protocol outline (all subjects use the SandboxSched sandbox ID):
 //
 //	bind    (node service -> coordinator LocalLaunch)
-//	        -> consume.Coordinator.Prepare (placement pinned to the sandbox node)
-//	ready   (agent -> node service -> ssf-node MarkRuntimeReady
-//	        + coordinator InvokeLifecycle -> ConfirmReady + Commit)
-//	release (agent -> node service unmount + ssf-node ReleaseVolumes
-//	        + coordinator InvokeLifecycle -> ConfirmStopped + Release)
+//	        -> resolve claims to NFS exports, plan the dispatch locally
+//	ready   (agent -> node service kernel mount evidence
+//	        + coordinator InvokeLifecycle -> Ready)
+//	release (agent -> node service unmount
+//	        + coordinator InvokeLifecycle -> Released)
 //
-// Evidence proofs are computed by the node service from a per-bind ticket and
+// Mount evidence is computed by the node service from a per-bind ticket and
 // re-verified against real kernel state (process and mountinfo) before any
 // state transition is accepted.
 package sandboxschedadapter
@@ -42,30 +43,11 @@ func (p Principal) Allows(namespace string) bool {
 	return false
 }
 
-// DriverConfig names a CSI controller endpoint used for controller publish.
-type DriverConfig struct {
-	Name               string `json:"name"`
-	ControllerEndpoint string `json:"controllerEndpoint"`
-	Revision           string `json:"revision"`
-}
-
 // ControlConfig configures the coordinator-hosted control plugin.
 type ControlConfig struct {
-	Namespace             string               `json:"namespace"`
-	Principal             Principal            `json:"principal"`
-	DatabaseURL           string               `json:"database_url"`
-	Kubeconfig            string               `json:"kubeconfig"`
-	Drivers               []DriverConfig       `json:"drivers"`
-	SigningKey            string               `json:"signing_key"`
-	Cert                  string               `json:"cert"`
-	Key                   string               `json:"key"`
-	CA                    string               `json:"ca"`
-	PreparationNodePort   string               `json:"preparation_node_port"`
-	PreparationServerName string               `json:"preparation_server_name"`
-	NodeServicePort       string               `json:"node_service_port"`
-	NodeServiceLabel      string               `json:"node_service_label"`
-	NodeServerName        string               `json:"node_server_name"`
-	VolumeProfiles        []core.VolumeProfile `json:"volume_profiles"`
+	Principal   Principal `json:"principal"`
+	DatabaseURL string    `json:"database_url"`
+	Kubeconfig  string    `json:"kubeconfig"`
 }
 
 // LoadControlConfig reads the control plugin configuration. The database URL
@@ -82,37 +64,8 @@ func LoadControlConfig(path string) (ControlConfig, error) {
 	if c.DatabaseURL == "" {
 		c.DatabaseURL = os.Getenv("SSF_DATABASE_URL")
 	}
-	if c.PreparationNodePort == "" {
-		c.PreparationNodePort = "9443"
-	}
-	if c.PreparationServerName == "" {
-		return c, errors.New("preparation_server_name required")
-	}
-	if c.NodeServicePort == "" {
-		c.NodeServicePort = "9447"
-	}
-	if c.NodeServiceLabel == "" {
-		c.NodeServiceLabel = "app.kubernetes.io/name=sandboxsched-storage-node"
-	}
-	if c.NodeServerName == "" {
-		return c, errors.New("node_server_name required")
-	}
-	if c.Namespace == "" || c.Principal.Tenant == "" || len(c.Principal.Namespaces) == 0 {
-		return c, errors.New("sandboxsched namespace and principal required")
-	}
-	if c.SigningKey == "" || c.Cert == "" || c.Key == "" || c.CA == "" {
-		return c, errors.New("sandboxsched signing key and control TLS required")
-	}
-	if len(c.Drivers) == 0 {
-		return c, errors.New("sandboxsched CSI drivers required")
-	}
-	for _, p := range c.VolumeProfiles {
-		if err := p.Validate(); err != nil {
-			return c, err
-		}
-		if p.Runtime != c.Principal.Tenant {
-			return c, errors.New("sandboxsched profile runtime mismatch")
-		}
+	if c.Principal.Tenant == "" || len(c.Principal.Namespaces) == 0 {
+		return c, errors.New("sandboxsched principal required")
 	}
 	return c, nil
 }
@@ -122,7 +75,6 @@ type NodeConfig struct {
 	NodeName     string `json:"node_name"`
 	Listen       string `json:"listen"`
 	HealthListen string `json:"health_listen"`
-	HookListen   string `json:"hook_listen"`
 	Cert         string `json:"cert"`
 	Key          string `json:"key"`
 	CA           string `json:"ca"`
@@ -136,16 +88,10 @@ type NodeConfig struct {
 		ServerName string `json:"server_name,omitempty"`
 	} `json:"coordinator"`
 
-	SSFEndpoint   string `json:"ssf_endpoint"`
-	SSFServerName string `json:"ssf_server_name"`
-	APIKeyFile    string `json:"api_key_file"`
-	Root          string `json:"root"`
-	DeviceRoot    string `json:"device_root"`
-
-	// EvidencePeers lists the SPIFFE IDs allowed to call the evidence API.
-	EvidencePeers     []string `json:"evidence_peers"`
-	HookTokenFile     string   `json:"hook_token_file"`
-	PreparationRuntime string `json:"preparation_runtime"`
+	// Runtime names this plugin inside the coordinator.
+	Runtime    string `json:"runtime"`
+	APIKeyFile string `json:"api_key_file"`
+	Root       string `json:"root"`
 
 	Kubeconfig string `json:"kubeconfig"`
 }
@@ -166,34 +112,19 @@ func LoadNodeConfig(path string) (NodeConfig, error) {
 		c.NodeName = os.Getenv("NODE_NAME")
 	}
 	if c.Root == "" {
-		c.Root = "/var/lib/ssf/sandboxschedadapter"
-	}
-	if c.DeviceRoot == "" {
-		c.DeviceRoot = "/var/lib/ssf"
+		c.Root = "/var/lib/sandboxschedadapter"
 	}
 	if c.Listen == "" {
 		c.Listen = ":9447"
 	}
-	if c.HookListen == "" {
-		c.HookListen = "127.0.0.1:9449"
+	if c.Runtime == "" {
+		c.Runtime = "sandboxsched"
 	}
-	if c.SSFEndpoint == "" {
-		c.SSFEndpoint = "127.0.0.1:9443"
-	}
-	if c.PreparationRuntime == "" {
-		c.PreparationRuntime = "sandboxsched"
-	}
-	if c.NodeName == "" || c.SSFEndpoint == "" || c.APIKeyFile == "" || c.Cert == "" || c.Key == "" || c.CA == "" {
-		return c, errors.New("sandboxsched node identity, SSF endpoint, API key and TLS required")
+	if c.NodeName == "" || c.APIKeyFile == "" || c.Cert == "" || c.Key == "" || c.CA == "" {
+		return c, errors.New("sandboxsched node identity, API key and TLS required")
 	}
 	if c.Coordinator.Endpoint == "" || c.Coordinator.Peer == "" || c.Coordinator.Cert == "" {
 		return c, errors.New("sandboxsched coordinator client required")
-	}
-	if len(c.EvidencePeers) == 0 {
-		return c, errors.New("sandboxsched evidence verifier required")
-	}
-	if c.HookTokenFile == "" {
-		return c, errors.New("sandboxsched preparation hook token required")
 	}
 	return c, nil
 }
@@ -219,10 +150,11 @@ type DispatchBinding struct {
 	BindingID string `json:"bindingID"`
 	GuestPath string `json:"guestPath"`
 	ReadOnly  bool   `json:"readOnly"`
-	// Kind "" is the default engine-backed block volume; "nfs" marks a
-	// direct NFS export mount that bypasses the storage engine entirely.
+	// Kind is always "nfs": a direct NFS export mount planned locally by
+	// the control plugin. The field stays so legacy engine-backed journal
+	// rows remain parseable and are rejected explicitly.
 	Kind string `json:"kind,omitempty"`
-	// Source is the resolved NFS export ("server:/path") of a nfs binding.
+	// Source is the resolved NFS export ("server:/path") of the binding.
 	Source string `json:"source,omitempty"`
 }
 
@@ -231,8 +163,7 @@ type Dispatch struct {
 	Operation string            `json:"operation"`
 	Plan      string            `json:"plan"`
 	RunUID    string            `json:"runUID"`
-	// Kind "" is the default engine-backed launch; "nfs" is a direct-mount
-	// dispatch planned locally by the control plugin without consume.
+	// Kind is always "nfs" (see DispatchBinding.Kind).
 	Kind      string            `json:"kind,omitempty"`
 	Bindings  []DispatchBinding `json:"bindings"`
 	Placement core.Placement    `json:"placement"`
