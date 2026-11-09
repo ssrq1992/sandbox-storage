@@ -16,7 +16,7 @@ webhooks:
       matchExpressions:
         - key: kubernetes.io/metadata.name
           operator: In
-          values: [agentenv-system]
+          values: [flux-sandbox-test]
     clientConfig:
       service:
         namespace: ssf-system

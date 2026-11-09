@@ -48,8 +48,8 @@ type BindRecord struct {
 	UpdatedAt time.Time   `json:"updatedAt"`
 }
 
-// contentRecord mirrors the crash-safe format intent pattern of the agentenv
-// adapter for locally initialized volumes.
+// contentRecord is the crash-safe format intent for locally initialized
+// volumes.
 type contentRecord struct {
 	Request      runtime.PreparationRequest `json:"request"`
 	FormatIntent string                     `json:"formatIntent"`

@@ -1,4 +1,4 @@
-"""Re-generate both internal protocols in a temporary directory and compare."""
+"""Re-generate the internal protocols in a temporary directory and compare."""
 import pathlib
 import subprocess
 import tempfile
@@ -7,7 +7,6 @@ root = pathlib.Path(__file__).resolve().parents[1]
 for source, proto_path in [
     (root, "api/ssf/v1/node.proto"),
     (root, "api/overlaybd/v1/backend.proto"),
-    (root.parent / "AgentENV/services", "api/proto/scheduler.proto"),
 ]:
     with tempfile.TemporaryDirectory(prefix="ssf-protocol-check-") as output:
         subprocess.run([
@@ -21,4 +20,4 @@ for source, proto_path in [
             checked_in = source / file.relative_to(output)
             if not checked_in.exists() or file.read_bytes() != checked_in.read_bytes():
                 raise SystemExit(f"generated protobuf file is stale: {checked_in}")
-print("SSF, OverlayBD backend and AgentENV protobuf generation is reproducible")
+print("SSF and OverlayBD backend protobuf generation is reproducible")

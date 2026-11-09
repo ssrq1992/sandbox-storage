@@ -164,7 +164,7 @@ func (a tenantAuth) Authorize(_ context.Context, tenant string, ref core.PVCRef,
 // nodeServiceURL discovers the node service pod on a node.
 func (s *ControlService) nodeServiceURL(node string) (string, error) {
 	pods, err := s.Control.Kube.API.CoreV1().Pods(s.Config.Namespace).List(context.Background(), metav1.ListOptions{
-		LabelSelector: "app.kubernetes.io/name=agentenv-node",
+		LabelSelector: s.Config.NodeServiceLabel,
 		FieldSelector: "spec.nodeName=" + node,
 	})
 	if err != nil {

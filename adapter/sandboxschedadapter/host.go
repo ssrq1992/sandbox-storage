@@ -94,8 +94,8 @@ func OpenSandboxSchedControl(ctx context.Context, cfg ControlConfig) (*SandboxCo
 		return fail(err)
 	}
 	// Drive autonomous Immediate-mode preparation for the principal
-	// namespaces, mirroring the agentenv adapter's recovery loop: managed
-	// claims become prepared without waiting for a consumer sandbox.
+	// namespaces: managed claims become prepared without waiting for a
+	// consumer sandbox.
 	prepDone := make(chan struct{})
 	prepCtx, cancelPrep := context.WithCancel(ctx)
 	go func() {
@@ -137,8 +137,8 @@ type nodeInfo struct {
 }
 
 // openSandboxPreparation wires the WFFC volume preparation flow. Preparation
-// plans travel to the public node agent exactly as in the agentenv flow; the
-// engine forwards content work to the node service preparation hook.
+// plans travel to the public node agent; the engine forwards content work to
+// the node service preparation hook.
 func openSandboxPreparation(control *SandboxControl, cfg ControlConfig, tlsConfig *tls.Config, pluginHTTP *http.Client) (func(), error) {
 	if len(cfg.VolumeProfiles) == 0 {
 		return func() {}, nil
@@ -147,7 +147,7 @@ func openSandboxPreparation(control *SandboxControl, cfg ControlConfig, tlsConfi
 		return nil, err
 	}
 	nodePods := func(ctx context.Context, node string) ([]string, error) {
-		options := metav1.ListOptions{LabelSelector: "app.kubernetes.io/name=agentenv-node"}
+		options := metav1.ListOptions{LabelSelector: cfg.NodeServiceLabel}
 		if node != "" {
 			options.FieldSelector = "spec.nodeName=" + node
 		}
@@ -190,7 +190,7 @@ func openSandboxPreparation(control *SandboxControl, cfg ControlConfig, tlsConfi
 		}
 		for _, podIP := range addresses {
 			pods, err := control.Kube.API.CoreV1().Pods(cfg.Namespace).List(ctx, metav1.ListOptions{
-				LabelSelector: "app.kubernetes.io/name=agentenv-node", FieldSelector: "status.podIP=" + podIP})
+				LabelSelector: cfg.NodeServiceLabel, FieldSelector: "status.podIP=" + podIP})
 			if err != nil || len(pods.Items) == 0 {
 				continue
 			}

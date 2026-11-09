@@ -5,22 +5,22 @@
   "CA": "/etc/ssf-tls/ca.crt",
   "VolumeProfiles": [
     {
-      "name": "agentenv-block-ext4-v1",
-      "runtime": "agentenv",
+      "name": "sandboxsched-block-ext4-v1",
+      "runtime": "sandboxsched",
       "version": "volume-preparation-v1",
       "volumeMode": "Block",
       "filesystem": "ext4",
-      "initializeBlank": true
+      "initializeBlank": false
     }
   ],
   "ManagedNamespaces": [
-    "agentenv-system"
+    "flux-sandbox-test"
   ],
   "CoordinatorUsers": [
-    "system:serviceaccount:agentenv-system:ssf-coordinator"
+    "system:serviceaccount:sandboxsched-storage:ssf-coordinator"
   ],
   "SnapshotControllerUsers": [
     "system:serviceaccount:kube-system:snapshot-controller",
-    "system:serviceaccount:agentenv-system:ssf-overlaybd-controller"
+    "system:serviceaccount:sandboxsched-storage:ssf-overlaybd-controller"
   ]
 }

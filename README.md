@@ -1,12 +1,12 @@
 # SSF — Sandbox Storage Framework
 
-当前实现与验证见 [26 独立公共协调服务](../design/26-independent-coordinator-implementation.md)，部署使用框架仓库的联合构建入口和 overlay。
+当前实现与验证见 [26 独立公共协调服务](../design/26-independent-coordinator-implementation.md)，独立部署清单见 [deploy/sandboxsched-storage.yaml](deploy/sandboxsched-storage.yaml)。
 
-Kubernetes 创建 PVC 后，原 AgentENV 创建接口通过 `volumeMounts[].pvc` 引用。自动准备的此前实施记录见 [22](../design/22-volume-preparation-implementation.md)，本轮独立服务的验证结果以 [26](../design/26-independent-coordinator-implementation.md) 和 `validation/control-service` 为准。
+Kubernetes 创建 PVC 后，SandboxSched 的沙箱创建接口通过 `volumeMounts[].pvc` 引用。自动准备的此前实施记录见 [22](../design/22-volume-preparation-implementation.md)，本轮独立服务的验证结果以 [26](../design/26-independent-coordinator-implementation.md) 和 `validation/control-service` 为准。
 
-SSF 使用 Kubernetes 管理 PVC/PV、供卷、快照、克隆、扩容与回收。沙箱消费由公共 Go 协调库直接执行 Attach；当前 AgentENV 由独立 `ssf-coordinator` 承载，并通过签名计划驱动公共 Node Agent 的 Stage/Publish。没有逐沙箱 Pod，当前 AgentENV 具有独立协调服务 Deployment，保留原 Scheduler 的计算选点。
+SSF 使用 Kubernetes 管理 PVC/PV、供卷、快照、克隆、扩容与回收。沙箱消费由公共 Go 协调库直接执行 Attach；SandboxSched 由独立 `ssf-coordinator` 承载，并通过签名计划驱动公共 Node Agent 的 Stage/Publish。没有逐沙箱 Pod。
 
-公共核心提供框架与验证工程；`runtime/verification` 明确拒绝宣称真实 guest 已就绪。[AgentENV 原生插件](adapter/agentenvadapter/README.md) 保留原 Gateway、Scheduler、Orchestrator 和沙箱 API，实现存储接入、完整生命周期与交付工具；旧独立沙箱控制面已移除。当前架构见 [23](../design/23-current-implementation-architecture.md)，完整回归及真实环境未执行项见 [14](../design/14-agentenvadapter-real-environment-test-plan.md)。SSF 核心不依赖项目适配器。
+公共核心提供框架与验证工程；`runtime/verification` 明确拒绝宣称真实 guest 已就绪。[SandboxSched 适配器](adapter/sandboxschedadapter/) 将 SandboxSched（containerd + runc 沙箱）接入 SSF 存储运行时：控制面插件在协调服务内承载启动规划，节点服务运行在公共 Node Agent 旁，负责卷发布、块设备文件系统挂载与内核级沙箱挂载验证。当前架构见 [23](../design/23-current-implementation-architecture.md)。SSF 核心不依赖项目适配器。
 
 ## 构建与检查
 
@@ -21,7 +21,7 @@ make linux
 make check-generated
 ```
 
-Go 1.26；生产节点运行 Linux。`go.sum` 固定依赖校验值。Node Rust 客户端使用 `sdk/rust/Cargo.toml`；原生运行时 adapter crate 使用 `cargo test --locked --manifest-path adapter/agentenvadapter/runtime/Cargo.toml`。主 AgentENV 的 Linux 类型检查与本机可移植单测分开记录，当前结果见 `validation/control-service`。
+Go 1.26；生产节点运行 Linux。`go.sum` 固定依赖校验值。Node Rust 客户端使用 `sdk/rust/Cargo.toml`；本机可移植单测结果记录于 `validation/control-service`。
 
 ## 组件
 
@@ -55,7 +55,7 @@ Go 1.26；生产节点运行 Linux。`go.sum` 固定依赖校验值。Node Rust 
 4. 部署 Node Agent。CSI Node Driver 必须看到同一绝对路径 `/var/lib/ssf`，具备正确 mount propagation；仅挂载 socket 不足以完成集成。Node、Driver、Runtime 的路径与可见域必须一致。
 5. 需要网络访问 Controller UDS 时，将 Gateway 加到厂商 Controller Pod，共享 `/csi` socket，使用 `deploy/gateway.example.json` 和共享账本只读账号（通过 `SSF_DATABASE_URL`）；它验证 Binding 元数据与 attachment 状态，不替换原生 provisioner/resizer/snapshotter。
 6. 原生 StorageClass 使用 Retain；PVC 标记 `ssf.dev/managed=true`；静态候选 CSI PV 同样标记。Resolver 在验证真实 claim UID 后为动态 PV补充标记。Guard 在这之前也检查 PV 引用的受管 PVC。
-7. AgentENV 按 [13 部署文档](../design/13-agentenvadapter-installation-and-deployment.md) 安装独立协调服务和原工作负载增量，将消费 RBAC 绑定 `ssf-coordinator`。原 Scheduler 只保留原生发现权限。示例 RBAC 是功能集合，应按已认证租户 namespace、Secret 范围拆分生产 Role；租户不得直接修改 PV、受管标签、选点注解或使用管理 ServiceAccount。
+7. SandboxSched 按 `deploy/sandboxsched-storage.yaml` 部署独立协调服务与节点存储服务，将消费 RBAC 绑定 `ssf-coordinator`。示例 RBAC 是功能集合，应按已认证租户 namespace、Secret 范围拆分生产 Role；租户不得直接修改 PV、受管标签、选点注解或使用管理 ServiceAccount。
 
 `deploy/base.yaml` 包含部署资源，不包含真实密钥或数据库口令；`ssf-ledger` Secret 的 `url` 提供连接串。Node 以 root/privileged 运行是挂载可见性需要，Guard 无此要求。
 

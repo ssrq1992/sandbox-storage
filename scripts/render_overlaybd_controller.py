@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render the OverlayBD controller only; never contact or mutate a cluster.
 
-Use the same worker inventory as render_agentenv_native.py. Database, TLS
+Use the worker inventory from the node deployment. Database, TLS
 secrets, Guard and snapshot CRDs are separately installed dependencies.
 """
 import argparse

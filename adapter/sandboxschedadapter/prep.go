@@ -15,7 +15,7 @@ func (n *Node) supportedProfile(p core.VolumeProfile) bool {
 	return p.Runtime == n.Config.PreparationRuntime && p.Version == core.PreparationProtocol && p.VolumeMode == "Block" && p.Filesystem == "ext4"
 }
 
-// validatePreparation mirrors the agentenv adapter's request validation.
+// validatePreparation checks the preparation request contract.
 func (n *Node) validatePreparation(q runtime.PreparationRequest) error {
 	if !safeID.MatchString(q.Operation) || q.PlanDigest == "" || !n.supportedProfile(q.Spec.Profile) ||
 		q.Endpoint.Kind != "BlockDevice" || q.Spec.PVC.UID != q.Endpoint.VolumeUID ||
@@ -28,8 +28,8 @@ func (n *Node) validatePreparation(q runtime.PreparationRequest) error {
 }
 
 // PrepareVolume initializes the volume filesystem directly on the published
-// block device. This replaces the agentenv throwaway-sandbox formatter with a
-// privileged node-local mkfs, guarded by the same crash-safe intent journal.
+// block device with a privileged node-local mkfs, guarded by the crash-safe
+// intent journal.
 func (n *Node) PrepareVolume(ctx context.Context, q runtime.PreparationRequest) (core.PreparationReceipt, error) {
 	n.contentMu.Lock()
 	defer n.contentMu.Unlock()

@@ -1,7 +1,6 @@
 package sandboxschedadapter
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"crypto/x509"
@@ -37,9 +36,7 @@ type Node struct {
 	SSF              v1.RuntimeStorageNodeClient
 	Control          *control.Client
 	Call             func(ctx context.Context, method string, envelope []byte) (json.RawMessage, error)
-	Forward          *http.Client // evidence forwarding to the agentenv adapter
 	APIKey           string
-	HookForwardToken string
 	contentMu        sync.Mutex
 	mu               sync.Mutex
 }
@@ -91,16 +88,7 @@ func Run(ctx context.Context, c NodeConfig) error {
 		return err
 	}
 	defer conn.Close()
-	forwardTLS, err := authTLSVariant(c.EvidenceForwardCert, c.EvidenceForwardKey, c.EvidenceForwardCA)
-	if err != nil {
-		return err
-	}
-	forwardTLS.ServerName = c.EvidenceForwardServerName
-	hookToken, err := os.ReadFile(c.HookForwardTokenFile)
-	if err != nil {
-		return err
-	}
-	controlClient, err := control.New(control.Config{Endpoint: c.Coordinator.Endpoint, Cert: c.Coordinator.Cert, Key: c.Coordinator.Key, CA: c.Coordinator.CA, Peer: c.Coordinator.Peer})
+	controlClient, err := control.New(control.Config{Endpoint: c.Coordinator.Endpoint, Cert: c.Coordinator.Cert, Key: c.Coordinator.Key, CA: c.Coordinator.CA, Peer: c.Coordinator.Peer, ServerName: c.Coordinator.ServerName})
 	if err != nil {
 		return err
 	}
@@ -111,9 +99,7 @@ func Run(ctx context.Context, c NodeConfig) error {
 		Journal:          j,
 		SSF:              v1.NewRuntimeStorageNodeClient(conn),
 		Control:          controlClient,
-		Forward:          &http.Client{Transport: &http.Transport{TLSClientConfig: forwardTLS}, Timeout: 15 * time.Second, CheckRedirect: rejectRedirect},
 		APIKey:           strings.TrimSpace(string(key)),
-		HookForwardToken: strings.TrimSpace(string(hookToken)),
 	}
 	n.Call = func(ctx context.Context, method string, envelope []byte) (json.RawMessage, error) {
 		reply, err := n.Control.Call(ctx, method, control.Request{Runtime: n.Config.PreparationRuntime, Envelope: envelope})
@@ -229,14 +215,6 @@ func (n *Node) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		n.evidence(w, r)
-	case "/v1/capture/evidence":
-		// SandboxSched does not capture; every capture verification belongs
-		// to the agentenv runtime and is forwarded unchanged.
-		if !n.authorizeEvidencePeer(r) {
-			problem(w, 403, errors.New("evidence peer forbidden"))
-			return
-		}
-		n.forwardEvidence(w, r)
 	case "/v1/node-released":
 		if !n.authorizeEvidencePeer(r) {
 			problem(w, 403, errors.New("control peer forbidden"))
@@ -672,8 +650,7 @@ func (n *Node) releaseLocked(ctx context.Context, sandbox string) error {
 	return err
 }
 
-// evidence verifies SandboxSched runtime evidence and forwards every other
-// verification to the agentenv adapter.
+// evidence verifies SandboxSched runtime evidence.
 func (n *Node) evidence(w http.ResponseWriter, r *http.Request) {
 	var q struct {
 		Sandbox  string `json:"sandbox"`
@@ -701,15 +678,9 @@ func (n *Node) evidence(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if err != nil || (record.Sandbox != q.Sandbox && record.Instance != q.Sandbox && record.RunUID != q.Sandbox) {
-		// Not a SandboxSched sandbox: transparently proxy to the agentenv
-		// verifier so the shared node stack keeps a single evidence URL.
-		// The body was consumed by decoding; replay the exact wire format.
-		body, mErr := json.Marshal(q)
-		if mErr != nil {
-			problem(w, 500, mErr)
-			return
-		}
-		n.forwardEvidenceBody(w, r.Context(), body)
+		// Not a SandboxSched sandbox: no other runtime is hosted by this
+		// service, so the subject is unknown.
+		problem(w, 404, errors.New("unknown sandbox"))
 		return
 	}
 	if n.proof(record, q.Sandbox, q.Action) != q.Evidence {
@@ -768,38 +739,6 @@ func (n *Node) verifyLive(record BindRecord, action string) error {
 	}
 }
 
-// forwardEvidence proxies a raw evidence POST to the agentenv adapter. It is
-// used by paths that never decode the body (capture evidence).
-func (n *Node) forwardEvidence(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(io.LimitReader(r.Body, 1<<20))
-	defer r.Body.Close()
-	if err != nil {
-		problem(w, 400, err)
-		return
-	}
-	n.forwardEvidenceBody(w, r.Context(), body)
-}
-
-// forwardEvidenceBody proxies an evidence request body to the agentenv
-// adapter. Callers that already decoded the request re-marshal the struct:
-// the request body is closed after decoding and cannot be replayed.
-func (n *Node) forwardEvidenceBody(w http.ResponseWriter, ctx context.Context, body []byte) {
-	req, err := http.NewRequestWithContext(ctx, "POST", n.Config.EvidenceForwardURL, bytes.NewReader(body))
-	if err != nil {
-		problem(w, 500, err)
-		return
-	}
-	req.Header.Set("Content-Type", "application/json")
-	resp, err := n.Forward.Do(req)
-	if err != nil {
-		problem(w, 502, err)
-		return
-	}
-	defer resp.Body.Close()
-	w.WriteHeader(resp.StatusCode)
-	_, _ = io.Copy(w, io.LimitReader(resp.Body, 1<<20))
-}
-
 // nodeReleased answers the control plugin's release fence: the node-side
 // operation must already be released through the SSF node agent.
 func (n *Node) nodeReleased(w http.ResponseWriter, r *http.Request) {
@@ -831,7 +770,7 @@ func (n *Node) nodeReleased(w http.ResponseWriter, r *http.Request) {
 }
 
 // preparationHook serves the SSF node preparation forward. SandboxSched
-// volumes are initialized locally; agentenv requests are forwarded unchanged.
+// volumes are initialized locally; other runtimes are not hosted.
 func (n *Node) preparationHook(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/storage/volume-preparation" || r.Method != "POST" {
 		problem(w, 404, errors.New("not found"))
@@ -856,21 +795,7 @@ func (n *Node) preparationHook(w http.ResponseWriter, r *http.Request) {
 		n.volumePreparationHook(w, request)
 		return
 	}
-	forward, err := http.NewRequestWithContext(r.Context(), "POST", n.Config.HookForwardURL, bytes.NewReader(body))
-	if err != nil {
-		problem(w, 500, err)
-		return
-	}
-	forward.Header.Set("Content-Type", "application/json")
-	forward.Header.Set("Authorization", "Bearer "+n.HookForwardToken)
-	resp, err := n.hookForwardClient().Do(forward)
-	if err != nil {
-		problem(w, 502, err)
-		return
-	}
-	defer resp.Body.Close()
-	w.WriteHeader(resp.StatusCode)
-	_, _ = io.Copy(w, io.LimitReader(resp.Body, 1<<20))
+	problem(w, 404, errors.New("unsupported preparation runtime"))
 }
 
 type preparationEnvelope struct {
@@ -904,10 +829,6 @@ func (n *Node) hookToken() string {
 		return ""
 	}
 	return strings.TrimSpace(string(raw))
-}
-
-func (n *Node) hookForwardClient() *http.Client {
-	return &http.Client{Timeout: 10 * time.Minute, CheckRedirect: rejectRedirect}
 }
 
 // recoverLoop reconciles journal state with actual sandbox state.

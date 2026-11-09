@@ -63,6 +63,7 @@ type ControlConfig struct {
 	PreparationNodePort   string               `json:"preparation_node_port"`
 	PreparationServerName string               `json:"preparation_server_name"`
 	NodeServicePort       string               `json:"node_service_port"`
+	NodeServiceLabel      string               `json:"node_service_label"`
 	NodeServerName        string               `json:"node_server_name"`
 	VolumeProfiles        []core.VolumeProfile `json:"volume_profiles"`
 }
@@ -89,6 +90,9 @@ func LoadControlConfig(path string) (ControlConfig, error) {
 	}
 	if c.NodeServicePort == "" {
 		c.NodeServicePort = "9447"
+	}
+	if c.NodeServiceLabel == "" {
+		c.NodeServiceLabel = "app.kubernetes.io/name=sandboxsched-storage-node"
 	}
 	if c.NodeServerName == "" {
 		return c, errors.New("node_server_name required")
@@ -124,11 +128,12 @@ type NodeConfig struct {
 	CA           string `json:"ca"`
 
 	Coordinator struct {
-		Endpoint string `json:"endpoint"`
-		Cert     string `json:"cert"`
-		Key      string `json:"key"`
-		CA       string `json:"ca"`
-		Peer     string `json:"peer"`
+		Endpoint   string `json:"endpoint"`
+		Cert       string `json:"cert"`
+		Key        string `json:"key"`
+		CA         string `json:"ca"`
+		Peer       string `json:"peer"`
+		ServerName string `json:"server_name,omitempty"`
 	} `json:"coordinator"`
 
 	SSFEndpoint   string `json:"ssf_endpoint"`
@@ -137,17 +142,10 @@ type NodeConfig struct {
 	Root          string `json:"root"`
 	DeviceRoot    string `json:"device_root"`
 
-	EvidenceForwardURL        string   `json:"evidence_forward_url"`
-	EvidenceForwardCert       string   `json:"evidence_forward_cert"`
-	EvidenceForwardKey        string   `json:"evidence_forward_key"`
-	EvidenceForwardCA         string   `json:"evidence_forward_ca"`
-	EvidenceForwardServerName string   `json:"evidence_forward_server_name"`
-	EvidencePeers             []string `json:"evidence_peers"`
-
-	HookTokenFile        string `json:"hook_token_file"`
-	HookForwardURL       string `json:"hook_forward_url"`
-	HookForwardTokenFile string `json:"hook_forward_token_file"`
-	PreparationRuntime   string `json:"preparation_runtime"`
+	// EvidencePeers lists the SPIFFE IDs allowed to call the evidence API.
+	EvidencePeers     []string `json:"evidence_peers"`
+	HookTokenFile     string   `json:"hook_token_file"`
+	PreparationRuntime string `json:"preparation_runtime"`
 
 	Kubeconfig string `json:"kubeconfig"`
 }
@@ -191,11 +189,11 @@ func LoadNodeConfig(path string) (NodeConfig, error) {
 	if c.Coordinator.Endpoint == "" || c.Coordinator.Peer == "" || c.Coordinator.Cert == "" {
 		return c, errors.New("sandboxsched coordinator client required")
 	}
-	if len(c.EvidencePeers) == 0 || c.EvidenceForwardURL == "" || c.EvidenceForwardCert == "" {
-		return c, errors.New("sandboxsched evidence verifier and forwarding required")
+	if len(c.EvidencePeers) == 0 {
+		return c, errors.New("sandboxsched evidence verifier required")
 	}
-	if c.HookTokenFile == "" || c.HookForwardURL == "" || c.HookForwardTokenFile == "" {
-		return c, errors.New("sandboxsched preparation hook and forwarding required")
+	if c.HookTokenFile == "" {
+		return c, errors.New("sandboxsched preparation hook token required")
 	}
 	return c, nil
 }
